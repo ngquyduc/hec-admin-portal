@@ -1,0 +1,19 @@
+{
+  "projectName": "hec-admin-portal",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "pnpm",
+  "tailwind": true,
+  "addOnOptions": {},
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "nitro",
+    "start",
+    "form",
+    "shadcn",
+    "table",
+    "tanstack-query"
+  ]
+}
