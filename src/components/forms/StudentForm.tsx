@@ -1,9 +1,11 @@
 import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
 import { useCreateStudent, useUpdateStudent } from '@/hooks/useStudents'
+import { useParents, useParentsSearch } from '@/hooks/useParents'
 import { CreateStudentSchema, UpdateStudentSchema, type Student } from '@/types/entities'
 import { ENGLISH_LEVEL_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
+import { useState } from 'react'
 
 interface StudentFormProps {
   student?: Student
@@ -14,6 +16,16 @@ export function StudentForm({ student, mode }: StudentFormProps) {
   const navigate = useNavigate()
   const createStudent = useCreateStudent()
   const updateStudent = useUpdateStudent()
+
+  const [parentSearch, setParentSearch] = useState('')
+  const [showParentDropdown, setShowParentDropdown] = useState(false)
+  const [selectedParentLabel, setSelectedParentLabel] = useState<string>(() => {
+    return student?.parentId ? '' : ''
+  })
+
+  const { data: allParents = [] } = useParents()
+  const { data: searchedParents = [] } = useParentsSearch(parentSearch)
+  const parentsToShow = parentSearch.length > 0 ? searchedParents : allParents
 
   const form = useForm({
     defaultValues: {
@@ -30,8 +42,11 @@ export function StudentForm({ student, mode }: StudentFormProps) {
     },
     onSubmit: async ({ value }) => {
       try {
+        const { englishLevel, ...rest } = value
         const submitData = {
-          ...value,
+          ...rest,
+          level: englishLevel,
+          status: mode === 'create' ? ('active' as const) : value.status,
           parentId: value.parentId || null,
         }
         
@@ -195,25 +210,35 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           )}
         </form.Field>
 
-        {/* Status */}
-        <form.Field name="status">
-          {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <select
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-              </select>
+        {/* Status — only editable in edit mode */}
+        {mode === 'edit' ? (
+          <form.Field name="status">
+            {(field) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
+                <select
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value as any)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+              </div>
+            )}
+          </form.Field>
+        ) : (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <div className="w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-50 text-gray-500 text-sm">
+              Active
             </div>
-          )}
-        </form.Field>
+            <p className="mt-1 text-xs text-gray-400">New students are always set to Active</p>
+          </div>
+        )}
 
         {/* Address */}
         <form.Field name="address">
@@ -232,22 +257,78 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           )}
         </form.Field>
 
-        {/* Parent ID */}
+        {/* Parent Selector */}
         <form.Field name="parentId">
           {(field) => (
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Parent ID
+                Parent / Guardian
               </label>
-              <input
-                type="text"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Optional - Link to parent record"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+
+              {/* Selected parent badge */}
+              {field.state.value && (
+                <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700">
+                  <span>{selectedParentLabel || field.state.value}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      field.handleChange('')
+                      setSelectedParentLabel('')
+                      setParentSearch('')
+                    }}
+                    className="text-blue-400 hover:text-blue-600 font-bold leading-none"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+
+              {/* Search input — hidden once a parent is selected */}
+              {!field.state.value && (
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={parentSearch}
+                    onChange={(e) => {
+                      setParentSearch(e.target.value)
+                      setShowParentDropdown(true)
+                    }}
+                    onFocus={() => setShowParentDropdown(true)}
+                    onBlur={() => setTimeout(() => setShowParentDropdown(false), 150)}
+                    placeholder="Search by name or phone number..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+
+                  {showParentDropdown && (
+                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                      {parentsToShow.length === 0 ? (
+                        <div className="px-4 py-3 text-sm text-gray-500">No parents found</div>
+                      ) : (
+                        parentsToShow.map((parent) => (
+                          <button
+                            key={parent.id}
+                            type="button"
+                            onMouseDown={() => {
+                              field.handleChange(parent.id)
+                              setSelectedParentLabel(`${parent.name}${parent.phone ? ` — ${parent.phone}` : ''}`)
+                              setParentSearch('')
+                              setShowParentDropdown(false)
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors"
+                          >
+                            <span className="font-medium text-gray-900">{parent.name}</span>
+                            {parent.phone && (
+                              <span className="ml-2 text-gray-500">{parent.phone}</span>
+                            )}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
               <p className="mt-1 text-xs text-gray-500">
-                Enter the parent's ID to link this student to a parent
+                Search and select a parent to link this student
               </p>
             </div>
           )}

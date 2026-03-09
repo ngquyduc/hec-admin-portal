@@ -108,7 +108,7 @@ export const parentService = {
     const { data, error } = await supabase
       .from('parent')
       .select('*')
-      .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
+      .or(`name.ilike.%${query}%,phone.ilike.%${query}%,email.ilike.%${query}%`)
       .order('created_at', { ascending: false })
 
     if (error) throw error
