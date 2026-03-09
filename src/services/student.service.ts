@@ -2,9 +2,9 @@ import { supabase } from '@/lib/supabase'
 import type { Student, CreateStudent, UpdateStudent } from '@/types/entities'
 import type { Database } from '@/types/database'
 
-type StudentRow = Database['public']['Tables']['students']['Row']
-type StudentInsert = Database['public']['Tables']['students']['Insert']
-type StudentUpdate = Database['public']['Tables']['students']['Update']
+type StudentRow = Database['public']['Tables']['student']['Row']
+type StudentInsert = Database['public']['Tables']['student']['Insert']
+type StudentUpdate = Database['public']['Tables']['student']['Update']
 
 function transformStudentRow(row: StudentRow): Student {
   return {
@@ -66,7 +66,7 @@ function transformUpdateStudent(data: UpdateStudent): StudentUpdate {
 export const studentService = {
   async getAll(): Promise<Student[]> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -76,7 +76,7 @@ export const studentService = {
 
   async getById(id: string): Promise<Student> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .select('*')
       .eq('id', id)
       .single()
@@ -87,7 +87,7 @@ export const studentService = {
 
   async create(student: CreateStudent): Promise<Student> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .insert(transformCreateStudent(student))
       .select()
       .single()
@@ -98,7 +98,7 @@ export const studentService = {
 
   async update(id: string, updates: UpdateStudent): Promise<Student> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .update(transformUpdateStudent(updates))
       .eq('id', id)
       .select()
@@ -110,7 +110,7 @@ export const studentService = {
 
   async delete(id: string): Promise<void> {
     const { error } = await supabase
-      .from('students')
+      .from('student')
       .delete()
       .eq('id', id)
 
@@ -119,7 +119,7 @@ export const studentService = {
 
   async search(query: string): Promise<Student[]> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .select('*')
       .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
       .order('created_at', { ascending: false })
@@ -130,7 +130,7 @@ export const studentService = {
 
   async getByStatus(status: 'active' | 'inactive' | 'suspended'): Promise<Student[]> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .select('*')
       .eq('status', status)
       .order('created_at', { ascending: false })
@@ -141,7 +141,7 @@ export const studentService = {
 
   async getByLevel(level: string): Promise<Student[]> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .select('*')
       .eq('level', level)
       .order('created_at', { ascending: false })
@@ -152,7 +152,7 @@ export const studentService = {
 
   async getByParent(parentId: string): Promise<Student[]> {
     const { data, error } = await supabase
-      .from('students')
+      .from('student')
       .select('*')
       .eq('parent_id', parentId)
       .order('created_at', { ascending: false })

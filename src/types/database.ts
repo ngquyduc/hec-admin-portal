@@ -59,7 +59,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      teachers: {
+      teacher: {
         Row: {
           id: string
           first_name: string
@@ -115,7 +115,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      students: {
+      student: {
         Row: {
           id: string
           first_name: string
@@ -165,7 +165,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      parents: {
+      parent: {
         Row: {
           id: string
           first_name: string

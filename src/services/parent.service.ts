@@ -2,9 +2,9 @@ import { supabase } from '@/lib/supabase'
 import type { Parent, CreateParent, UpdateParent } from '@/types/entities'
 import type { Database } from '@/types/database'
 
-type ParentRow = Database['public']['Tables']['parents']['Row']
-type ParentInsert = Database['public']['Tables']['parents']['Insert']
-type ParentUpdate = Database['public']['Tables']['parents']['Update']
+type ParentRow = Database['public']['Tables']['parent']['Row']
+type ParentInsert = Database['public']['Tables']['parent']['Insert']
+type ParentUpdate = Database['public']['Tables']['parent']['Update']
 
 function transformParentRow(row: ParentRow): Parent {
   return {
@@ -56,7 +56,7 @@ function transformUpdateParent(data: UpdateParent): ParentUpdate {
 export const parentService = {
   async getAll(): Promise<Parent[]> {
     const { data, error } = await supabase
-      .from('parents')
+      .from('parent')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -66,7 +66,7 @@ export const parentService = {
 
   async getById(id: string): Promise<Parent> {
     const { data, error } = await supabase
-      .from('parents')
+      .from('parent')
       .select('*')
       .eq('id', id)
       .single()
@@ -77,7 +77,7 @@ export const parentService = {
 
   async create(parent: CreateParent): Promise<Parent> {
     const { data, error } = await supabase
-      .from('parents')
+      .from('parent')
       .insert(transformCreateParent(parent))
       .select()
       .single()
@@ -88,7 +88,7 @@ export const parentService = {
 
   async update(id: string, updates: UpdateParent): Promise<Parent> {
     const { data, error } = await supabase
-      .from('parents')
+      .from('parent')
       .update(transformUpdateParent(updates))
       .eq('id', id)
       .select()
@@ -100,7 +100,7 @@ export const parentService = {
 
   async delete(id: string): Promise<void> {
     const { error } = await supabase
-      .from('parents')
+      .from('parent')
       .delete()
       .eq('id', id)
 
@@ -109,7 +109,7 @@ export const parentService = {
 
   async search(query: string): Promise<Parent[]> {
     const { data, error } = await supabase
-      .from('parents')
+      .from('parent')
       .select('*')
       .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
       .order('created_at', { ascending: false })

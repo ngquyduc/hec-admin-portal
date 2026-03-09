@@ -2,9 +2,9 @@ import { supabase } from '@/lib/supabase'
 import type { Teacher, CreateTeacher, UpdateTeacher } from '@/types/entities'
 import type { Database } from '@/types/database'
 
-type TeacherRow = Database['public']['Tables']['teachers']['Row']
-type TeacherInsert = Database['public']['Tables']['teachers']['Insert']
-type TeacherUpdate = Database['public']['Tables']['teachers']['Update']
+type TeacherRow = Database['public']['Tables']['teacher']['Row']
+type TeacherInsert = Database['public']['Tables']['teacher']['Insert']
+type TeacherUpdate = Database['public']['Tables']['teacher']['Update']
 
 function transformTeacherRow(row: TeacherRow): Teacher {
   return {
@@ -70,7 +70,7 @@ function transformUpdateTeacher(data: UpdateTeacher): TeacherUpdate {
 export const teacherService = {
   async getAll(): Promise<Teacher[]> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -80,7 +80,7 @@ export const teacherService = {
 
   async getById(id: string): Promise<Teacher> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .select('*')
       .eq('id', id)
       .single()
@@ -91,7 +91,7 @@ export const teacherService = {
 
   async create(teacher: CreateTeacher): Promise<Teacher> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .insert(transformCreateTeacher(teacher))
       .select()
       .single()
@@ -102,7 +102,7 @@ export const teacherService = {
 
   async update(id: string, updates: UpdateTeacher): Promise<Teacher> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .update(transformUpdateTeacher(updates))
       .eq('id', id)
       .select()
@@ -114,7 +114,7 @@ export const teacherService = {
 
   async delete(id: string): Promise<void> {
     const { error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .delete()
       .eq('id', id)
 
@@ -123,7 +123,7 @@ export const teacherService = {
 
   async search(query: string): Promise<Teacher[]> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .select('*')
       .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
       .order('created_at', { ascending: false })
@@ -134,7 +134,7 @@ export const teacherService = {
 
   async getByStatus(status: 'active' | 'inactive' | 'suspended'): Promise<Teacher[]> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .select('*')
       .eq('status', status)
       .order('created_at', { ascending: false })
@@ -145,7 +145,7 @@ export const teacherService = {
 
   async getBySubject(subject: string): Promise<Teacher[]> {
     const { data, error } = await supabase
-      .from('teachers')
+      .from('teacher')
       .select('*')
       .contains('subjects', [subject])
       .order('created_at', { ascending: false })
