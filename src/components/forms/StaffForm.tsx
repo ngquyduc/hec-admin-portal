@@ -4,6 +4,7 @@ import { useCreateStaff, useUpdateStaff } from '@/hooks/useStaff'
 import { CreateStaffSchema, UpdateStaffSchema, type Staff } from '@/types/entities'
 import { STAFF_ROLE_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface StaffFormProps {
   staff?: Staff
@@ -39,6 +40,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         navigate({ to: '/staff' })
       } catch (error) {
         console.error('Form submission error:', error)
+        toast.error(error instanceof Error ? error.message : 'Failed to save staff. Please try again.')
       }
     },
   })
@@ -269,7 +271,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         </button>
         <button
           type="submit"
-          disabled={form.state.isSubmitting}
+          disabled={!form.state.canSubmit}
           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {form.state.isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Staff' : 'Update Staff'}

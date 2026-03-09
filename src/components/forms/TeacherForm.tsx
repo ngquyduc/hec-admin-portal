@@ -5,6 +5,7 @@ import { CreateTeacherSchema, UpdateTeacherSchema, type Teacher } from '@/types/
 import { SUBJECT_LABELS, TEACHER_ROLE_LABELS } from '@/lib/constants'
 import { ArrowLeft, X } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface TeacherFormProps {
   teacher?: Teacher
@@ -44,6 +45,7 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         navigate({ to: '/teachers' })
       } catch (error) {
         console.error('Form submission error:', error)
+        toast.error(error instanceof Error ? error.message : 'Failed to save teacher. Please try again.')
       }
     },
   })
@@ -329,7 +331,7 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         </button>
         <button
           type="submit"
-          disabled={form.state.isSubmitting || selectedSubjects.length === 0}
+          disabled={!form.state.canSubmit || selectedSubjects.length === 0}
           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {form.state.isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Teacher' : 'Update Teacher'}

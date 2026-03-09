@@ -12,6 +12,7 @@ import Navigation from '../components/Navigation'
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
+import { Toaster } from 'sonner'
 
 import type { QueryClient } from '@tanstack/react-query'
 
@@ -66,6 +67,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             TanStackQueryDevtools,
           ]}
         />
+        <Toaster richColors position="top-right" />
         <Scripts />
       </body>
     </html>

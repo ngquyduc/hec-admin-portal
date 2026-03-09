@@ -6,6 +6,7 @@ import { CreateStudentSchema, UpdateStudentSchema, type Student } from '@/types/
 import { ENGLISH_LEVEL_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface StudentFormProps {
   student?: Student
@@ -60,6 +61,7 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         navigate({ to: '/students' })
       } catch (error) {
         console.error('Form submission error:', error)
+        toast.error(error instanceof Error ? error.message : 'Failed to save student. Please try again.')
       }
     },
   })
@@ -364,7 +366,7 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         </button>
         <button
           type="submit"
-          disabled={form.state.isSubmitting}
+          disabled={!form.state.canSubmit}
           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {form.state.isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Student' : 'Update Student'}
