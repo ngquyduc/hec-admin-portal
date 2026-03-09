@@ -1,4 +1,4 @@
-import type { StaffRole, Subject, EnglishLevel, Relationship, Status } from '@/types/entities'
+import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole } from '@/types/entities'
 
 // Display labels for entity types
 export const ENTITY_LABELS = {
@@ -19,13 +19,8 @@ export const STAFF_ROLE_LABELS: Record<StaffRole, string> = {
 
 // Subject labels
 export const SUBJECT_LABELS: Record<Subject, string> = {
-  'general-english': 'General English',
-  'business-english': 'Business English',
   'ielts': 'IELTS',
-  'toefl': 'TOEFL',
-  'toeic': 'TOEIC',
-  'kids-english': 'Kids English',
-  'conversation': 'Conversation',
+  'communication-english': 'Tiếng Anh giao tiếp',
 }
 
 // English level labels
@@ -47,6 +42,12 @@ export const RELATIONSHIP_LABELS: Record<Relationship, string> = {
   grandmother: 'Grandmother',
   grandfather: 'Grandfather',
   other: 'Other',
+}
+
+// Teacher role labels
+export const TEACHER_ROLE_LABELS: Record<TeacherRole, string> = {
+  'main-teacher': 'Main Teacher',
+  'teaching-assistant': 'Teaching Assistant',
 }
 
 // Status labels

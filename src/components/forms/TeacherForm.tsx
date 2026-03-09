@@ -2,7 +2,7 @@ import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
 import { useCreateTeacher, useUpdateTeacher } from '@/hooks/useTeachers'
 import { CreateTeacherSchema, UpdateTeacherSchema, type Teacher } from '@/types/entities'
-import { SUBJECT_LABELS } from '@/lib/constants'
+import { SUBJECT_LABELS, TEACHER_ROLE_LABELS } from '@/lib/constants'
 import { ArrowLeft, X } from 'lucide-react'
 import { useState } from 'react'
 
@@ -20,15 +20,14 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
   const form = useForm({
     defaultValues: {
       name: teacher?.name ?? '',
+      role: teacher?.role ?? ('main-teacher' as const),
       email: teacher?.email ?? '',
       phone: teacher?.phone ?? '',
       subjects: teacher?.subjects ?? [],
       hireDate: (typeof teacher?.hireDate === 'string' ? teacher.hireDate : teacher?.hireDate ? new Date(teacher.hireDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
-      hourlyRate: teacher?.hourlyRate ?? 0,
       status: teacher?.status ?? ('active' as const),
       address: teacher?.address ?? '',
       emergencyContact: teacher?.emergencyContact ?? '',
-      qualifications: teacher?.qualifications ?? '',
       notes: teacher?.notes ?? '',
     },
     onSubmit: async ({ value }) => {
@@ -86,6 +85,37 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
                 onBlur={field.handleBlur}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {field.state.meta.errors && (
+                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+              )}
+            </div>
+          )}
+        </form.Field>
+
+        {/* Role */}
+        <form.Field
+          name="role"
+          validators={{
+            onChange: CreateTeacherSchema.shape.role,
+          }}
+        >
+          {(field) => (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Role <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value as any)}
+                onBlur={field.handleBlur}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {Object.entries(TEACHER_ROLE_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
               {field.state.meta.errors && (
                 <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
               )}
@@ -213,49 +243,27 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           )}
         </form.Field>
 
-        {/* Hourly Rate */}
-        <form.Field
-          name="hourlyRate"
-        >
-          {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Hourly Rate <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(parseFloat(e.target.value) || 0)}
-                onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        {/* Status */}
-        <form.Field name="status">
-          {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <select
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-              </select>
-            </div>
-          )}
-        </form.Field>
+        {/* Status (editable only on edit) */}
+        {mode === 'edit' && (
+          <form.Field name="status">
+            {(field) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
+                <select
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value as any)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+              </div>
+            )}
+          </form.Field>
+        )}
 
         {/* Address */}
         <form.Field name="address">
@@ -285,23 +293,6 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          )}
-        </form.Field>
-
-        {/* Qualifications */}
-        <form.Field name="qualifications">
-          {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Qualifications
-              </label>
-              <textarea
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                rows={2}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

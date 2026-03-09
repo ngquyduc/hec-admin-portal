@@ -10,13 +10,12 @@ function transformTeacherRow(row: TeacherRow): Teacher {
   return {
     id: row.id,
     name: row.name,
+    role: row.role,
     email: row.email,
     phone: row.phone,
     subjects: row.subjects,
-    qualifications: row.qualifications,
     hireDate: row.hire_date,
     status: row.status,
-    hourlyRate: row.hourly_rate ?? undefined,
     address: row.address ?? undefined,
     emergencyContact: row.emergency_contact ?? undefined,
     bio: row.bio ?? undefined,
@@ -29,13 +28,12 @@ function transformTeacherRow(row: TeacherRow): Teacher {
 function transformCreateTeacher(data: CreateTeacher): TeacherInsert {
   return {
     name: data.name,
+    role: data.role,
     email: data.email,
     phone: data.phone,
     subjects: data.subjects,
-    qualifications: data.qualifications,
     hire_date: typeof data.hireDate === 'string' ? data.hireDate : data.hireDate.toISOString(),
     status: data.status,
-    hourly_rate: data.hourlyRate ?? null,
     address: data.address ?? null,
     emergency_contact: data.emergencyContact ?? null,
     bio: data.bio ?? null,
@@ -47,15 +45,14 @@ function transformUpdateTeacher(data: UpdateTeacher): TeacherUpdate {
   const update: TeacherUpdate = {}
   
   if (data.name !== undefined) update.name = data.name
+  if (data.role !== undefined) update.role = data.role
   if (data.email !== undefined) update.email = data.email
   if (data.phone !== undefined) update.phone = data.phone
   if (data.subjects !== undefined) update.subjects = data.subjects
-  if (data.qualifications !== undefined) update.qualifications = data.qualifications
   if (data.hireDate !== undefined) {
     update.hire_date = typeof data.hireDate === 'string' ? data.hireDate : data.hireDate.toISOString()
   }
   if (data.status !== undefined) update.status = data.status
-  if (data.hourlyRate !== undefined) update.hourly_rate = data.hourlyRate ?? null
   if (data.address !== undefined) update.address = data.address ?? null
   if (data.emergencyContact !== undefined) update.emergency_contact = data.emergencyContact ?? null
   if (data.bio !== undefined) update.bio = data.bio ?? null
@@ -122,7 +119,7 @@ export const teacherService = {
     const { data, error } = await supabase
       .from('teacher')
       .select('*')
-      .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
+      .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
       .order('created_at', { ascending: false })
 
     if (error) throw error

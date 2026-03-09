@@ -60,10 +60,11 @@ export interface Database {
         Row: {
           id: string
           name: string
+          role: 'main-teacher' | 'teaching-assistant'
           email: string
           phone: string
-          subjects: Array<'general-english' | 'business-english' | 'ielts' | 'toefl' | 'toeic' | 'kids-english' | 'conversation'>
-          qualifications: string
+          subjects: Array<'ielts' | 'communication-english'>
+          qualifications: string | null
           hire_date: string
           status: 'active' | 'inactive' | 'suspended'
           hourly_rate: number | null
@@ -77,12 +78,13 @@ export interface Database {
         Insert: {
           id?: string
           name: string
+          role: 'main-teacher' | 'teaching-assistant'
           email: string
           phone: string
-          subjects: Array<'general-english' | 'business-english' | 'ielts' | 'toefl' | 'toeic' | 'kids-english' | 'conversation'>
-          qualifications: string
+          subjects: Array<'ielts' | 'communication-english'>
           hire_date: string
           status?: 'active' | 'inactive' | 'suspended'
+          qualifications?: string | null
           hourly_rate?: number | null
           address?: string | null
           emergency_contact?: string | null
@@ -94,10 +96,11 @@ export interface Database {
         Update: {
           id?: string
           name?: string
+          role?: 'main-teacher' | 'teaching-assistant'
           email?: string
           phone?: string
-          subjects?: Array<'general-english' | 'business-english' | 'ielts' | 'toefl' | 'toeic' | 'kids-english' | 'conversation'>
-          qualifications?: string
+          subjects?: Array<'ielts' | 'communication-english'>
+          qualifications?: string | null
           hire_date?: string
           status?: 'active' | 'inactive' | 'suspended'
           hourly_rate?: number | null

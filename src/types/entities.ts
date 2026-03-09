@@ -47,25 +47,24 @@ export type UpdateStaff = z.infer<typeof UpdateStaffSchema>
 
 // ============= Teacher Schema =============
 export const SubjectSchema = z.enum([
-  'general-english',
-  'business-english',
   'ielts',
-  'toefl',
-  'toeic',
-  'kids-english',
-  'conversation',
+  'communication-english',
+])
+
+export const TeacherRoleSchema = z.enum([
+  'main-teacher',
+  'teaching-assistant',
 ])
 
 export const TeacherSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Name is required'),
+  role: TeacherRoleSchema,
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),
   subjects: z.array(SubjectSchema).min(1, 'At least one subject is required'),
-  qualifications: z.string().min(1, 'Qualifications are required'),
   hireDate: z.string().or(z.date()),
   status: StatusSchema,
-  hourlyRate: z.number().positive('Hourly rate must be positive').optional(),
   address: z.string().optional(),
   emergencyContact: z.string().optional(),
   bio: z.string().optional(),
@@ -83,6 +82,7 @@ export const CreateTeacherSchema = TeacherSchema.omit({
 export const UpdateTeacherSchema = CreateTeacherSchema.partial()
 
 export type Teacher = z.infer<typeof TeacherSchema>
+export type TeacherRole = z.infer<typeof TeacherRoleSchema>
 export type Subject = z.infer<typeof SubjectSchema>
 export type CreateTeacher = z.infer<typeof CreateTeacherSchema>
 export type UpdateTeacher = z.infer<typeof UpdateTeacherSchema>
