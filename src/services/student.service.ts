@@ -9,8 +9,7 @@ type StudentUpdate = Database['public']['Tables']['student']['Update']
 function transformStudentRow(row: StudentRow): Student {
   return {
     id: row.id,
-    firstName: row.first_name,
-    lastName: row.last_name,
+    name: row.name,
     email: row.email ?? undefined,
     phone: row.phone ?? undefined,
     dateOfBirth: row.date_of_birth,
@@ -27,8 +26,7 @@ function transformStudentRow(row: StudentRow): Student {
 
 function transformCreateStudent(data: CreateStudent): StudentInsert {
   return {
-    first_name: data.firstName,
-    last_name: data.lastName,
+    name: data.name,
     email: data.email ?? null,
     phone: data.phone ?? null,
     date_of_birth: typeof data.dateOfBirth === 'string' ? data.dateOfBirth : data.dateOfBirth.toISOString(),
@@ -44,8 +42,7 @@ function transformCreateStudent(data: CreateStudent): StudentInsert {
 function transformUpdateStudent(data: UpdateStudent): StudentUpdate {
   const update: StudentUpdate = {}
   
-  if (data.firstName !== undefined) update.first_name = data.firstName
-  if (data.lastName !== undefined) update.last_name = data.lastName
+  if (data.name !== undefined) update.name = data.name
   if (data.email !== undefined) update.email = data.email ?? null
   if (data.phone !== undefined) update.phone = data.phone ?? null
   if (data.dateOfBirth !== undefined) {

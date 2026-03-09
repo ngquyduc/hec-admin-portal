@@ -10,8 +10,7 @@ type StaffUpdate = Database['public']['Tables']['staff']['Update']
 function transformStaffRow(row: StaffRow): Staff {
   return {
     id: row.id,
-    firstName: row.first_name,
-    lastName: row.last_name,
+    name: row.name,
     email: row.email,
     phone: row.phone,
     role: row.role,
@@ -28,8 +27,7 @@ function transformStaffRow(row: StaffRow): Staff {
 // Transform create input to database insert
 function transformCreateStaff(data: CreateStaff): StaffInsert {
   return {
-    first_name: data.firstName,
-    last_name: data.lastName,
+    name: data.name,
     email: data.email,
     phone: data.phone,
     role: data.role,
@@ -45,8 +43,7 @@ function transformCreateStaff(data: CreateStaff): StaffInsert {
 function transformUpdateStaff(data: UpdateStaff): StaffUpdate {
   const update: StaffUpdate = {}
   
-  if (data.firstName !== undefined) update.first_name = data.firstName
-  if (data.lastName !== undefined) update.last_name = data.lastName
+  if (data.name !== undefined) update.name = data.name
   if (data.email !== undefined) update.email = data.email
   if (data.phone !== undefined) update.phone = data.phone
   if (data.role !== undefined) update.role = data.role
@@ -119,7 +116,7 @@ export const staffService = {
     const { data, error } = await supabase
       .from('staff')
       .select('*')
-      .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
+      .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
       .order('created_at', { ascending: false })
 
     if (error) throw error

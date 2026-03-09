@@ -19,8 +19,7 @@ export const StaffRoleSchema = z.enum([
 
 export const StaffSchema = z.object({
   id: z.string(),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),
   role: StaffRoleSchema,
@@ -59,8 +58,7 @@ export const SubjectSchema = z.enum([
 
 export const TeacherSchema = z.object({
   id: z.string(),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),
   subjects: z.array(SubjectSchema).min(1, 'At least one subject is required'),
@@ -102,8 +100,7 @@ export const EnglishLevelSchema = z.enum([
 
 export const StudentSchema = z.object({
   id: z.string(),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address').optional(),
   phone: z.string().optional(),
   dateOfBirth: z.string().or(z.date()),
@@ -142,9 +139,12 @@ export const RelationshipSchema = z.enum([
 
 export const ParentSchema = z.object({
   id: z.string(),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Invalid email address'),
+  name: z.string().min(1, 'Name is required'),
+  email: z
+    .string()
+    .email('Invalid email address')
+    .or(z.literal(''))
+    .optional(),
   phone: z.string().min(1, 'Phone number is required'),
   relationship: RelationshipSchema,
   studentIds: z.array(z.string()).default([]),

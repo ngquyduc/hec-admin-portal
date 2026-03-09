@@ -17,8 +17,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
 
   const form = useForm({
     defaultValues: {
-      firstName: staff?.firstName ?? '',
-      lastName: staff?.lastName ?? '',
+      name: staff?.name ?? '',
       email: staff?.email ?? '',
       phone: staff?.phone ?? '',
       role: staff?.role ?? ('administrator' as const),
@@ -54,43 +53,17 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
       className="space-y-6"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* First Name */}
+        {/* Name */}
         <form.Field
-          name="firstName"
+          name="name"
           validators={{
-            onChange: CreateStaffSchema.shape.firstName,
+            onChange: CreateStaffSchema.shape.name,
           }}
         >
           {(field) => (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        {/* Last Name */}
-        <form.Field
-          name="lastName"
-          validators={{
-            onChange: CreateStaffSchema.shape.lastName,
-          }}
-        >
-          {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name <span className="text-red-500">*</span>
+                Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"

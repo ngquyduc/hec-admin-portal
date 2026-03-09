@@ -23,17 +23,10 @@ function StaffListPage() {
 
   const columns: ColumnDef<Staff>[] = [
     {
-      accessorKey: 'firstName',
-      header: 'First Name',
+      accessorKey: 'name',
+      header: 'Name',
       cell: ({ row }) => (
-        <div className="font-medium text-gray-900">{row.original.firstName}</div>
-      ),
-    },
-    {
-      accessorKey: 'lastName',
-      header: 'Last Name',
-      cell: ({ row }) => (
-        <div className="font-medium text-gray-900">{row.original.lastName}</div>
+        <div className="font-medium text-gray-900">{row.original.name}</div>
       ),
     },
     {
@@ -85,7 +78,7 @@ function StaffListPage() {
             <Pencil className="h-4 w-4" />
           </button>
           <button
-            onClick={() => handleDelete(row.original.id, `${row.original.firstName} ${row.original.lastName}`)}
+            onClick={() => handleDelete(row.original.id, row.original.name)}
             className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
             title="Delete"
           >
@@ -128,8 +121,8 @@ function StaffListPage() {
           <DataTable
             columns={columns}
             data={staff}
-            searchColumn="firstName"
-            searchPlaceholder="Search by first name..."
+            searchColumn="name"
+            searchPlaceholder="Search by name..."
           />
         </div>
       )}

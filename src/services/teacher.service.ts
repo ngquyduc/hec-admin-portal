@@ -9,8 +9,7 @@ type TeacherUpdate = Database['public']['Tables']['teacher']['Update']
 function transformTeacherRow(row: TeacherRow): Teacher {
   return {
     id: row.id,
-    firstName: row.first_name,
-    lastName: row.last_name,
+    name: row.name,
     email: row.email,
     phone: row.phone,
     subjects: row.subjects,
@@ -29,8 +28,7 @@ function transformTeacherRow(row: TeacherRow): Teacher {
 
 function transformCreateTeacher(data: CreateTeacher): TeacherInsert {
   return {
-    first_name: data.firstName,
-    last_name: data.lastName,
+    name: data.name,
     email: data.email,
     phone: data.phone,
     subjects: data.subjects,
@@ -48,8 +46,7 @@ function transformCreateTeacher(data: CreateTeacher): TeacherInsert {
 function transformUpdateTeacher(data: UpdateTeacher): TeacherUpdate {
   const update: TeacherUpdate = {}
   
-  if (data.firstName !== undefined) update.first_name = data.firstName
-  if (data.lastName !== undefined) update.last_name = data.lastName
+  if (data.name !== undefined) update.name = data.name
   if (data.email !== undefined) update.email = data.email
   if (data.phone !== undefined) update.phone = data.phone
   if (data.subjects !== undefined) update.subjects = data.subjects

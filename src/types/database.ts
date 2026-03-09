@@ -15,8 +15,7 @@ export interface Database {
       staff: {
         Row: {
           id: string
-          first_name: string
-          last_name: string
+          name: string
           email: string
           phone: string
           role: 'administrator' | 'coordinator' | 'receptionist' | 'accountant' | 'manager'
@@ -30,8 +29,7 @@ export interface Database {
         }
         Insert: {
           id?: string
-          first_name: string
-          last_name: string
+          name: string
           email: string
           phone: string
           role: 'administrator' | 'coordinator' | 'receptionist' | 'accountant' | 'manager'
@@ -45,8 +43,7 @@ export interface Database {
         }
         Update: {
           id?: string
-          first_name?: string
-          last_name?: string
+          name?: string
           email?: string
           phone?: string
           role?: 'administrator' | 'coordinator' | 'receptionist' | 'accountant' | 'manager'
@@ -62,8 +59,7 @@ export interface Database {
       teacher: {
         Row: {
           id: string
-          first_name: string
-          last_name: string
+          name: string
           email: string
           phone: string
           subjects: Array<'general-english' | 'business-english' | 'ielts' | 'toefl' | 'toeic' | 'kids-english' | 'conversation'>
@@ -80,8 +76,7 @@ export interface Database {
         }
         Insert: {
           id?: string
-          first_name: string
-          last_name: string
+          name: string
           email: string
           phone: string
           subjects: Array<'general-english' | 'business-english' | 'ielts' | 'toefl' | 'toeic' | 'kids-english' | 'conversation'>
@@ -98,8 +93,7 @@ export interface Database {
         }
         Update: {
           id?: string
-          first_name?: string
-          last_name?: string
+          name?: string
           email?: string
           phone?: string
           subjects?: Array<'general-english' | 'business-english' | 'ielts' | 'toefl' | 'toeic' | 'kids-english' | 'conversation'>
@@ -118,8 +112,7 @@ export interface Database {
       student: {
         Row: {
           id: string
-          first_name: string
-          last_name: string
+          name: string
           email: string | null
           phone: string | null
           date_of_birth: string
@@ -134,8 +127,7 @@ export interface Database {
         }
         Insert: {
           id?: string
-          first_name: string
-          last_name: string
+          name: string
           email?: string | null
           phone?: string | null
           date_of_birth: string
@@ -150,8 +142,7 @@ export interface Database {
         }
         Update: {
           id?: string
-          first_name?: string
-          last_name?: string
+          name?: string
           email?: string | null
           phone?: string | null
           date_of_birth?: string
@@ -168,8 +159,7 @@ export interface Database {
       parent: {
         Row: {
           id: string
-          first_name: string
-          last_name: string
+          name: string
           email: string
           phone: string
           relationship: 'mother' | 'father' | 'guardian' | 'grandmother' | 'grandfather' | 'other'
@@ -182,8 +172,7 @@ export interface Database {
         }
         Insert: {
           id?: string
-          first_name: string
-          last_name: string
+          name: string
           email: string
           phone: string
           relationship: 'mother' | 'father' | 'guardian' | 'grandmother' | 'grandfather' | 'other'
@@ -196,8 +185,7 @@ export interface Database {
         }
         Update: {
           id?: string
-          first_name?: string
-          last_name?: string
+          name?: string
           email?: string
           phone?: string
           relationship?: 'mother' | 'father' | 'guardian' | 'grandmother' | 'grandfather' | 'other'

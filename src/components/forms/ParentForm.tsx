@@ -17,11 +17,10 @@ export function ParentForm({ parent, mode }: ParentFormProps) {
 
   const form = useForm({
     defaultValues: {
-      firstName: parent?.firstName ?? '',
-      lastName: parent?.lastName ?? '',
+      name: parent?.name ?? '',
       email: parent?.email ?? '',
       phone: parent?.phone ?? '',
-      relationship: parent?.relationship ?? ('father' as const),
+      relationship: parent?.relationship ?? ('mother' as const),
       occupation: parent?.occupation ?? '',
       address: parent?.address ?? '',
       notes: parent?.notes ?? '',
@@ -52,43 +51,17 @@ export function ParentForm({ parent, mode }: ParentFormProps) {
       className="space-y-6"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* First Name */}
+        {/* Name */}
         <form.Field
-          name="firstName"
+          name="name"
           validators={{
-            onChange: CreateParentSchema.shape.firstName,
+            onChange: CreateParentSchema.shape.name,
           }}
         >
           {(field) => (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        {/* Last Name */}
-        <form.Field
-          name="lastName"
-          validators={{
-            onChange: CreateParentSchema.shape.lastName,
-          }}
-        >
-          {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name <span className="text-red-500">*</span>
+                Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -107,14 +80,12 @@ export function ParentForm({ parent, mode }: ParentFormProps) {
         {/* Email */}
         <form.Field
           name="email"
-          validators={{
-            onChange: CreateParentSchema.shape.email,
-          }}
+          validators={undefined}
         >
           {(field) => (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
+                Email
               </label>
               <input
                 type="email"
@@ -209,7 +180,7 @@ export function ParentForm({ parent, mode }: ParentFormProps) {
           {(field) => (
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
+                Home Address
               </label>
               <input
                 type="text"

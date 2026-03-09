@@ -9,8 +9,7 @@ type ParentUpdate = Database['public']['Tables']['parent']['Update']
 function transformParentRow(row: ParentRow): Parent {
   return {
     id: row.id,
-    firstName: row.first_name,
-    lastName: row.last_name,
+    name: row.name,
     email: row.email,
     phone: row.phone,
     relationship: row.relationship,
@@ -25,8 +24,7 @@ function transformParentRow(row: ParentRow): Parent {
 
 function transformCreateParent(data: CreateParent): ParentInsert {
   return {
-    first_name: data.firstName,
-    last_name: data.lastName,
+    name: data.name,
     email: data.email,
     phone: data.phone,
     relationship: data.relationship,
@@ -40,8 +38,7 @@ function transformCreateParent(data: CreateParent): ParentInsert {
 function transformUpdateParent(data: UpdateParent): ParentUpdate {
   const update: ParentUpdate = {}
   
-  if (data.firstName !== undefined) update.first_name = data.firstName
-  if (data.lastName !== undefined) update.last_name = data.lastName
+  if (data.name !== undefined) update.name = data.name
   if (data.email !== undefined) update.email = data.email
   if (data.phone !== undefined) update.phone = data.phone
   if (data.relationship !== undefined) update.relationship = data.relationship
