@@ -25,7 +25,7 @@ function transformParentRow(row: ParentRow): Parent {
 function transformCreateParent(data: CreateParent): ParentInsert {
   return {
     name: data.name,
-    email: data.email,
+    email: data.email ?? null,
     phone: data.phone,
     relationship: data.relationship,
     student_ids: data.studentIds,

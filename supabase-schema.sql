@@ -129,3 +129,96 @@ create policy "Enable all access for authenticated users" on public.students
 
 create policy "Enable all access for authenticated users" on public.parents
   for all using (auth.role() = 'authenticated');
+
+-- =============================================
+-- Classes table
+-- =============================================
+create table public.classes (
+  id uuid primary key default uuid_generate_v4(),
+  name text not null,
+  description text,
+  teacher_id uuid not null references public.teachers(id) on delete restrict,
+  assistant_id uuid references public.teachers(id) on delete set null,
+  level text not null check (level in ('beginner', 'elementary', 'pre-intermediate', 'intermediate', 'upper-intermediate', 'advanced', 'proficient')),
+  status text not null default 'active' check (status in ('active', 'inactive', 'suspended')),
+  notes text,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Class-student junction table
+create table public.class_students (
+  class_id uuid not null references public.classes(id) on delete cascade,
+  student_id uuid not null references public.students(id) on delete cascade,
+  enrolled_at timestamp with time zone default now(),
+  primary key (class_id, student_id)
+);
+
+-- Lessons table
+create table public.lessons (
+  id uuid primary key default uuid_generate_v4(),
+  class_id uuid not null references public.classes(id) on delete cascade,
+  title text not null,
+  content text,
+  start_time timestamp with time zone not null,
+  end_time timestamp with time zone not null,
+  status text not null default 'scheduled' check (status in ('scheduled', 'ongoing', 'completed', 'cancelled')),
+  notes text,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Lesson attendance table
+create table public.lesson_attendance (
+  id uuid primary key default uuid_generate_v4(),
+  lesson_id uuid not null references public.lessons(id) on delete cascade,
+  student_id uuid not null references public.students(id) on delete cascade,
+  status text not null default 'present' check (status in ('present', 'late', 'absent_excused', 'absent_unexcused')),
+  notes text,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now(),
+  unique (lesson_id, student_id)
+);
+
+-- Indexes
+create index idx_classes_teacher_id on public.classes(teacher_id);
+create index idx_classes_status on public.classes(status);
+create index idx_classes_level on public.classes(level);
+create index idx_class_students_class_id on public.class_students(class_id);
+create index idx_class_students_student_id on public.class_students(student_id);
+create index idx_lessons_class_id on public.lessons(class_id);
+create index idx_lessons_status on public.lessons(status);
+create index idx_lessons_start_time on public.lessons(start_time);
+create index idx_lesson_attendance_lesson_id on public.lesson_attendance(lesson_id);
+create index idx_lesson_attendance_student_id on public.lesson_attendance(student_id);
+
+-- Updated_at triggers
+create trigger set_classes_updated_at
+  before update on public.classes
+  for each row execute procedure public.handle_updated_at();
+
+create trigger set_lessons_updated_at
+  before update on public.lessons
+  for each row execute procedure public.handle_updated_at();
+
+create trigger set_lesson_attendance_updated_at
+  before update on public.lesson_attendance
+  for each row execute procedure public.handle_updated_at();
+
+-- RLS
+alter table public.classes enable row level security;
+alter table public.class_students enable row level security;
+alter table public.lessons enable row level security;
+alter table public.lesson_attendance enable row level security;
+
+create policy "Enable all access for authenticated users" on public.classes
+  for all using (auth.role() = 'authenticated');
+
+create policy "Enable all access for authenticated users" on public.class_students
+  for all using (auth.role() = 'authenticated');
+
+create policy "Enable all access for authenticated users" on public.lessons
+  for all using (auth.role() = 'authenticated');
+
+create policy "Enable all access for authenticated users" on public.lesson_attendance
+  for all using (auth.role() = 'authenticated');

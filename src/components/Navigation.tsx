@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Users, GraduationCap, UserCircle, BookOpen } from 'lucide-react'
+import { Users, GraduationCap, UserCircle, BookOpen, School, CalendarDays } from 'lucide-react'
 
 export default function Navigation() {
   const navItems = [
@@ -7,6 +7,8 @@ export default function Navigation() {
     { to: '/teachers', label: 'Teachers', icon: GraduationCap },
     { to: '/students', label: 'Students', icon: BookOpen },
     { to: '/parents', label: 'Parents', icon: UserCircle },
+    { to: '/classes', label: 'Classes', icon: School },
+    { to: '/lessons', label: 'Lessons', icon: CalendarDays },
   ]
 
   return (

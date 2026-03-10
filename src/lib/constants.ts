@@ -1,4 +1,4 @@
-import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole } from '@/types/entities'
+import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole, LessonStatus, AttendanceStatus } from '@/types/entities'
 
 // Display labels for entity types
 export const ENTITY_LABELS = {
@@ -62,4 +62,36 @@ export const STATUS_COLORS: Record<Status, string> = {
   active: 'text-green-600 bg-green-50',
   inactive: 'text-gray-600 bg-gray-50',
   suspended: 'text-red-600 bg-red-50',
+}
+
+// Lesson status labels
+export const LESSON_STATUS_LABELS: Record<LessonStatus, string> = {
+  scheduled: 'Scheduled',
+  ongoing: 'Ongoing',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+}
+
+// Lesson status colors
+export const LESSON_STATUS_COLORS: Record<LessonStatus, string> = {
+  scheduled: 'text-blue-600 bg-blue-50',
+  ongoing: 'text-yellow-600 bg-yellow-50',
+  completed: 'text-green-600 bg-green-50',
+  cancelled: 'text-red-600 bg-red-50',
+}
+
+// Attendance status labels (Vietnamese)
+export const ATTENDANCE_STATUS_LABELS: Record<AttendanceStatus, string> = {
+  present: 'Có mặt',
+  late: 'Đi trễ',
+  absent_excused: 'Nghỉ có phép',
+  absent_unexcused: 'Nghỉ không phép',
+}
+
+// Attendance status colors
+export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, string> = {
+  present: 'text-green-600 bg-green-50',
+  late: 'text-yellow-600 bg-yellow-50',
+  absent_excused: 'text-blue-600 bg-blue-50',
+  absent_unexcused: 'text-red-600 bg-red-50',
 }

@@ -14,14 +14,21 @@ import { Route as TeachersIndexRouteImport } from './routes/teachers/index'
 import { Route as StudentsIndexRouteImport } from './routes/students/index'
 import { Route as StaffIndexRouteImport } from './routes/staff/index'
 import { Route as ParentsIndexRouteImport } from './routes/parents/index'
+import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
+import { Route as ClassesIndexRouteImport } from './routes/classes/index'
 import { Route as TeachersNewRouteImport } from './routes/teachers/new'
 import { Route as StudentsNewRouteImport } from './routes/students/new'
 import { Route as StaffNewRouteImport } from './routes/staff/new'
 import { Route as ParentsNewRouteImport } from './routes/parents/new'
+import { Route as ClassesNewRouteImport } from './routes/classes/new'
+import { Route as ClassesClassIdIndexRouteImport } from './routes/classes/$classId/index'
 import { Route as TeachersTeacherIdEditRouteImport } from './routes/teachers/$teacherId/edit'
 import { Route as StudentsStudentIdEditRouteImport } from './routes/students/$studentId/edit'
 import { Route as StaffStaffIdEditRouteImport } from './routes/staff/$staffId/edit'
 import { Route as ParentsParentIdEditRouteImport } from './routes/parents/$parentId/edit'
+import { Route as ClassesClassIdEditRouteImport } from './routes/classes/$classId/edit'
+import { Route as ClassesClassIdLessonsNewRouteImport } from './routes/classes/$classId/lessons/new'
+import { Route as ClassesClassIdLessonsLessonIdEditRouteImport } from './routes/classes/$classId/lessons/$lessonId/edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +55,16 @@ const ParentsIndexRoute = ParentsIndexRouteImport.update({
   path: '/parents/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LessonsIndexRoute = LessonsIndexRouteImport.update({
+  id: '/lessons/',
+  path: '/lessons/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesIndexRoute = ClassesIndexRouteImport.update({
+  id: '/classes/',
+  path: '/classes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeachersNewRoute = TeachersNewRouteImport.update({
   id: '/teachers/new',
   path: '/teachers/new',
@@ -66,6 +83,16 @@ const StaffNewRoute = StaffNewRouteImport.update({
 const ParentsNewRoute = ParentsNewRouteImport.update({
   id: '/parents/new',
   path: '/parents/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesNewRoute = ClassesNewRouteImport.update({
+  id: '/classes/new',
+  path: '/classes/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesClassIdIndexRoute = ClassesClassIdIndexRouteImport.update({
+  id: '/classes/$classId/',
+  path: '/classes/$classId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeachersTeacherIdEditRoute = TeachersTeacherIdEditRouteImport.update({
@@ -88,115 +115,181 @@ const ParentsParentIdEditRoute = ParentsParentIdEditRouteImport.update({
   path: '/parents/$parentId/edit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClassesClassIdEditRoute = ClassesClassIdEditRouteImport.update({
+  id: '/classes/$classId/edit',
+  path: '/classes/$classId/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesClassIdLessonsNewRoute =
+  ClassesClassIdLessonsNewRouteImport.update({
+    id: '/classes/$classId/lessons/new',
+    path: '/classes/$classId/lessons/new',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ClassesClassIdLessonsLessonIdEditRoute =
+  ClassesClassIdLessonsLessonIdEditRouteImport.update({
+    id: '/classes/$classId/lessons/$lessonId/edit',
+    path: '/classes/$classId/lessons/$lessonId/edit',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/classes/new': typeof ClassesNewRoute
   '/parents/new': typeof ParentsNewRoute
   '/staff/new': typeof StaffNewRoute
   '/students/new': typeof StudentsNewRoute
   '/teachers/new': typeof TeachersNewRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/lessons/': typeof LessonsIndexRoute
   '/parents/': typeof ParentsIndexRoute
   '/staff/': typeof StaffIndexRoute
   '/students/': typeof StudentsIndexRoute
   '/teachers/': typeof TeachersIndexRoute
+  '/classes/$classId/edit': typeof ClassesClassIdEditRoute
   '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
   '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
   '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
+  '/classes/$classId/': typeof ClassesClassIdIndexRoute
+  '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
+  '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/classes/new': typeof ClassesNewRoute
   '/parents/new': typeof ParentsNewRoute
   '/staff/new': typeof StaffNewRoute
   '/students/new': typeof StudentsNewRoute
   '/teachers/new': typeof TeachersNewRoute
+  '/classes': typeof ClassesIndexRoute
+  '/lessons': typeof LessonsIndexRoute
   '/parents': typeof ParentsIndexRoute
   '/staff': typeof StaffIndexRoute
   '/students': typeof StudentsIndexRoute
   '/teachers': typeof TeachersIndexRoute
+  '/classes/$classId/edit': typeof ClassesClassIdEditRoute
   '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
   '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
   '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
+  '/classes/$classId': typeof ClassesClassIdIndexRoute
+  '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
+  '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/classes/new': typeof ClassesNewRoute
   '/parents/new': typeof ParentsNewRoute
   '/staff/new': typeof StaffNewRoute
   '/students/new': typeof StudentsNewRoute
   '/teachers/new': typeof TeachersNewRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/lessons/': typeof LessonsIndexRoute
   '/parents/': typeof ParentsIndexRoute
   '/staff/': typeof StaffIndexRoute
   '/students/': typeof StudentsIndexRoute
   '/teachers/': typeof TeachersIndexRoute
+  '/classes/$classId/edit': typeof ClassesClassIdEditRoute
   '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
   '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
   '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
+  '/classes/$classId/': typeof ClassesClassIdIndexRoute
+  '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
+  '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/classes/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
     | '/teachers/new'
+    | '/classes/'
+    | '/lessons/'
     | '/parents/'
     | '/staff/'
     | '/students/'
     | '/teachers/'
+    | '/classes/$classId/edit'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
     | '/teachers/$teacherId/edit'
+    | '/classes/$classId/'
+    | '/classes/$classId/lessons/new'
+    | '/classes/$classId/lessons/$lessonId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/classes/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
     | '/teachers/new'
+    | '/classes'
+    | '/lessons'
     | '/parents'
     | '/staff'
     | '/students'
     | '/teachers'
+    | '/classes/$classId/edit'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
     | '/teachers/$teacherId/edit'
+    | '/classes/$classId'
+    | '/classes/$classId/lessons/new'
+    | '/classes/$classId/lessons/$lessonId/edit'
   id:
     | '__root__'
     | '/'
+    | '/classes/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
     | '/teachers/new'
+    | '/classes/'
+    | '/lessons/'
     | '/parents/'
     | '/staff/'
     | '/students/'
     | '/teachers/'
+    | '/classes/$classId/edit'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
     | '/teachers/$teacherId/edit'
+    | '/classes/$classId/'
+    | '/classes/$classId/lessons/new'
+    | '/classes/$classId/lessons/$lessonId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClassesNewRoute: typeof ClassesNewRoute
   ParentsNewRoute: typeof ParentsNewRoute
   StaffNewRoute: typeof StaffNewRoute
   StudentsNewRoute: typeof StudentsNewRoute
   TeachersNewRoute: typeof TeachersNewRoute
+  ClassesIndexRoute: typeof ClassesIndexRoute
+  LessonsIndexRoute: typeof LessonsIndexRoute
   ParentsIndexRoute: typeof ParentsIndexRoute
   StaffIndexRoute: typeof StaffIndexRoute
   StudentsIndexRoute: typeof StudentsIndexRoute
   TeachersIndexRoute: typeof TeachersIndexRoute
+  ClassesClassIdEditRoute: typeof ClassesClassIdEditRoute
   ParentsParentIdEditRoute: typeof ParentsParentIdEditRoute
   StaffStaffIdEditRoute: typeof StaffStaffIdEditRoute
   StudentsStudentIdEditRoute: typeof StudentsStudentIdEditRoute
   TeachersTeacherIdEditRoute: typeof TeachersTeacherIdEditRoute
+  ClassesClassIdIndexRoute: typeof ClassesClassIdIndexRoute
+  ClassesClassIdLessonsNewRoute: typeof ClassesClassIdLessonsNewRoute
+  ClassesClassIdLessonsLessonIdEditRoute: typeof ClassesClassIdLessonsLessonIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,6 +329,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lessons/': {
+      id: '/lessons/'
+      path: '/lessons'
+      fullPath: '/lessons/'
+      preLoaderRoute: typeof LessonsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/': {
+      id: '/classes/'
+      path: '/classes'
+      fullPath: '/classes/'
+      preLoaderRoute: typeof ClassesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/teachers/new': {
       id: '/teachers/new'
       path: '/teachers/new'
@@ -262,6 +369,20 @@ declare module '@tanstack/react-router' {
       path: '/parents/new'
       fullPath: '/parents/new'
       preLoaderRoute: typeof ParentsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/new': {
+      id: '/classes/new'
+      path: '/classes/new'
+      fullPath: '/classes/new'
+      preLoaderRoute: typeof ClassesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/$classId/': {
+      id: '/classes/$classId/'
+      path: '/classes/$classId'
+      fullPath: '/classes/$classId/'
+      preLoaderRoute: typeof ClassesClassIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teachers/$teacherId/edit': {
@@ -292,23 +413,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentsParentIdEditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classes/$classId/edit': {
+      id: '/classes/$classId/edit'
+      path: '/classes/$classId/edit'
+      fullPath: '/classes/$classId/edit'
+      preLoaderRoute: typeof ClassesClassIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/$classId/lessons/new': {
+      id: '/classes/$classId/lessons/new'
+      path: '/classes/$classId/lessons/new'
+      fullPath: '/classes/$classId/lessons/new'
+      preLoaderRoute: typeof ClassesClassIdLessonsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/$classId/lessons/$lessonId/edit': {
+      id: '/classes/$classId/lessons/$lessonId/edit'
+      path: '/classes/$classId/lessons/$lessonId/edit'
+      fullPath: '/classes/$classId/lessons/$lessonId/edit'
+      preLoaderRoute: typeof ClassesClassIdLessonsLessonIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClassesNewRoute: ClassesNewRoute,
   ParentsNewRoute: ParentsNewRoute,
   StaffNewRoute: StaffNewRoute,
   StudentsNewRoute: StudentsNewRoute,
   TeachersNewRoute: TeachersNewRoute,
+  ClassesIndexRoute: ClassesIndexRoute,
+  LessonsIndexRoute: LessonsIndexRoute,
   ParentsIndexRoute: ParentsIndexRoute,
   StaffIndexRoute: StaffIndexRoute,
   StudentsIndexRoute: StudentsIndexRoute,
   TeachersIndexRoute: TeachersIndexRoute,
+  ClassesClassIdEditRoute: ClassesClassIdEditRoute,
   ParentsParentIdEditRoute: ParentsParentIdEditRoute,
   StaffStaffIdEditRoute: StaffStaffIdEditRoute,
   StudentsStudentIdEditRoute: StudentsStudentIdEditRoute,
   TeachersTeacherIdEditRoute: TeachersTeacherIdEditRoute,
+  ClassesClassIdIndexRoute: ClassesClassIdIndexRoute,
+  ClassesClassIdLessonsNewRoute: ClassesClassIdLessonsNewRoute,
+  ClassesClassIdLessonsLessonIdEditRoute:
+    ClassesClassIdLessonsLessonIdEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

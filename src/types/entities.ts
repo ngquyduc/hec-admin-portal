@@ -168,9 +168,97 @@ export type Relationship = z.infer<typeof RelationshipSchema>
 export type CreateParent = z.infer<typeof CreateParentSchema>
 export type UpdateParent = z.infer<typeof UpdateParentSchema>
 
-// ============= Utility Types =============
-export type EntityType = 'staff' | 'teacher' | 'student' | 'parent'
+// ============= Class Schema =============
+export const ClassSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, 'Class name is required'),
+  description: z.string().optional(),
+  teacherId: z.string().min(1, 'Teacher is required'),
+  assistantId: z.string().optional(),
+  level: EnglishLevelSchema,
+  status: StatusSchema,
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
 
-export type Entity = Staff | Teacher | Student | Parent
+export const CreateClassSchema = ClassSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export const UpdateClassSchema = CreateClassSchema.partial()
+
+export type Class = z.infer<typeof ClassSchema>
+export type CreateClass = z.infer<typeof CreateClassSchema>
+export type UpdateClass = z.infer<typeof UpdateClassSchema>
+
+// ============= Lesson Schema =============
+export const LessonStatusSchema = z.enum([
+  'scheduled',
+  'ongoing',
+  'completed',
+  'cancelled',
+])
+
+export const LessonSchema = z.object({
+  id: z.string(),
+  classId: z.string().min(1, 'Class is required'),
+  title: z.string().min(1, 'Title is required'),
+  content: z.string().optional(),
+  startTime: z.string(),
+  endTime: z.string(),
+  status: LessonStatusSchema,
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateLessonSchema = LessonSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export const UpdateLessonSchema = CreateLessonSchema.partial()
+
+export type Lesson = z.infer<typeof LessonSchema>
+export type LessonStatus = z.infer<typeof LessonStatusSchema>
+export type CreateLesson = z.infer<typeof CreateLessonSchema>
+export type UpdateLesson = z.infer<typeof UpdateLessonSchema>
+
+// ============= Attendance Schema =============
+export const AttendanceStatusSchema = z.enum([
+  'present',
+  'late',
+  'absent_excused',
+  'absent_unexcused',
+])
+
+export const AttendanceSchema = z.object({
+  id: z.string(),
+  lessonId: z.string(),
+  studentId: z.string(),
+  status: AttendanceStatusSchema,
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateAttendanceSchema = AttendanceSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export type Attendance = z.infer<typeof AttendanceSchema>
+export type AttendanceStatus = z.infer<typeof AttendanceStatusSchema>
+export type CreateAttendance = z.infer<typeof CreateAttendanceSchema>
+
+// ============= Utility Types =============
+export type EntityType = 'staff' | 'teacher' | 'student' | 'parent' | 'class' | 'lesson'
+
+export type Entity = Staff | Teacher | Student | Parent | Class | Lesson
 
 export type Status = z.infer<typeof StatusSchema>

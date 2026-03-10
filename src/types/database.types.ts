@@ -215,6 +215,185 @@ export type Database = {
         }
         Relationships: []
       }
+      classes: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          teacher_id: string
+          assistant_id: string | null
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          status: 'active' | 'inactive' | 'suspended'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          teacher_id: string
+          assistant_id?: string | null
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          status?: 'active' | 'inactive' | 'suspended'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          teacher_id?: string
+          assistant_id?: string | null
+          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          status?: 'active' | 'inactive' | 'suspended'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'classes_teacher_id_fkey'
+            columns: ['teacher_id']
+            isOneToOne: false
+            referencedRelation: 'teachers'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'classes_assistant_id_fkey'
+            columns: ['assistant_id']
+            isOneToOne: false
+            referencedRelation: 'teachers'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      class_students: {
+        Row: {
+          class_id: string
+          student_id: string
+          enrolled_at: string
+        }
+        Insert: {
+          class_id: string
+          student_id: string
+          enrolled_at?: string
+        }
+        Update: {
+          class_id?: string
+          student_id?: string
+          enrolled_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'class_students_class_id_fkey'
+            columns: ['class_id']
+            isOneToOne: false
+            referencedRelation: 'classes'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'class_students_student_id_fkey'
+            columns: ['student_id']
+            isOneToOne: false
+            referencedRelation: 'students'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      lessons: {
+        Row: {
+          id: string
+          class_id: string
+          title: string
+          content: string | null
+          start_time: string
+          end_time: string
+          status: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          class_id: string
+          title: string
+          content?: string | null
+          start_time: string
+          end_time: string
+          status?: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          class_id?: string
+          title?: string
+          content?: string | null
+          start_time?: string
+          end_time?: string
+          status?: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'lessons_class_id_fkey'
+            columns: ['class_id']
+            isOneToOne: false
+            referencedRelation: 'classes'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      lesson_attendance: {
+        Row: {
+          id: string
+          lesson_id: string
+          student_id: string
+          status: 'present' | 'late' | 'absent_excused' | 'absent_unexcused'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          lesson_id: string
+          student_id: string
+          status?: 'present' | 'late' | 'absent_excused' | 'absent_unexcused'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          lesson_id?: string
+          student_id?: string
+          status?: 'present' | 'late' | 'absent_excused' | 'absent_unexcused'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_attendance_lesson_id_fkey'
+            columns: ['lesson_id']
+            isOneToOne: false
+            referencedRelation: 'lessons'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'lesson_attendance_student_id_fkey'
+            columns: ['student_id']
+            isOneToOne: false
+            referencedRelation: 'students'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -9,7 +9,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       staff: {
@@ -55,6 +55,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       teacher: {
         Row: {
@@ -111,6 +112,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       student: {
         Row: {
@@ -158,6 +160,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       parent: {
         Row: {
@@ -176,7 +179,7 @@ export interface Database {
         Insert: {
           id?: string
           name: string
-          email: string
+          email?: string | null
           phone: string
           relationship: 'mother' | 'father' | 'guardian' | 'grandmother' | 'grandfather' | 'other'
           student_ids?: string[]
@@ -199,6 +202,133 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
+      }
+      classes: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          teacher_id: string
+          assistant_id: string | null
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          status: 'active' | 'inactive' | 'suspended'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          teacher_id: string
+          assistant_id?: string | null
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          status?: 'active' | 'inactive' | 'suspended'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          teacher_id?: string
+          assistant_id?: string | null
+          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          status?: 'active' | 'inactive' | 'suspended'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      class_students: {
+        Row: {
+          class_id: string
+          student_id: string
+          enrolled_at: string
+        }
+        Insert: {
+          class_id: string
+          student_id: string
+          enrolled_at?: string
+        }
+        Update: {
+          class_id?: string
+          student_id?: string
+          enrolled_at?: string
+        }
+        Relationships: []
+      }
+      lessons: {
+        Row: {
+          id: string
+          class_id: string
+          title: string
+          content: string | null
+          start_time: string
+          end_time: string
+          status: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          class_id: string
+          title: string
+          content?: string | null
+          start_time: string
+          end_time: string
+          status?: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          class_id?: string
+          title?: string
+          content?: string | null
+          start_time?: string
+          end_time?: string
+          status?: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lesson_attendance: {
+        Row: {
+          id: string
+          lesson_id: string
+          student_id: string
+          status: 'present' | 'late' | 'absent_excused' | 'absent_unexcused'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          lesson_id: string
+          student_id: string
+          status?: 'present' | 'late' | 'absent_excused' | 'absent_unexcused'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          lesson_id?: string
+          student_id?: string
+          status?: 'present' | 'late' | 'absent_excused' | 'absent_unexcused'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
