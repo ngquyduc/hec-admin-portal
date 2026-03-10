@@ -13,23 +13,23 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-blue-600 text-white shadow-md">
+    <header className="bg-white border-b shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <h1 className="text-2xl font-bold">HEC Admin Portal</h1>
+          <h1 className="text-xl font-bold text-gray-900">HEC Admin Portal</h1>
           <div className="flex items-center gap-4">
             {user && (
               <>
-                <span className="text-sm text-blue-100">
+                <span className="text-sm text-gray-600">
                   {user.email}
-                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-500 rounded capitalize">
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-100 text-blue-700 rounded capitalize">
                     {user.role}
                   </span>
                 </span>
                 <button
                   onClick={handleSignOut}
                   disabled={signOut.isPending}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-700 hover:bg-blue-800 rounded-md transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
                 >
                   <LogOut className="h-4 w-4" />
                   Sign Out

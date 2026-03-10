@@ -10,6 +10,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { useEffect } from 'react'
 
 import Navigation from '../components/Navigation'
+import Header from '../components/Header'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -78,6 +79,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <Header />
       <Navigation />
       {children}
     </>
