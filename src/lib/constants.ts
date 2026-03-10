@@ -95,3 +95,15 @@ export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, string> = {
   absent_excused: 'text-blue-600 bg-blue-50',
   absent_unexcused: 'text-red-600 bg-red-50',
 }
+
+// Absence reason options (Vietnamese)
+export const ABSENCE_REASONS = [
+  'Ốm',
+  'Đi du lịch',
+  'Việc gia đình đột xuất',
+  'Việc gia đình có lịch trước (ngày giỗ, đám cưới...)',
+  'Lịch học đột xuất ở trường',
+  'Hoạt động khác ở trường (có lịch trước)',
+  'Không thông báo, không rõ lý do',
+  'Học buổi khác',
+] as const
