@@ -34,6 +34,23 @@ export function useSignOut() {
   })
 }
 
+export function useSendOtp() {
+  return useMutation({
+    mutationFn: (email: string) => authService.sendOtp(email),
+  })
+}
+
+export function useVerifyOtp() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ email, token }: { email: string; token: string }) =>
+      authService.verifyOtp(email, token),
+    onSuccess: (user) => {
+      queryClient.setQueryData(AUTH_QUERY_KEY, user)
+    },
+  })
+}
+
 export function useIsAdmin() {
   const { data: user } = useCurrentUser()
   return user?.role === 'admin'
