@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useClassById } from '@/hooks/useClasses'
 import { ClassForm } from '@/components/forms/ClassForm'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/classes/$classId/edit')({
   component: EditClassPage,
@@ -13,9 +14,11 @@ function EditClassPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-          Loading class...
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            Loading class...
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -23,7 +26,7 @@ function EditClassPage() {
   if (error || !classData) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Error loading class: {error?.message || 'Class not found'}
         </div>
       </div>
@@ -33,12 +36,14 @@ function EditClassPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Edit Class</h1>
-        <p className="text-gray-600 mt-1">Update "{classData.name}"</p>
+        <h1 className="text-3xl font-bold text-foreground">Edit Class</h1>
+        <p className="text-muted-foreground mt-1">Update "{classData.name}"</p>
       </div>
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card>
+        <CardContent className="p-6">
         <ClassForm mode="edit" classData={classData} />
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

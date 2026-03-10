@@ -5,6 +5,9 @@ import { useTeachers, useDeleteTeacher } from '@/hooks/useTeachers'
 import { DataTable } from '@/components/DataTable'
 import type { Teacher } from '@/types/entities'
 import { SUBJECT_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/teachers/')({
   component: TeachersListPage,
@@ -26,14 +29,14 @@ function TeachersListPage() {
       accessorKey: 'name',
       header: 'Name',
       cell: ({ row }) => (
-        <div className="font-medium text-gray-900">{row.original.name}</div>
+        <div className="font-medium">{row.original.name}</div>
       ),
     },
     {
       accessorKey: 'email',
       header: 'Email',
       cell: ({ row }) => (
-        <div className="text-gray-600">{row.original.email}</div>
+        <div className="text-muted-foreground">{row.original.email}</div>
       ),
     },
     {
@@ -42,12 +45,9 @@ function TeachersListPage() {
       cell: ({ row }) => (
         <div className="flex flex-wrap gap-1">
           {row.original.subjects.map((subject) => (
-            <span
-              key={subject}
-              className="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded"
-            >
+            <Badge key={subject} variant="secondary">
               {SUBJECT_LABELS[subject]}
-            </span>
+            </Badge>
           ))}
         </div>
       ),
@@ -56,34 +56,33 @@ function TeachersListPage() {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) => (
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-            STATUS_COLORS[row.original.status]
-          }`}
-        >
+        <Badge className={STATUS_COLORS[row.original.status]}>
           {STATUS_LABELS[row.original.status]}
-        </span>
+        </Badge>
       ),
     },
     {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <button
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => navigate({ to: '/teachers/$teacherId/edit', params: { teacherId: row.original.id } })}
-            className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
             title="Edit"
           >
             <Pencil className="h-4 w-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => handleDelete(row.original.id, row.original.name)}
-            className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
             title="Delete"
+            className="text-destructive hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       ),
     },
@@ -92,7 +91,7 @@ function TeachersListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Error loading teachers: {error.message}
         </div>
       </div>
@@ -102,29 +101,32 @@ function TeachersListPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Teachers Management</h1>
-        <Link
-          to="/teachers/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="h-4 w-4" />
-          Add New Teacher
-        </Link>
+        <h1 className="text-3xl font-bold">Teachers Management</h1>
+        <Button asChild>
+          <Link to="/teachers/new">
+            <Plus className="h-4 w-4" />
+            Add New Teacher
+          </Link>
+        </Button>
       </div>
 
       {isLoading ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <div className="text-gray-500">Loading teachers...</div>
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            Loading teachers...
+          </CardContent>
+        </Card>
       ) : (
-        <div className="bg-white rounded-lg shadow p-6">
-          <DataTable
-            columns={columns}
-            data={teachers}
-            searchColumn="name"
-            searchPlaceholder="Search by name..."
-          />
-        </div>
+        <Card>
+          <CardContent className="p-6">
+            <DataTable
+              columns={columns}
+              data={teachers}
+              searchColumn="name"
+              searchPlaceholder="Search by name..."
+            />
+          </CardContent>
+        </Card>
       )}
     </div>
   )

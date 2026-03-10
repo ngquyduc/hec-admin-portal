@@ -7,6 +7,18 @@ import { ENGLISH_LEVEL_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface StudentFormProps {
   student?: Student
@@ -84,19 +96,16 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Name <span className="text-destructive">*</span></Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -105,19 +114,16 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* Email */}
         <form.Field name="email">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Email</Label>
+              <Input
                 type="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -126,19 +132,16 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* Phone */}
         <form.Field name="phone">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Phone</Label>
+              <Input
                 type="tel"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -147,19 +150,16 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* Date of Birth */}
         <form.Field name="dateOfBirth">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date of Birth <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Date of Birth <span className="text-destructive">*</span></Label>
+              <Input
                 type="date"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -168,24 +168,20 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* English Level */}
         <form.Field name="englishLevel">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                English Level <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as any)}
-                onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {Object.entries(ENGLISH_LEVEL_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-1.5">
+              <Label>English Level <span className="text-destructive">*</span></Label>
+              <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(ENGLISH_LEVEL_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -194,19 +190,16 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* Enrollment Date */}
         <form.Field name="enrollmentDate">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Enrollment Date <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Enrollment Date <span className="text-destructive">*</span></Label>
+              <Input
                 type="date"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -216,44 +209,40 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {mode === 'edit' ? (
           <form.Field name="status">
             {(field) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
-                <select
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as any)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="suspended">Suspended</option>
-                </select>
+              <div className="space-y-1.5">
+                <Label>Status</Label>
+                <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="suspended">Suspended</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </form.Field>
         ) : (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <div className="w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-50 text-gray-500 text-sm">
+          <div className="space-y-1.5">
+            <Label>Status</Label>
+            <div className="flex h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
               Active
             </div>
-            <p className="mt-1 text-xs text-gray-400">New students are always set to Active</p>
+            <p className="text-xs text-muted-foreground">New students are always set to Active</p>
           </div>
         )}
 
         {/* Address */}
         <form.Field name="address">
           {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
-              </label>
-              <input
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Address</Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -262,15 +251,13 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* Parent Selector */}
         <form.Field name="parentId">
           {(field) => (
-            <div className="md:col-span-2 relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Parent / Guardian
-              </label>
+            <div className="md:col-span-2 relative space-y-1.5">
+              <Label>Parent / Guardian</Label>
 
               {/* Selected parent badge */}
               {field.state.value && (
-                <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700">
-                  <span>{selectedParentLabel || field.state.value}</span>
+                <Badge variant="secondary" className="gap-2 mb-1">
+                  {selectedParentLabel || field.state.value}
                   <button
                     type="button"
                     onClick={() => {
@@ -278,17 +265,17 @@ export function StudentForm({ student, mode }: StudentFormProps) {
                       setSelectedParentLabel('')
                       setParentSearch('')
                     }}
-                    className="text-blue-400 hover:text-blue-600 font-bold leading-none"
+                    className="hover:text-destructive font-bold leading-none"
                   >
                     ×
                   </button>
-                </div>
+                </Badge>
               )}
 
               {/* Search input — hidden once a parent is selected */}
               {!field.state.value && (
                 <div className="relative">
-                  <input
+                  <Input
                     type="text"
                     value={parentSearch}
                     onChange={(e) => {
@@ -298,13 +285,12 @@ export function StudentForm({ student, mode }: StudentFormProps) {
                     onFocus={() => setShowParentDropdown(true)}
                     onBlur={() => setTimeout(() => setShowParentDropdown(false), 150)}
                     placeholder="Search by name or phone number..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
 
                   {showParentDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                    <div className="absolute z-10 mt-1 w-full bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
                       {parentsToShow.length === 0 ? (
-                        <div className="px-4 py-3 text-sm text-gray-500">No parents found</div>
+                        <div className="px-4 py-3 text-sm text-muted-foreground">No parents found</div>
                       ) : (
                         parentsToShow.map((parent) => (
                           <button
@@ -316,11 +302,11 @@ export function StudentForm({ student, mode }: StudentFormProps) {
                               setParentSearch('')
                               setShowParentDropdown(false)
                             }}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors"
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors"
                           >
-                            <span className="font-medium text-gray-900">{parent.name}</span>
+                            <span className="font-medium">{parent.name}</span>
                             {parent.phone && (
-                              <span className="ml-2 text-gray-500">{parent.phone}</span>
+                              <span className="ml-2 text-muted-foreground">{parent.phone}</span>
                             )}
                           </button>
                         ))
@@ -329,7 +315,7 @@ export function StudentForm({ student, mode }: StudentFormProps) {
                   )}
                 </div>
               )}
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Search and select a parent to link this student
               </p>
             </div>
@@ -339,15 +325,12 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         {/* Notes */}
         <form.Field name="notes">
           {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notes
-              </label>
-              <textarea
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Notes</Label>
+              <Textarea
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -356,21 +339,13 @@ export function StudentForm({ student, mode }: StudentFormProps) {
 
       {/* Form Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/students' })}
-          className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-        >
+        <Button type="button" variant="outline" onClick={() => navigate({ to: '/students' })}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={!form.state.canSubmit}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        </Button>
+        <Button type="submit" disabled={!form.state.canSubmit}>
           {form.state.isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Student' : 'Update Student'}
-        </button>
+        </Button>
       </div>
     </form>
   )

@@ -2,17 +2,20 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
+  useNavigate,
+  useLocation,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { useEffect } from 'react'
 
-import Header from '../components/Header'
 import Navigation from '../components/Navigation'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 import { Toaster } from 'sonner'
+import { useCurrentUser } from '@/hooks/useAuth'
 
 import type { QueryClient } from '@tanstack/react-query'
 
@@ -45,6 +48,42 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   shellComponent: RootDocument,
 })
 
+function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { data: user, isLoading } = useCurrentUser()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isLoginPage = location.pathname === '/login'
+
+  useEffect(() => {
+    if (isLoading) return
+    if (!user && !isLoginPage) {
+      navigate({ to: '/login' })
+    }
+    if (user && isLoginPage) {
+      navigate({ to: user.role === 'admin' ? '/' : '/teacher' })
+    }
+  }, [user, isLoading, isLoginPage, navigate])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-gray-400 text-sm">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!user && !isLoginPage) return null
+
+  if (isLoginPage) return <>{children}</>
+
+  return (
+    <>
+      <Navigation />
+      {children}
+    </>
+  )
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -52,9 +91,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Header />
-        <Navigation />
-        {children}
+        <AuthGuard>{children}</AuthGuard>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

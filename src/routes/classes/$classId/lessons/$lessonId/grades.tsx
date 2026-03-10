@@ -8,6 +8,8 @@ import type { GradeType } from '@/types/entities'
 import { ArrowLeft, Star } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/classes/$classId/lessons/$lessonId/grades')({
   component: LessonGradesPage,
@@ -72,16 +74,16 @@ function LessonGradesPage() {
 
   if (lessonLoading || gradesLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">Đang tải...</div>
-      </div>
+      <Card className="container mx-auto max-w-2xl mt-8">
+        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+      </Card>
     )
   }
 
   if (lessonError || !lesson) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Không tìm thấy buổi học: {lessonError?.message}
         </div>
       </div>
@@ -94,99 +96,103 @@ function LessonGradesPage() {
     <div className="container mx-auto px-4 py-8 space-y-6">
       {/* Header */}
       <div>
-        <button
+        <Button variant="ghost" size="sm"
           type="button"
           onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-3"
+          className="mb-3"
         >
           <ArrowLeft className="h-4 w-4" />
           Quay lại lớp học
-        </button>
+        </Button>
         <div className="flex items-center gap-3">
           <Star className="h-7 w-7 text-yellow-500" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Chấm điểm</h1>
-            <p className="text-gray-500 text-sm mt-0.5">{lesson.title}</p>
+            <h1 className="text-2xl font-bold">Chấm điểm</h1>
+            <p className="text-muted-foreground text-sm mt-0.5">{lesson.title}</p>
           </div>
         </div>
       </div>
 
       {/* Lesson info */}
-      <div className="bg-white rounded-lg shadow p-4 flex flex-wrap gap-6 text-sm">
+      <Card>
+        <CardContent className="p-4 flex flex-wrap gap-6 text-sm">
         <div>
-          <span className="text-gray-500">Thời gian bắt đầu: </span>
-          <span className="font-medium text-gray-900">
+          <span className="text-muted-foreground">Thời gian bắt đầu: </span>
+          <span className="font-medium">
             {new Date(lesson.startTime).toLocaleString('vi-VN')}
           </span>
         </div>
         <div>
-          <span className="text-gray-500">Thời gian kết thúc: </span>
-          <span className="font-medium text-gray-900">
+          <span className="text-muted-foreground">Thời gian kết thúc: </span>
+          <span className="font-medium">
             {new Date(lesson.endTime).toLocaleString('vi-VN')}
           </span>
         </div>
         <div>
-          <span className="text-gray-500">Sĩ số: </span>
-          <span className="font-medium text-gray-900">{totalCount} học sinh</span>
+          <span className="text-muted-foreground">Sĩ số: </span>
+          <span className="font-medium">{totalCount} học sinh</span>
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Grade type and max score selector */}
-      <div className="bg-white rounded-lg shadow p-4 flex flex-wrap gap-6 items-end">
+      <Card>
+        <CardContent className="p-4 flex flex-wrap gap-6 items-end">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Loại điểm</label>
+          <label className="block text-sm font-medium mb-1">Loại điểm</label>
           <div className="flex gap-2 flex-wrap">
             {GRADE_TYPES.map((type) => (
-              <button
+              <Button
                 key={type}
                 type="button"
+                variant={gradeType === type ? 'secondary' : 'outline'}
+                size="sm"
                 onClick={() => setGradeType(type)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
-                  gradeType === type
-                    ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
-                }`}
               >
                 {GRADE_TYPE_LABELS[type]}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Điểm tối đa</label>
+          <label className="block text-sm font-medium mb-1">Điểm tối đa</label>
           <input
             type="number"
             min={1}
             max={100}
             value={maxScore}
             onChange={(e) => setMaxScore(Number(e.target.value))}
-            className="w-24 px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-24 px-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-ring bg-background"
           />
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground">
           {gradedCount}/{totalCount} đã chấm điểm
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Grades table */}
       {totalCount === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-          Không có học sinh nào trong lớp.
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            Không có học sinh nào trong lớp.
+          </CardContent>
+        </Card>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <Card>
+          <CardContent className="p-0 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-muted/50 border-b">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-700 w-8">#</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-700">Học sinh</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-700">
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground w-8">#</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Học sinh</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                   Điểm (/{maxScore})
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-gray-700 w-16">%</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground w-16">%</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y">
               {enrolledStudents.map((student, index) => {
                 const rawVal = scores[student.id]
                 const numVal = rawVal !== '' && rawVal !== undefined ? Number(rawVal) : null
@@ -196,12 +202,12 @@ function LessonGradesPage() {
                     : null
 
                 return (
-                  <tr key={student.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-gray-400 text-xs">{index + 1}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900">
+                  <tr key={student.id} className="hover:bg-muted/50">
+                    <td className="px-4 py-3 text-muted-foreground text-xs">{index + 1}</td>
+                    <td className="px-4 py-3 font-medium">
                       {student.name}
                       {student.phone && (
-                        <span className="ml-2 text-xs text-gray-400">{student.phone}</span>
+                        <span className="ml-2 text-xs text-muted-foreground">{student.phone}</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -215,7 +221,7 @@ function LessonGradesPage() {
                           setScores((prev) => ({ ...prev, [student.id]: e.target.value }))
                         }
                         placeholder="—"
-                        className="w-24 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-24 px-2 py-1 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-ring bg-background"
                       />
                     </td>
                     <td className="px-4 py-3 text-sm">
@@ -232,7 +238,7 @@ function LessonGradesPage() {
                           {pct}%
                         </span>
                       ) : (
-                        <span className="text-gray-300">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </td>
                   </tr>
@@ -240,28 +246,28 @@ function LessonGradesPage() {
               })}
             </tbody>
           </table>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Actions */}
       {totalCount > 0 && (
         <div className="flex items-center gap-4 pb-8">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Hủy
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSubmit}
             disabled={upsertGrades.isPending}
-            className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {upsertGrades.isPending ? 'Đang lưu...' : 'Lưu điểm'}
-          </button>
+          </Button>
         </div>
       )}
     </div>

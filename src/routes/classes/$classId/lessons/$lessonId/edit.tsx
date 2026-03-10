@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useLessonById } from '@/hooks/useLessons'
 import { LessonForm } from '@/components/forms/LessonForm'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/classes/$classId/lessons/$lessonId/edit')({
   component: EditLessonPage,
@@ -13,9 +14,11 @@ function EditLessonPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-          Loading lesson...
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            Loading lesson...
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -23,7 +26,7 @@ function EditLessonPage() {
   if (error || !lesson) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Error loading lesson: {error?.message || 'Lesson not found'}
         </div>
       </div>
@@ -33,12 +36,14 @@ function EditLessonPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Edit Lesson</h1>
-        <p className="text-gray-600 mt-1">{lesson.title}</p>
+        <h1 className="text-3xl font-bold text-foreground">Edit Lesson</h1>
+        <p className="text-muted-foreground mt-1">{lesson.title}</p>
       </div>
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card>
+        <CardContent className="p-6">
         <LessonForm mode="edit" classId={classId} lesson={lesson} />
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

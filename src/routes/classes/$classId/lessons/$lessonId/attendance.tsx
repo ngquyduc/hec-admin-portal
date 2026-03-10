@@ -7,6 +7,8 @@ import type { AttendanceStatus } from '@/types/entities'
 import { ArrowLeft, CheckCircle, ClipboardList } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/classes/$classId/lessons/$lessonId/attendance')({
   component: AttendancePage,
@@ -82,18 +84,16 @@ function AttendancePage() {
 
   if (lessonLoading || attendanceLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-          Đang tải...
-        </div>
-      </div>
+      <Card className="container mx-auto max-w-2xl mt-8">
+        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+      </Card>
     )
   }
 
   if (lessonError || !lesson) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Không tìm thấy buổi học: {lessonError?.message}
         </div>
       </div>
@@ -108,19 +108,19 @@ function AttendancePage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <button
+          <Button variant="ghost" size="sm"
             type="button"
             onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-3"
+            className="mb-3"
           >
             <ArrowLeft className="h-4 w-4" />
             Quay lại lớp học
-          </button>
+          </Button>
           <div className="flex items-center gap-3">
-            <ClipboardList className="h-7 w-7 text-blue-600" />
+            <ClipboardList className="h-7 w-7 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Điểm danh</h1>
-              <p className="text-gray-500 text-sm mt-0.5">{lesson.title}</p>
+              <h1 className="text-2xl font-bold">Điểm danh</h1>
+              <p className="text-muted-foreground text-sm mt-0.5">{lesson.title}</p>
             </div>
           </div>
         </div>
@@ -133,76 +133,85 @@ function AttendancePage() {
       </div>
 
       {/* Lesson info */}
-      <div className="bg-white rounded-lg shadow p-4 flex flex-wrap gap-6 text-sm">
+      <Card>
+        <CardContent className="p-4 flex flex-wrap gap-6 text-sm">
         <div>
-          <span className="text-gray-500">Thời gian bắt đầu: </span>
-          <span className="font-medium text-gray-900">
+          <span className="text-muted-foreground">Thời gian bắt đầu: </span>
+          <span className="font-medium">
             {new Date(lesson.startTime).toLocaleString('vi-VN')}
           </span>
         </div>
         <div>
-          <span className="text-gray-500">Thời gian kết thúc: </span>
-          <span className="font-medium text-gray-900">
+          <span className="text-muted-foreground">Thời gian kết thúc: </span>
+          <span className="font-medium">
             {new Date(lesson.endTime).toLocaleString('vi-VN')}
           </span>
         </div>
         <div>
-          <span className="text-gray-500">Sĩ số: </span>
-          <span className="font-medium text-gray-900">{totalCount} học sinh</span>
+          <span className="text-muted-foreground">Sĩ số: </span>
+          <span className="font-medium">{totalCount} học sinh</span>
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Quick-mark all */}
       {totalCount > 0 && (
-        <div className="bg-white rounded-lg shadow p-4">
+        <Card>
+          <CardContent className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-700">Đánh dấu nhanh tất cả</h2>
-            <span className="text-xs text-gray-400">
+            <h2 className="text-sm font-semibold">Đánh dấu nhanh tất cả</h2>
+            <span className="text-xs text-muted-foreground">
               {markedCount}/{totalCount} đã điểm danh
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
             {(Object.entries(ATTENDANCE_STATUS_LABELS) as [AttendanceStatus, string][]).map(([value, label]) => (
-              <button
+              <Button
                 key={value}
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={() => markAll(value)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${ATTENDANCE_STATUS_COLORS[value]} hover:opacity-80`}
+                className={ATTENDANCE_STATUS_COLORS[value]}
               >
                 Tất cả: {label}
-              </button>
+              </Button>
             ))}
           </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Attendance table */}
       {totalCount === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-          Không có học sinh nào trong lớp.
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            Không có học sinh nào trong lớp.
+          </CardContent>
+        </Card>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <Card>
+          <CardContent className="p-0 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-muted/50 border-b">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-gray-700 w-8">#</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-700">Học sinh</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-700">Trạng thái</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-700">Lý do nghỉ (nếu có)</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground w-8">#</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Học sinh</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Trạng thái</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Lý do nghỉ (nếu có)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y">
               {enrolledStudents.map((student, index) => {
                 const status = attendance[student.id]
                 const isAbsent = status && ['absent_excused', 'absent_unexcused'].includes(status)
                 return (
-                  <tr key={student.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-gray-400 text-xs">{index + 1}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900">
+                  <tr key={student.id} className="hover:bg-muted/50">
+                    <td className="px-4 py-3 text-muted-foreground text-xs">{index + 1}</td>
+                    <td className="px-4 py-3 font-medium">
                       {student.name}
                       {student.phone && (
-                        <span className="ml-2 text-xs text-gray-400">{student.phone}</span>
+                        <span className="ml-2 text-xs text-muted-foreground">{student.phone}</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -219,10 +228,10 @@ function AttendancePage() {
                             })
                           }
                         }}
-                        className={`px-2 py-1.5 rounded text-xs font-medium border focus:outline-none focus:ring-1 focus:ring-blue-400 cursor-pointer ${
+                        className={`px-2 py-1.5 rounded text-xs font-medium border focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer bg-background ${
                           status
                             ? ATTENDANCE_STATUS_COLORS[status]
-                            : 'bg-gray-100 text-gray-400 border-gray-200'
+                            : 'text-muted-foreground border-input'
                         }`}
                       >
                         <option value="" disabled>
@@ -247,7 +256,7 @@ function AttendancePage() {
                               [student.id]: e.target.value,
                             }))
                           }
-                          className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-full px-2 py-1.5 text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-ring bg-background"
                         >
                           <option value="">-- Chọn lý do --</option>
                           {ABSENCE_REASONS.map((reason) => (
@@ -263,28 +272,28 @@ function AttendancePage() {
               })}
             </tbody>
           </table>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Actions */}
       {totalCount > 0 && (
         <div className="flex items-center gap-4 pb-8">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Hủy
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSubmit}
             disabled={upsertAttendance.isPending}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {upsertAttendance.isPending ? 'Đang lưu...' : 'Lưu điểm danh'}
-          </button>
+          </Button>
         </div>
       )}
     </div>

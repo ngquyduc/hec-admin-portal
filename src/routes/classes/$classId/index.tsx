@@ -7,6 +7,10 @@ import { ENGLISH_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABEL
 import type { Lesson } from '@/types/entities'
 import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, Star, BookOpen } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 
 export const Route = createFileRoute('/classes/$classId/')({
   component: ClassDetailPage,
@@ -28,8 +32,8 @@ function LessonRow({
   return (
     <li className="flex items-start justify-between py-3 gap-4">
       <div className="min-w-0">
-        <div className="font-medium text-gray-900">{lesson.title}</div>
-        <div className="text-sm text-gray-500 mt-0.5">
+        <div className="font-medium">{lesson.title}</div>
+        <div className="text-sm text-muted-foreground mt-0.5">
           {new Date(lesson.startTime).toLocaleString()} →{' '}
           {new Date(lesson.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
@@ -40,63 +44,68 @@ function LessonRow({
               Đã điểm danh
             </span>
           ) : (
-            <span className="text-xs text-gray-400">Chưa điểm danh</span>
+            <span className="text-xs text-muted-foreground">Chưa điểm danh</span>
           )}
         </div>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <span className={`px-2 py-0.5 text-xs rounded font-medium ${LESSON_STATUS_COLORS[lesson.status]}`}>
+        <Badge className={LESSON_STATUS_COLORS[lesson.status]}>
           {LESSON_STATUS_LABELS[lesson.status]}
-        </span>
-        <button
+        </Badge>
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() =>
             navigate({
               to: '/classes/$classId/lessons/$lessonId/attendance',
               params: { classId, lessonId: lesson.id },
             })
           }
-          className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 rounded transition-colors"
           title="Điểm danh"
         >
           <ClipboardList className="h-3.5 w-3.5" />
           Điểm danh
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() =>
             navigate({
               to: '/classes/$classId/lessons/$lessonId/grades',
               params: { classId, lessonId: lesson.id },
             })
           }
-          className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-50 text-yellow-700 hover:bg-yellow-100 rounded transition-colors"
           title="Chấm điểm"
         >
           <Star className="h-3.5 w-3.5" />
           Chấm điểm
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="ghost"
+          size="icon-sm"
           onClick={() =>
             navigate({
               to: '/classes/$classId/lessons/$lessonId/edit',
               params: { classId, lessonId: lesson.id },
             })
           }
-          className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
           title="Edit lesson"
         >
           <Pencil className="h-4 w-4" />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="ghost"
+          size="icon-sm"
+          className="text-destructive hover:text-destructive"
           onClick={onDelete}
-          className="p-1 text-gray-400 hover:text-red-600 transition-colors"
           title="Delete lesson"
         >
           <Trash2 className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     </li>
   )
@@ -126,18 +135,16 @@ function ClassDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-          Loading class...
-        </div>
-      </div>
+      <Card className="container mx-auto max-w-2xl mt-8">
+        <CardContent className="p-12 text-center text-muted-foreground">Loading class...</CardContent>
+      </Card>
     )
   }
 
   if (error || !classData) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Error loading class: {error?.message || 'Class not found'}
         </div>
       </div>
@@ -150,91 +157,91 @@ function ClassDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-3xl font-bold text-gray-900">{classData.name}</h1>
-            <span className={`px-2 py-1 text-xs rounded font-medium ${STATUS_COLORS[classData.status]}`}>
+            <h1 className="text-3xl font-bold">{classData.name}</h1>
+            <Badge className={STATUS_COLORS[classData.status]}>
               {STATUS_LABELS[classData.status]}
-            </span>
-            <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded font-medium">
+            </Badge>
+            <Badge variant="secondary">
               {ENGLISH_LEVEL_LABELS[classData.level]}
-            </span>
+            </Badge>
           </div>
           {classData.description && (
-            <p className="text-gray-600">{classData.description}</p>
+            <p className="text-muted-foreground">{classData.description}</p>
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Link
-            to="/classes/$classId/grades"
-            params={{ classId }}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-indigo-200 bg-indigo-50 rounded-md text-indigo-700 hover:bg-indigo-100 transition-colors"
-          >
-            <BookOpen className="h-4 w-4" />
-            Bảng điểm
-          </Link>
-          <Link
-            to="/classes/$classId/edit"
-            params={{ classId }}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            <Pencil className="h-4 w-4" />
-            Edit Class
-          </Link>
+          <Button variant="outline" asChild>
+            <Link to="/classes/$classId/grades" params={{ classId }}>
+              <BookOpen className="h-4 w-4" />
+              Bảng điểm
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to="/classes/$classId/edit" params={{ classId }}>
+              <Pencil className="h-4 w-4" />
+              Edit Class
+            </Link>
+          </Button>
         </div>
       </div>
 
       {/* Class Info */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Class Info</h2>
+      <Card>
+        <CardContent className="p-6">
+        <h2 className="text-lg font-semibold mb-4">Class Info</h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <dt className="text-sm text-gray-500">Main Teacher</dt>
-            <dd className="mt-1 font-medium text-gray-900">{teacherData?.name ?? classData.teacherId}</dd>
+            <dt className="text-sm text-muted-foreground">Main Teacher</dt>
+            <dd className="mt-1 font-medium">{teacherData?.name ?? classData.teacherId}</dd>
           </div>
           {classData.assistantId && (
             <div>
-              <dt className="text-sm text-gray-500">Teaching Assistant</dt>
-              <dd className="mt-1 font-medium text-gray-900">{assistantData?.name ?? classData.assistantId}</dd>
+              <dt className="text-sm text-muted-foreground">Teaching Assistant</dt>
+              <dd className="mt-1 font-medium">{assistantData?.name ?? classData.assistantId}</dd>
             </div>
           )}
           {classData.notes && (
             <div className="sm:col-span-2">
-              <dt className="text-sm text-gray-500">Notes</dt>
-              <dd className="mt-1 text-gray-700">{classData.notes}</dd>
+              <dt className="text-sm text-muted-foreground">Notes</dt>
+              <dd className="mt-1">{classData.notes}</dd>
             </div>
           )}
         </dl>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Students */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card>
+        <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold">
             Students ({enrolledStudents.length})
           </h2>
           <div className="relative">
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={() => setShowAddDropdown((v) => !v)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <UserPlus className="h-4 w-4" />
               Add Student
-            </button>
+            </Button>
             {showAddDropdown && (
-              <div className="absolute right-0 z-10 mt-1 w-72 bg-white border border-gray-200 rounded-md shadow-lg">
+              <div className="absolute right-0 z-10 mt-1 w-72 bg-popover border rounded-md shadow-lg">
                 <div className="p-2 border-b">
-                  <input
+                  <Input
                     type="text"
                     value={studentSearch}
                     onChange={(e) => setStudentSearch(e.target.value)}
                     placeholder="Search students..."
-                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="h-8 text-sm"
                     autoFocus
                   />
                 </div>
                 <div className="max-h-48 overflow-y-auto">
                   {unenrolledStudents.length === 0 ? (
-                    <p className="px-4 py-3 text-sm text-gray-500">No students to add</p>
+                    <p className="px-4 py-3 text-sm text-muted-foreground">No students to add</p>
                   ) : (
                     unenrolledStudents.map((s) => (
                       <button
@@ -245,10 +252,10 @@ function ClassDetailPage() {
                           setShowAddDropdown(false)
                           setStudentSearch('')
                         }}
-                        className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors"
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors"
                       >
-                        <span className="font-medium text-gray-900">{s.name}</span>
-                        {s.phone && <span className="ml-2 text-gray-500">{s.phone}</span>}
+                        <span className="font-medium">{s.name}</span>
+                        {s.phone && <span className="ml-2 text-muted-foreground">{s.phone}</span>}
                       </button>
                     ))
                   )}
@@ -259,53 +266,55 @@ function ClassDetailPage() {
         </div>
 
         {enrolledStudents.length === 0 ? (
-          <p className="text-gray-500 text-sm">No students enrolled yet.</p>
+          <p className="text-muted-foreground text-sm">No students enrolled yet.</p>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y">
             {enrolledStudents.map((s) => (
               <li key={s.id} className="flex items-center justify-between py-2">
                 <div>
-                  <span className="font-medium text-gray-900">{s.name}</span>
-                  {s.phone && <span className="ml-2 text-sm text-gray-500">{s.phone}</span>}
+                  <span className="font-medium">{s.name}</span>
+                  {s.phone && <span className="ml-2 text-sm text-muted-foreground">{s.phone}</span>}
                 </div>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-destructive hover:text-destructive"
                   onClick={async () => {
                     if (confirm(`Remove ${s.name} from this class?`)) {
                       await removeStudent.mutateAsync({ classId, studentId: s.id })
                     }
                   }}
-                  className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                   title="Remove from class"
                 >
                   <UserMinus className="h-4 w-4" />
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Lessons */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card>
+        <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold">
             Lessons ({lessons.length})
           </h2>
-          <Link
-            to="/classes/$classId/lessons/new"
-            params={{ classId }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Add Lesson
-          </Link>
+          <Button asChild size="sm">
+            <Link to="/classes/$classId/lessons/new" params={{ classId }}>
+              <Plus className="h-4 w-4" />
+              Add Lesson
+            </Link>
+          </Button>
         </div>
 
         {lessons.length === 0 ? (
-          <p className="text-gray-500 text-sm">No lessons yet. Add the first lesson.</p>
+          <p className="text-muted-foreground text-sm">No lessons yet. Add the first lesson.</p>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y">
             {lessons.map((lesson) => (
               <LessonRow
                 key={lesson.id}
@@ -320,7 +329,8 @@ function ClassDetailPage() {
             ))}
           </ul>
         )}
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

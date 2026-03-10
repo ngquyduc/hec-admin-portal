@@ -6,6 +6,18 @@ import { SUBJECT_LABELS, TEACHER_ROLE_LABELS } from '@/lib/constants'
 import { ArrowLeft, X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface TeacherFormProps {
   teacher?: Teacher
@@ -76,19 +88,16 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Name <span className="text-destructive">*</span></Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -102,24 +111,20 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Role <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as any)}
-                onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {Object.entries(TEACHER_ROLE_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-1.5">
+              <Label>Role <span className="text-destructive">*</span></Label>
+              <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(TEACHER_ROLE_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -133,19 +138,16 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Email <span className="text-destructive">*</span></Label>
+              <Input
                 type="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -159,29 +161,24 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Phone <span className="text-destructive">*</span></Label>
+              <Input
                 type="tel"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
         </form.Field>
 
         {/* Subjects - Multi-select */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Subjects <span className="text-red-500">*</span>
-          </label>
+        <div className="md:col-span-2 space-y-2">
+          <Label>Subjects <span className="text-destructive">*</span></Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {Object.entries(SUBJECT_LABELS).map(([value, label]) => (
               <button
@@ -190,8 +187,8 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
                 onClick={() => toggleSubject(value)}
                 className={`px-3 py-2 text-sm border rounded-md transition-colors ${
                   selectedSubjects.includes(value)
-                    ? 'bg-blue-100 border-blue-500 text-blue-700'
-                    : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background border-input text-foreground hover:bg-accent'
                 }`}
               >
                 {label}
@@ -201,24 +198,21 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           {selectedSubjects.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2">
               {selectedSubjects.map((subject) => (
-                <span
-                  key={subject}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-sm rounded"
-                >
+                <Badge key={subject} variant="secondary" className="gap-1">
                   {SUBJECT_LABELS[subject as keyof typeof SUBJECT_LABELS]}
                   <button
                     type="button"
                     onClick={() => toggleSubject(subject)}
-                    className="hover:text-blue-900"
+                    className="hover:text-destructive"
                   >
                     <X className="h-3 w-3" />
                   </button>
-                </span>
+                </Badge>
               ))}
             </div>
           )}
           {selectedSubjects.length === 0 && (
-            <p className="mt-1 text-sm text-red-600">At least one subject is required</p>
+            <p className="text-sm text-destructive">At least one subject is required</p>
           )}
         </div>
 
@@ -227,19 +221,16 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           name="hireDate"
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Hire Date <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Hire Date <span className="text-destructive">*</span></Label>
+              <Input
                 type="date"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -249,19 +240,18 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         {mode === 'edit' && (
           <form.Field name="status">
             {(field) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
-                <select
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as any)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="suspended">Suspended</option>
-                </select>
+              <div className="space-y-1.5">
+                <Label>Status</Label>
+                <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="suspended">Suspended</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </form.Field>
@@ -270,15 +260,12 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         {/* Address */}
         <form.Field name="address">
           {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
-              </label>
-              <input
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Address</Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -287,15 +274,12 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         {/* Emergency Contact */}
         <form.Field name="emergencyContact">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Emergency Contact
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Emergency Contact</Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -304,15 +288,12 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         {/* Notes */}
         <form.Field name="notes">
           {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notes
-              </label>
-              <textarea
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Notes</Label>
+              <Textarea
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -321,21 +302,13 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
 
       {/* Form Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/teachers' })}
-          className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-        >
+        <Button type="button" variant="outline" onClick={() => navigate({ to: '/teachers' })}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={!form.state.canSubmit || selectedSubjects.length === 0}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        </Button>
+        <Button type="submit" disabled={!form.state.canSubmit || selectedSubjects.length === 0}>
           {form.state.isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Teacher' : 'Update Teacher'}
-        </button>
+        </Button>
       </div>
     </form>
   )

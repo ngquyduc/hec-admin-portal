@@ -5,6 +5,17 @@ import { CreateStaffSchema, UpdateStaffSchema, type Staff } from '@/types/entiti
 import { STAFF_ROLE_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface StaffFormProps {
   staff?: Staff
@@ -63,19 +74,16 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Name <span className="text-destructive">*</span></Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -89,19 +97,16 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Email <span className="text-destructive">*</span></Label>
+              <Input
                 type="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -115,19 +120,16 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Phone <span className="text-destructive">*</span></Label>
+              <Input
                 type="tel"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -141,24 +143,20 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Role <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as any)}
-                onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {Object.entries(STAFF_ROLE_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-1.5">
+              <Label>Role <span className="text-destructive">*</span></Label>
+              <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(STAFF_ROLE_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -169,19 +167,16 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
           name="hireDate"
         >
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Hire Date <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Hire Date <span className="text-destructive">*</span></Label>
+              <Input
                 type="date"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {field.state.meta.errors && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
             </div>
           )}
@@ -190,19 +185,18 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         {/* Status */}
         <form.Field name="status">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <select
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-              </select>
+            <div className="space-y-1.5">
+              <Label>Status</Label>
+              <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="suspended">Suspended</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           )}
         </form.Field>
@@ -210,15 +204,12 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         {/* Address */}
         <form.Field name="address">
           {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
-              </label>
-              <input
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Address</Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -227,15 +218,12 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         {/* Emergency Contact */}
         <form.Field name="emergencyContact">
           {(field) => (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Emergency Contact
-              </label>
-              <input
+            <div className="space-y-1.5">
+              <Label>Emergency Contact</Label>
+              <Input
                 type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -244,15 +232,12 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         {/* Notes */}
         <form.Field name="notes">
           {(field) => (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notes
-              </label>
-              <textarea
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Notes</Label>
+              <Textarea
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -261,21 +246,13 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
 
       {/* Form Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/staff' })}
-          className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-        >
+        <Button type="button" variant="outline" onClick={() => navigate({ to: '/staff' })}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={!form.state.canSubmit}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        </Button>
+        <Button type="submit" disabled={!form.state.canSubmit}>
           {form.state.isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Staff' : 'Update Staff'}
-        </button>
+        </Button>
       </div>
     </form>
   )

@@ -496,6 +496,35 @@ export type Database = {
           }
         ]
       }
+      user_roles: {
+        Row: {
+          user_id: string
+          role: 'admin' | 'teacher'
+          teacher_id: string | null
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          role: 'admin' | 'teacher'
+          teacher_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          user_id?: string
+          role?: 'admin' | 'teacher'
+          teacher_id?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_roles_teacher_id_fkey'
+            columns: ['teacher_id']
+            isOneToOne: false
+            referencedRelation: 'teacher'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

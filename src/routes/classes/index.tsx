@@ -5,6 +5,9 @@ import { useClasses, useDeleteClass } from '@/hooks/useClasses'
 import { DataTable } from '@/components/DataTable'
 import type { Class } from '@/types/entities'
 import { ENGLISH_LEVEL_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/classes/')({
   component: ClassesListPage,
@@ -26,60 +29,56 @@ function ClassesListPage() {
       accessorKey: 'name',
       header: 'Class Name',
       cell: ({ row }) => (
-        <div className="font-medium text-gray-900">{row.original.name}</div>
+        <div className="font-medium">{row.original.name}</div>
       ),
     },
     {
       accessorKey: 'level',
       header: 'Level',
       cell: ({ row }) => (
-        <span className="inline-flex px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">
-          {ENGLISH_LEVEL_LABELS[row.original.level]}
-        </span>
+        <Badge variant="secondary">{ENGLISH_LEVEL_LABELS[row.original.level]}</Badge>
       ),
     },
     {
       accessorKey: 'description',
       header: 'Description',
       cell: ({ row }) => (
-        <div className="text-gray-600 truncate max-w-xs">{row.original.description || '—'}</div>
+        <div className="text-muted-foreground truncate max-w-xs">{row.original.description || '—'}</div>
       ),
     },
     {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) => (
-        <span className={`inline-flex px-2 py-1 text-xs rounded font-medium ${STATUS_COLORS[row.original.status]}`}>
+        <Badge className={STATUS_COLORS[row.original.status]}>
           {STATUS_LABELS[row.original.status]}
-        </span>
+        </Badge>
       ),
     },
     {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <button
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon-sm"
             onClick={() => navigate({ to: '/classes/$classId', params: { classId: row.original.id } })}
-            className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
             title="View details"
           >
             <Eye className="h-4 w-4" />
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost" size="icon-sm"
             onClick={() => navigate({ to: '/classes/$classId/edit', params: { classId: row.original.id } })}
-            className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
             title="Edit"
           >
             <Pencil className="h-4 w-4" />
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost" size="icon-sm"
             onClick={() => handleDelete(row.original.id, row.original.name)}
-            className="p-1 text-gray-400 hover:text-red-600 transition-colors"
             title="Delete"
+            className="text-destructive hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       ),
     },
@@ -88,7 +87,7 @@ function ClassesListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
           Error loading classes: {error.message}
         </div>
       </div>
@@ -99,31 +98,34 @@ function ClassesListPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Classes</h1>
-          <p className="text-gray-600 mt-1">{classes.length} class{classes.length !== 1 ? 'es' : ''}</p>
+          <h1 className="text-3xl font-bold">Classes</h1>
+          <p className="text-muted-foreground mt-1">{classes.length} class{classes.length !== 1 ? 'es' : ''}</p>
         </div>
-        <Link
-          to="/classes/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="h-4 w-4" />
-          Add New Class
-        </Link>
+        <Button asChild>
+          <Link to="/classes/new">
+            <Plus className="h-4 w-4" />
+            Add New Class
+          </Link>
+        </Button>
       </div>
 
       {isLoading ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <div className="text-gray-500">Loading classes...</div>
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">
+            Loading classes...
+          </CardContent>
+        </Card>
       ) : (
-        <div className="bg-white rounded-lg shadow p-6">
-          <DataTable
-            columns={columns}
-            data={classes}
-            searchColumn="name"
-            searchPlaceholder="Search classes..."
-          />
-        </div>
+        <Card>
+          <CardContent className="p-6">
+            <DataTable
+              columns={columns}
+              data={classes}
+              searchColumn="name"
+              searchPlaceholder="Search classes..."
+            />
+          </CardContent>
+        </Card>
       )}
     </div>
   )

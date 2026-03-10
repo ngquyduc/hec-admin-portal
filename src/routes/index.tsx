@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Users, GraduationCap, UserCircle, BookOpen } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -36,13 +37,12 @@ function App() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             HEC Admin Portal
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-muted-foreground">
             English Tutoring Center Management System
           </p>
         </div>
@@ -52,39 +52,40 @@ function App() {
             <Link
               key={entity.to}
               to={entity.to}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200 hover:border-blue-300"
+              className="rounded-xl border bg-card hover:shadow-md transition-shadow"
             >
-              <div className="flex flex-col items-center text-center">
+              <div className="flex flex-col items-center text-center p-6">
                 <div className="mb-4">{entity.icon}</div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-2xl font-semibold mb-2">
                   {entity.title}
                 </h3>
-                <p className="text-gray-600 text-sm mb-3">
+                <p className="text-muted-foreground text-sm mb-3">
                   {entity.description}
                 </p>
                 <div className="mt-auto">
-                  <span className="text-3xl font-bold text-gray-800">
+                  <span className="text-3xl font-bold">
                     {entity.count}
                   </span>
-                  <p className="text-xs text-gray-500">Total Records</p>
+                  <p className="text-xs text-muted-foreground">Total Records</p>
                 </div>
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="mt-12 bg-white rounded-lg shadow p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+        <Card className="mt-12">
+          <CardContent className="p-8">
+          <h2 className="text-2xl font-semibold mb-4">
             Quick Start Guide
           </h2>
-          <ol className="list-decimal list-inside space-y-2 text-gray-700">
-            <li>Set up your Supabase project following <code className="bg-gray-100 px-2 py-1 rounded">SUPABASE_SETUP.md</code></li>
-            <li>Configure your environment variables in <code className="bg-gray-100 px-2 py-1 rounded">.env</code></li>
-            <li>Run the database schema from <code className="bg-gray-100 px-2 py-1 rounded">supabase-schema.sql</code></li>
+          <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+            <li>Set up your Supabase project following <code className="bg-muted px-2 py-1 rounded">SUPABASE_SETUP.md</code></li>
+            <li>Configure your environment variables in <code className="bg-muted px-2 py-1 rounded">.env</code></li>
+            <li>Run the database schema from <code className="bg-muted px-2 py-1 rounded">supabase-schema.sql</code></li>
             <li>Start managing your staff, teachers, students, and parents</li>
           </ol>
-        </div>
-      </div>
+          </CardContent>
+        </Card>
     </div>
   )
 }

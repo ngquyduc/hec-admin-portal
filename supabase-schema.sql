@@ -222,3 +222,36 @@ create policy "Enable all access for authenticated users" on public.lessons
 
 create policy "Enable all access for authenticated users" on public.lesson_attendance
   for all using (auth.role() = 'authenticated');
+
+-- ============================================================
+-- Authentication: User Roles
+-- ============================================================
+-- Links Supabase Auth users to their application role.
+-- Admin accounts are created manually via Supabase dashboard.
+-- Teacher accounts are linked to a teacher record via teacher_id.
+
+create table public.user_roles (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  role       text not null check (role in ('admin', 'teacher')),
+  teacher_id uuid references public.teacher(id) on delete set null,
+  created_at timestamp with time zone default now()
+);
+
+alter table public.user_roles enable row level security;
+
+-- Users can only read their own role
+create policy "Users can read own role"
+  on public.user_roles for select
+  using (auth.uid() = user_id);
+
+-- Only service role can insert/update roles (no client-side self-assignment)
+-- To create the first admin, run this in the Supabase SQL editor after
+-- creating the user in Authentication > Users:
+--
+--   insert into public.user_roles (user_id, role)
+--   values ('<paste-user-uuid-here>', 'admin');
+--
+-- To link a teacher account:
+--   insert into public.user_roles (user_id, role, teacher_id)
+--   values ('<user-uuid>', 'teacher', '<teacher-table-uuid>');
+
