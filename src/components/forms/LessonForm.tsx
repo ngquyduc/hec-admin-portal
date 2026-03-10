@@ -1,12 +1,9 @@
 import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
-import { useCreateLesson, useUpdateLesson, useLessonAttendance, useUpsertAttendance } from '@/hooks/useLessons'
-import { useClassStudents } from '@/hooks/useClasses'
-import { useStudents } from '@/hooks/useStudents'
-import { CreateLessonSchema, UpdateLessonSchema, type Lesson, type AttendanceStatus } from '@/types/entities'
-import { LESSON_STATUS_LABELS, ATTENDANCE_STATUS_LABELS, ATTENDANCE_STATUS_COLORS } from '@/lib/constants'
+import { useCreateLesson, useUpdateLesson } from '@/hooks/useLessons'
+import { CreateLessonSchema, UpdateLessonSchema, type Lesson } from '@/types/entities'
+import { LESSON_STATUS_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
-import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 interface LessonFormProps {
@@ -19,29 +16,6 @@ export function LessonForm({ classId, lesson, mode }: LessonFormProps) {
   const navigate = useNavigate()
   const createLesson = useCreateLesson()
   const updateLesson = useUpdateLesson()
-  const upsertAttendance = useUpsertAttendance()
-
-  const { data: enrolledLinks = [] } = useClassStudents(classId)
-  const { data: allStudents = [] } = useStudents()
-  const { data: existingAttendance = [] } = useLessonAttendance(lesson?.id ?? '')
-
-  const enrolledStudentIds = enrolledLinks.map((l) => l.studentId)
-  const enrolledStudents = allStudents.filter((s) => enrolledStudentIds.includes(s.id))
-
-  // Attendance state: map of studentId → status
-  const [attendance, setAttendance] = useState<Record<string, AttendanceStatus>>({})
-
-  // Seed attendance from existing records or default to 'present'
-  useEffect(() => {
-    if (mode === 'edit' && enrolledStudents.length > 0) {
-      const seed: Record<string, AttendanceStatus> = {}
-      enrolledStudents.forEach((s) => {
-        const existing = existingAttendance.find((a) => a.studentId === s.id)
-        seed[s.id] = existing?.status ?? 'present'
-      })
-      setAttendance(seed)
-    }
-  }, [enrolledStudents.length, existingAttendance.length, mode])
 
   const toDatetimeLocal = (iso: string) => {
     if (!iso) return ''
@@ -70,25 +44,12 @@ export function LessonForm({ classId, lesson, mode }: LessonFormProps) {
           notes: value.notes || undefined,
         }
 
-        let savedLessonId = lesson?.id
-
         if (mode === 'create') {
           const validated = CreateLessonSchema.parse(submitData)
-          const created = await createLesson.mutateAsync(validated)
-          savedLessonId = created.id
+          await createLesson.mutateAsync(validated)
         } else if (lesson) {
           const validated = UpdateLessonSchema.parse(submitData)
           await updateLesson.mutateAsync({ id: lesson.id, data: validated })
-        }
-
-        // Save attendance in edit mode
-        if (mode === 'edit' && savedLessonId && Object.keys(attendance).length > 0) {
-          const records = Object.entries(attendance).map(([studentId, status]) => ({
-            lessonId: savedLessonId!,
-            studentId,
-            status,
-          }))
-          await upsertAttendance.mutateAsync(records)
         }
 
         navigate({ to: '/classes/$classId', params: { classId } })
@@ -229,51 +190,6 @@ export function LessonForm({ classId, lesson, mode }: LessonFormProps) {
           )}
         </form.Field>
       </div>
-
-      {/* Attendance — edit mode only */}
-      {mode === 'edit' && enrolledStudents.length > 0 && (
-        <div className="pt-4">
-          <h3 className="text-base font-semibold text-gray-900 mb-3">Attendance</h3>
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">Student</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-700">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {enrolledStudents.map((student) => {
-                  const status = attendance[student.id] ?? 'present'
-                  return (
-                    <tr key={student.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium text-gray-900">{student.name}</td>
-                      <td className="px-4 py-3">
-                        <select
-                          value={status}
-                          onChange={(e) =>
-                            setAttendance((prev) => ({
-                              ...prev,
-                              [student.id]: e.target.value as AttendanceStatus,
-                            }))
-                          }
-                          className={`px-2 py-1 rounded text-xs font-medium border-0 outline-none cursor-pointer ${ATTENDANCE_STATUS_COLORS[status]}`}
-                        >
-                          {Object.entries(ATTENDANCE_STATUS_LABELS).map(([value, label]) => (
-                            <option key={value} value={value}>
-                              {label}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
 
       {/* Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">

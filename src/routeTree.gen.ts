@@ -26,9 +26,12 @@ import { Route as TeachersTeacherIdEditRouteImport } from './routes/teachers/$te
 import { Route as StudentsStudentIdEditRouteImport } from './routes/students/$studentId/edit'
 import { Route as StaffStaffIdEditRouteImport } from './routes/staff/$staffId/edit'
 import { Route as ParentsParentIdEditRouteImport } from './routes/parents/$parentId/edit'
+import { Route as ClassesClassIdGradesRouteImport } from './routes/classes/$classId/grades'
 import { Route as ClassesClassIdEditRouteImport } from './routes/classes/$classId/edit'
 import { Route as ClassesClassIdLessonsNewRouteImport } from './routes/classes/$classId/lessons/new'
+import { Route as ClassesClassIdLessonsLessonIdGradesRouteImport } from './routes/classes/$classId/lessons/$lessonId/grades'
 import { Route as ClassesClassIdLessonsLessonIdEditRouteImport } from './routes/classes/$classId/lessons/$lessonId/edit'
+import { Route as ClassesClassIdLessonsLessonIdAttendanceRouteImport } from './routes/classes/$classId/lessons/$lessonId/attendance'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -115,6 +118,11 @@ const ParentsParentIdEditRoute = ParentsParentIdEditRouteImport.update({
   path: '/parents/$parentId/edit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClassesClassIdGradesRoute = ClassesClassIdGradesRouteImport.update({
+  id: '/classes/$classId/grades',
+  path: '/classes/$classId/grades',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClassesClassIdEditRoute = ClassesClassIdEditRouteImport.update({
   id: '/classes/$classId/edit',
   path: '/classes/$classId/edit',
@@ -126,10 +134,22 @@ const ClassesClassIdLessonsNewRoute =
     path: '/classes/$classId/lessons/new',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ClassesClassIdLessonsLessonIdGradesRoute =
+  ClassesClassIdLessonsLessonIdGradesRouteImport.update({
+    id: '/classes/$classId/lessons/$lessonId/grades',
+    path: '/classes/$classId/lessons/$lessonId/grades',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ClassesClassIdLessonsLessonIdEditRoute =
   ClassesClassIdLessonsLessonIdEditRouteImport.update({
     id: '/classes/$classId/lessons/$lessonId/edit',
     path: '/classes/$classId/lessons/$lessonId/edit',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ClassesClassIdLessonsLessonIdAttendanceRoute =
+  ClassesClassIdLessonsLessonIdAttendanceRouteImport.update({
+    id: '/classes/$classId/lessons/$lessonId/attendance',
+    path: '/classes/$classId/lessons/$lessonId/attendance',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -147,13 +167,16 @@ export interface FileRoutesByFullPath {
   '/students/': typeof StudentsIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/classes/$classId/edit': typeof ClassesClassIdEditRoute
+  '/classes/$classId/grades': typeof ClassesClassIdGradesRoute
   '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
   '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
   '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
   '/classes/$classId/': typeof ClassesClassIdIndexRoute
   '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
+  '/classes/$classId/lessons/$lessonId/attendance': typeof ClassesClassIdLessonsLessonIdAttendanceRoute
   '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
+  '/classes/$classId/lessons/$lessonId/grades': typeof ClassesClassIdLessonsLessonIdGradesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -169,13 +192,16 @@ export interface FileRoutesByTo {
   '/students': typeof StudentsIndexRoute
   '/teachers': typeof TeachersIndexRoute
   '/classes/$classId/edit': typeof ClassesClassIdEditRoute
+  '/classes/$classId/grades': typeof ClassesClassIdGradesRoute
   '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
   '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
   '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
   '/classes/$classId': typeof ClassesClassIdIndexRoute
   '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
+  '/classes/$classId/lessons/$lessonId/attendance': typeof ClassesClassIdLessonsLessonIdAttendanceRoute
   '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
+  '/classes/$classId/lessons/$lessonId/grades': typeof ClassesClassIdLessonsLessonIdGradesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -192,13 +218,16 @@ export interface FileRoutesById {
   '/students/': typeof StudentsIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/classes/$classId/edit': typeof ClassesClassIdEditRoute
+  '/classes/$classId/grades': typeof ClassesClassIdGradesRoute
   '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
   '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
   '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
   '/classes/$classId/': typeof ClassesClassIdIndexRoute
   '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
+  '/classes/$classId/lessons/$lessonId/attendance': typeof ClassesClassIdLessonsLessonIdAttendanceRoute
   '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
+  '/classes/$classId/lessons/$lessonId/grades': typeof ClassesClassIdLessonsLessonIdGradesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -216,13 +245,16 @@ export interface FileRouteTypes {
     | '/students/'
     | '/teachers/'
     | '/classes/$classId/edit'
+    | '/classes/$classId/grades'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
     | '/teachers/$teacherId/edit'
     | '/classes/$classId/'
     | '/classes/$classId/lessons/new'
+    | '/classes/$classId/lessons/$lessonId/attendance'
     | '/classes/$classId/lessons/$lessonId/edit'
+    | '/classes/$classId/lessons/$lessonId/grades'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -238,13 +270,16 @@ export interface FileRouteTypes {
     | '/students'
     | '/teachers'
     | '/classes/$classId/edit'
+    | '/classes/$classId/grades'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
     | '/teachers/$teacherId/edit'
     | '/classes/$classId'
     | '/classes/$classId/lessons/new'
+    | '/classes/$classId/lessons/$lessonId/attendance'
     | '/classes/$classId/lessons/$lessonId/edit'
+    | '/classes/$classId/lessons/$lessonId/grades'
   id:
     | '__root__'
     | '/'
@@ -260,13 +295,16 @@ export interface FileRouteTypes {
     | '/students/'
     | '/teachers/'
     | '/classes/$classId/edit'
+    | '/classes/$classId/grades'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
     | '/teachers/$teacherId/edit'
     | '/classes/$classId/'
     | '/classes/$classId/lessons/new'
+    | '/classes/$classId/lessons/$lessonId/attendance'
     | '/classes/$classId/lessons/$lessonId/edit'
+    | '/classes/$classId/lessons/$lessonId/grades'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -283,13 +321,16 @@ export interface RootRouteChildren {
   StudentsIndexRoute: typeof StudentsIndexRoute
   TeachersIndexRoute: typeof TeachersIndexRoute
   ClassesClassIdEditRoute: typeof ClassesClassIdEditRoute
+  ClassesClassIdGradesRoute: typeof ClassesClassIdGradesRoute
   ParentsParentIdEditRoute: typeof ParentsParentIdEditRoute
   StaffStaffIdEditRoute: typeof StaffStaffIdEditRoute
   StudentsStudentIdEditRoute: typeof StudentsStudentIdEditRoute
   TeachersTeacherIdEditRoute: typeof TeachersTeacherIdEditRoute
   ClassesClassIdIndexRoute: typeof ClassesClassIdIndexRoute
   ClassesClassIdLessonsNewRoute: typeof ClassesClassIdLessonsNewRoute
+  ClassesClassIdLessonsLessonIdAttendanceRoute: typeof ClassesClassIdLessonsLessonIdAttendanceRoute
   ClassesClassIdLessonsLessonIdEditRoute: typeof ClassesClassIdLessonsLessonIdEditRoute
+  ClassesClassIdLessonsLessonIdGradesRoute: typeof ClassesClassIdLessonsLessonIdGradesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -413,6 +454,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentsParentIdEditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classes/$classId/grades': {
+      id: '/classes/$classId/grades'
+      path: '/classes/$classId/grades'
+      fullPath: '/classes/$classId/grades'
+      preLoaderRoute: typeof ClassesClassIdGradesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/classes/$classId/edit': {
       id: '/classes/$classId/edit'
       path: '/classes/$classId/edit'
@@ -427,11 +475,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClassesClassIdLessonsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classes/$classId/lessons/$lessonId/grades': {
+      id: '/classes/$classId/lessons/$lessonId/grades'
+      path: '/classes/$classId/lessons/$lessonId/grades'
+      fullPath: '/classes/$classId/lessons/$lessonId/grades'
+      preLoaderRoute: typeof ClassesClassIdLessonsLessonIdGradesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/classes/$classId/lessons/$lessonId/edit': {
       id: '/classes/$classId/lessons/$lessonId/edit'
       path: '/classes/$classId/lessons/$lessonId/edit'
       fullPath: '/classes/$classId/lessons/$lessonId/edit'
       preLoaderRoute: typeof ClassesClassIdLessonsLessonIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/$classId/lessons/$lessonId/attendance': {
+      id: '/classes/$classId/lessons/$lessonId/attendance'
+      path: '/classes/$classId/lessons/$lessonId/attendance'
+      fullPath: '/classes/$classId/lessons/$lessonId/attendance'
+      preLoaderRoute: typeof ClassesClassIdLessonsLessonIdAttendanceRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -451,14 +513,19 @@ const rootRouteChildren: RootRouteChildren = {
   StudentsIndexRoute: StudentsIndexRoute,
   TeachersIndexRoute: TeachersIndexRoute,
   ClassesClassIdEditRoute: ClassesClassIdEditRoute,
+  ClassesClassIdGradesRoute: ClassesClassIdGradesRoute,
   ParentsParentIdEditRoute: ParentsParentIdEditRoute,
   StaffStaffIdEditRoute: StaffStaffIdEditRoute,
   StudentsStudentIdEditRoute: StudentsStudentIdEditRoute,
   TeachersTeacherIdEditRoute: TeachersTeacherIdEditRoute,
   ClassesClassIdIndexRoute: ClassesClassIdIndexRoute,
   ClassesClassIdLessonsNewRoute: ClassesClassIdLessonsNewRoute,
+  ClassesClassIdLessonsLessonIdAttendanceRoute:
+    ClassesClassIdLessonsLessonIdAttendanceRoute,
   ClassesClassIdLessonsLessonIdEditRoute:
     ClassesClassIdLessonsLessonIdEditRoute,
+  ClassesClassIdLessonsLessonIdGradesRoute:
+    ClassesClassIdLessonsLessonIdGradesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,19 +1,109 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useClassById, useClassStudents, useRemoveStudentFromClass, useAddStudentToClass } from '@/hooks/useClasses'
-import { useLessonsByClass, useDeleteLesson } from '@/hooks/useLessons'
+import { useLessonsByClass, useDeleteLesson, useLessonAttendance } from '@/hooks/useLessons'
 import { useStudents } from '@/hooks/useStudents'
 import { useTeacherById } from '@/hooks/useTeachers'
 import { ENGLISH_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
-import { Plus, Pencil, Trash2, UserMinus, UserPlus } from 'lucide-react'
+import type { Lesson } from '@/types/entities'
+import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, Star, BookOpen } from 'lucide-react'
 import { useState } from 'react'
 
 export const Route = createFileRoute('/classes/$classId/')({
   component: ClassDetailPage,
 })
 
+function LessonRow({
+  lesson,
+  classId,
+  onDelete,
+}: {
+  lesson: Lesson
+  classId: string
+  onDelete: () => void
+}) {
+  const navigate = useNavigate()
+  const { data: attendance = [] } = useLessonAttendance(lesson.id)
+  const attendanceTaken = attendance.length > 0
+
+  return (
+    <li className="flex items-start justify-between py-3 gap-4">
+      <div className="min-w-0">
+        <div className="font-medium text-gray-900">{lesson.title}</div>
+        <div className="text-sm text-gray-500 mt-0.5">
+          {new Date(lesson.startTime).toLocaleString()} →{' '}
+          {new Date(lesson.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+        <div className="mt-1">
+          {attendanceTaken ? (
+            <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
+              <CheckCircle className="h-3.5 w-3.5" />
+              Đã điểm danh
+            </span>
+          ) : (
+            <span className="text-xs text-gray-400">Chưa điểm danh</span>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className={`px-2 py-0.5 text-xs rounded font-medium ${LESSON_STATUS_COLORS[lesson.status]}`}>
+          {LESSON_STATUS_LABELS[lesson.status]}
+        </span>
+        <button
+          type="button"
+          onClick={() =>
+            navigate({
+              to: '/classes/$classId/lessons/$lessonId/attendance',
+              params: { classId, lessonId: lesson.id },
+            })
+          }
+          className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 rounded transition-colors"
+          title="Điểm danh"
+        >
+          <ClipboardList className="h-3.5 w-3.5" />
+          Điểm danh
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            navigate({
+              to: '/classes/$classId/lessons/$lessonId/grades',
+              params: { classId, lessonId: lesson.id },
+            })
+          }
+          className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-50 text-yellow-700 hover:bg-yellow-100 rounded transition-colors"
+          title="Chấm điểm"
+        >
+          <Star className="h-3.5 w-3.5" />
+          Chấm điểm
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            navigate({
+              to: '/classes/$classId/lessons/$lessonId/edit',
+              params: { classId, lessonId: lesson.id },
+            })
+          }
+          className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+          title="Edit lesson"
+        >
+          <Pencil className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+          title="Delete lesson"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
+    </li>
+  )
+}
+
 function ClassDetailPage() {
   const { classId } = Route.useParams()
-  const navigate = useNavigate()
 
   const { data: classData, isLoading, error } = useClassById(classId)
   const { data: teacherData } = useTeacherById(classData?.teacherId ?? '')
@@ -72,14 +162,24 @@ function ClassDetailPage() {
             <p className="text-gray-600">{classData.description}</p>
           )}
         </div>
-        <Link
-          to="/classes/$classId/edit"
-          params={{ classId }}
-          className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-        >
-          <Pencil className="h-4 w-4" />
-          Edit Class
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/classes/$classId/grades"
+            params={{ classId }}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-indigo-200 bg-indigo-50 rounded-md text-indigo-700 hover:bg-indigo-100 transition-colors"
+          >
+            <BookOpen className="h-4 w-4" />
+            Bảng điểm
+          </Link>
+          <Link
+            to="/classes/$classId/edit"
+            params={{ classId }}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <Pencil className="h-4 w-4" />
+            Edit Class
+          </Link>
+        </div>
       </div>
 
       {/* Class Info */}
@@ -207,43 +307,16 @@ function ClassDetailPage() {
         ) : (
           <ul className="divide-y divide-gray-100">
             {lessons.map((lesson) => (
-              <li key={lesson.id} className="flex items-center justify-between py-3">
-                <div>
-                  <div className="font-medium text-gray-900">{lesson.title}</div>
-                  <div className="text-sm text-gray-500 mt-0.5">
-                    {new Date(lesson.startTime).toLocaleString()} →{' '}
-                    {new Date(lesson.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className={`px-2 py-0.5 text-xs rounded font-medium ${LESSON_STATUS_COLORS[lesson.status]}`}>
-                    {LESSON_STATUS_LABELS[lesson.status]}
-                  </span>
-                  <button
-                    onClick={() =>
-                    navigate({
-                      to: '/classes/$classId/lessons/$lessonId/edit',
-                      params: { classId, lessonId: lesson.id },
-                    })
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                classId={classId}
+                onDelete={async () => {
+                  if (confirm(`Delete lesson "${lesson.title}"?`)) {
+                    await deleteLesson.mutateAsync(lesson.id)
                   }
-                    className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
-                    title="Edit lesson"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={async () => {
-                      if (confirm(`Delete lesson "${lesson.title}"?`)) {
-                        await deleteLesson.mutateAsync(lesson.id)
-                      }
-                    }}
-                    className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                    title="Delete lesson"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </li>
+                }}
+              />
             ))}
           </ul>
         )}

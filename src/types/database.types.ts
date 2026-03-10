@@ -394,6 +394,108 @@ export type Database = {
           }
         ]
       }
+      lesson_grades: {
+        Row: {
+          id: string
+          lesson_id: string
+          student_id: string
+          score: number | null
+          max_score: number
+          grade_type: 'homework' | 'quiz' | 'exercise' | 'participation'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          lesson_id: string
+          student_id: string
+          score?: number | null
+          max_score?: number
+          grade_type: 'homework' | 'quiz' | 'exercise' | 'participation'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          lesson_id?: string
+          student_id?: string
+          score?: number | null
+          max_score?: number
+          grade_type?: 'homework' | 'quiz' | 'exercise' | 'participation'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_grades_lesson_id_fkey'
+            columns: ['lesson_id']
+            isOneToOne: false
+            referencedRelation: 'lessons'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'lesson_grades_student_id_fkey'
+            columns: ['student_id']
+            isOneToOne: false
+            referencedRelation: 'students'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      class_grades: {
+        Row: {
+          id: string
+          class_id: string
+          student_id: string
+          period: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
+          score: number | null
+          max_score: number
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          class_id: string
+          student_id: string
+          period: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
+          score?: number | null
+          max_score?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          class_id?: string
+          student_id?: string
+          period?: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
+          score?: number | null
+          max_score?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'class_grades_class_id_fkey'
+            columns: ['class_id']
+            isOneToOne: false
+            referencedRelation: 'classes'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'class_grades_student_id_fkey'
+            columns: ['student_id']
+            isOneToOne: false
+            referencedRelation: 'students'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

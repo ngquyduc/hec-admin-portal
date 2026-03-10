@@ -330,6 +330,78 @@ export type Database = {
         }
         Relationships: []
       }
+      lesson_grades: {
+        Row: {
+          id: string
+          lesson_id: string
+          student_id: string
+          score: number | null
+          max_score: number
+          grade_type: 'homework' | 'quiz' | 'exercise' | 'participation'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          lesson_id: string
+          student_id: string
+          score?: number | null
+          max_score?: number
+          grade_type: 'homework' | 'quiz' | 'exercise' | 'participation'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          lesson_id?: string
+          student_id?: string
+          score?: number | null
+          max_score?: number
+          grade_type?: 'homework' | 'quiz' | 'exercise' | 'participation'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      class_grades: {
+        Row: {
+          id: string
+          class_id: string
+          student_id: string
+          period: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
+          score: number | null
+          max_score: number
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          class_id: string
+          student_id: string
+          period: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
+          score?: number | null
+          max_score?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          class_id?: string
+          student_id?: string
+          period?: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
+          score?: number | null
+          max_score?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

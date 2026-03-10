@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { type ColumnDef } from '@tanstack/react-table'
-import { Pencil, Trash2 } from 'lucide-react'
-import { useLessons, useDeleteLesson } from '@/hooks/useLessons'
+import { Pencil, Trash2, ClipboardList, CheckCircle } from 'lucide-react'
+import { useLessons, useDeleteLesson, useLessonAttendance } from '@/hooks/useLessons'
 import { useClasses } from '@/hooks/useClasses'
 import { DataTable } from '@/components/DataTable'
 import type { Lesson } from '@/types/entities'
@@ -10,6 +10,35 @@ import { LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
 export const Route = createFileRoute('/lessons/')({
   component: LessonsListPage,
 })
+
+function AttendanceCell({ lesson }: { lesson: Lesson }) {
+  const { data: attendance = [] } = useLessonAttendance(lesson.id)
+  const navigate = useNavigate()
+  const taken = attendance.length > 0
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() =>
+          navigate({
+            to: '/classes/$classId/lessons/$lessonId/attendance',
+            params: { classId: lesson.classId, lessonId: lesson.id },
+          })
+        }
+        className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 rounded transition-colors"
+        title="Điểm danh"
+      >
+        <ClipboardList className="h-3.5 w-3.5" />
+        Điểm danh
+      </button>
+      {taken && (
+        <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
+          <CheckCircle className="h-3.5 w-3.5" />
+          Đã xong
+        </span>
+      )}
+    </div>
+  )
+}
 
 function LessonsListPage() {
   const { data: lessons = [], isLoading, error } = useLessons()
@@ -63,6 +92,11 @@ function LessonsListPage() {
           {LESSON_STATUS_LABELS[row.original.status]}
         </span>
       ),
+    },
+    {
+      id: 'attendance',
+      header: 'Điểm danh',
+      cell: ({ row }) => <AttendanceCell lesson={row.original} />,
     },
     {
       id: 'actions',

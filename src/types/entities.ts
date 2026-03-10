@@ -256,6 +256,67 @@ export type Attendance = z.infer<typeof AttendanceSchema>
 export type AttendanceStatus = z.infer<typeof AttendanceStatusSchema>
 export type CreateAttendance = z.infer<typeof CreateAttendanceSchema>
 
+// ============= Grade Schemas =============
+export const GradeTypeSchema = z.enum([
+  'homework',
+  'quiz',
+  'exercise',
+  'participation',
+])
+
+export const GradePeriodSchema = z.enum([
+  'Q1',
+  'Q2',
+  'Q3',
+  'Q4',
+  'midterm',
+  'final',
+])
+
+export const LessonGradeSchema = z.object({
+  id: z.string(),
+  lessonId: z.string(),
+  studentId: z.string(),
+  score: z.number().min(0).nullable(),
+  maxScore: z.number().min(0).default(10),
+  gradeType: GradeTypeSchema,
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateLessonGradeSchema = LessonGradeSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export type LessonGrade = z.infer<typeof LessonGradeSchema>
+export type GradeType = z.infer<typeof GradeTypeSchema>
+export type CreateLessonGrade = z.infer<typeof CreateLessonGradeSchema>
+
+export const ClassGradeSchema = z.object({
+  id: z.string(),
+  classId: z.string(),
+  studentId: z.string(),
+  period: GradePeriodSchema,
+  score: z.number().min(0).max(100).nullable(),
+  maxScore: z.number().default(100),
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateClassGradeSchema = ClassGradeSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export type ClassGrade = z.infer<typeof ClassGradeSchema>
+export type GradePeriod = z.infer<typeof GradePeriodSchema>
+export type CreateClassGrade = z.infer<typeof CreateClassGradeSchema>
+
 // ============= Utility Types =============
 export type EntityType = 'staff' | 'teacher' | 'student' | 'parent' | 'class' | 'lesson'
 
