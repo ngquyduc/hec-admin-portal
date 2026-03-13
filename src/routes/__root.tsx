@@ -54,6 +54,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const location = useLocation()
   const isLoginPage = location.pathname === '/login'
+  const isAdminRoute = !location.pathname.startsWith('/teacher') && location.pathname !== '/login'
 
   useEffect(() => {
     if (isLoading) return
@@ -63,7 +64,10 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     if (user && isLoginPage) {
       navigate({ to: user.role === 'admin' ? '/' : '/teacher' })
     }
-  }, [user, isLoading, isLoginPage, navigate])
+    if (user && user.role === 'teacher' && isAdminRoute) {
+      navigate({ to: '/teacher' })
+    }
+  }, [user, isLoading, isLoginPage, isAdminRoute, navigate])
 
   if (isLoading) {
     return (
@@ -74,6 +78,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   if (!user && !isLoginPage) return null
+
+  if (user && user.role === 'teacher' && isAdminRoute) return null
 
   if (isLoginPage) return <>{children}</>
 
