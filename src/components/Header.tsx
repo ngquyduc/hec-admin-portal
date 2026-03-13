@@ -29,7 +29,7 @@ export default function Header() {
                 <button
                   onClick={handleSignOut}
                   disabled={signOut.isPending}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
+                  className="flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <LogOut className="h-4 w-4" />
                   Sign Out
