@@ -18,7 +18,6 @@ function transformTeacherRow(row: TeacherRow): Teacher {
     status: row.status,
     address: row.address ?? undefined,
     emergencyContact: row.emergency_contact ?? undefined,
-    bio: row.bio ?? undefined,
     notes: row.notes ?? undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -36,7 +35,6 @@ function transformCreateTeacher(data: CreateTeacher): TeacherInsert {
     status: data.status,
     address: data.address ?? null,
     emergency_contact: data.emergencyContact ?? null,
-    bio: data.bio ?? null,
     notes: data.notes ?? null,
   }
 }
@@ -55,7 +53,6 @@ function transformUpdateTeacher(data: UpdateTeacher): TeacherUpdate {
   if (data.status !== undefined) update.status = data.status
   if (data.address !== undefined) update.address = data.address ?? null
   if (data.emergencyContact !== undefined) update.emergency_contact = data.emergencyContact ?? null
-  if (data.bio !== undefined) update.bio = data.bio ?? null
   if (data.notes !== undefined) update.notes = data.notes ?? null
   
   return update

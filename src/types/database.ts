@@ -71,7 +71,6 @@ export type Database = {
           hourly_rate: number | null
           address: string | null
           emergency_contact: string | null
-          bio: string | null
           notes: string | null
           created_at: string
           updated_at: string
@@ -89,7 +88,6 @@ export type Database = {
           hourly_rate?: number | null
           address?: string | null
           emergency_contact?: string | null
-          bio?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string
@@ -107,7 +105,6 @@ export type Database = {
           hourly_rate?: number | null
           address?: string | null
           emergency_contact?: string | null
-          bio?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string

@@ -67,7 +67,6 @@ export const TeacherSchema = z.object({
   status: StatusSchema,
   address: z.string().optional(),
   emergencyContact: z.string().optional(),
-  bio: z.string().optional(),
   notes: z.string().optional(),
   createdAt: z.string().or(z.date()),
   updatedAt: z.string().or(z.date()),
