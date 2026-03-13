@@ -1,6 +1,10 @@
 import { supabase } from '@/lib/supabase'
 import type { AuthUser, UserRole } from '@/types/auth'
 
+export type SendOtpResult = {
+  mode: 'login' | 'signup'
+}
+
 export const authService = {
   async signIn(email: string, password: string): Promise<AuthUser> {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -29,15 +33,27 @@ export const authService = {
   // Requires "Enable Email OTP" to be turned ON in Supabase Auth settings
   // (Auth → Configuration → Email). Without that setting, Supabase falls
   // back to sending a magic link instead of a numeric code.
-  async sendOtp(email: string): Promise<void> {
+  async sendOtp(email: string): Promise<SendOtpResult> {
+    const normalizedEmail = email.trim().toLowerCase()
+
+    const { data: exists, error: existsError } = await (supabase as any).rpc('auth_user_exists', {
+      email_input: normalizedEmail,
+    })
+
+    if (existsError) throw existsError
+
+    const userExists = Boolean(exists)
+
     const { error } = await supabase.auth.signInWithOtp({
-      email,
+      email: normalizedEmail,
       options: {
-        shouldCreateUser: false,
+        shouldCreateUser: !userExists,
         // No emailRedirectTo — we verify the code manually, not via a link
       },
     })
     if (error) throw error
+
+    return { mode: userExists ? 'login' : 'signup' }
   },
 
   async verifyOtp(email: string, token: string): Promise<AuthUser> {
@@ -55,7 +71,7 @@ export const authService = {
       .eq('user_id', data.user.id)
       .single()
 
-    if (roleError) throw new Error('No role assigned to this account. Please ask an administrator to assign your role in the user_roles table.')
+    if (roleError) throw new Error('No role assigned to this account. Please ask an admin to assign you a role.')
 
     return {
       id: data.user.id,

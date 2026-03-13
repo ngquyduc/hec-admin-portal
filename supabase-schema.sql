@@ -255,3 +255,22 @@ create policy "Users can read own role"
 --   insert into public.user_roles (user_id, role, teacher_id)
 --   values ('<user-uuid>', 'teacher', '<teacher-table-uuid>');
 
+-- ============================================================
+-- Authentication: Helper functions
+-- ============================================================
+
+create or replace function public.auth_user_exists(email_input text)
+returns boolean
+language sql
+security definer
+set search_path = public, auth
+as $$
+  select exists(
+    select 1
+    from auth.users u
+    where lower(u.email) = lower(email_input)
+  );
+$$;
+
+grant execute on function public.auth_user_exists(text) to anon, authenticated;
+

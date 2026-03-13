@@ -57,9 +57,14 @@ function LoginPage() {
 
   const handleSendOtp = async () => {
     try {
-      await sendOtp.mutateAsync(email)
+      const result = await sendOtp.mutateAsync(email)
       setStep('otp-code')
-      toast.success('Check your email for a sign-in code')
+
+      if (result.mode === 'login') {
+        toast.success('Check your email for a sign-in code')
+      } else {
+        toast.success('No account found. We sent you a signup code to continue.')
+      }
     } catch (err: any) {
       toast.error(err.message ?? 'Failed to send code')
     }
