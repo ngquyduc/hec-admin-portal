@@ -40,20 +40,6 @@ function StudentsListPage() {
       ),
     },
     {
-      accessorKey: 'entryResult',
-      header: 'Entry Result',
-      cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.entryResult || '-'}</div>
-      ),
-    },
-    {
-      accessorKey: 'exitTarget',
-      header: 'Exit Target',
-      cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.exitTarget || '-'}</div>
-      ),
-    },
-    {
       accessorKey: 'enrollmentDate',
       header: 'Enrolled',
       cell: ({ row }) => (
