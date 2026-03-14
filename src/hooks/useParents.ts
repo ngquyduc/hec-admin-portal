@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { parentService } from '@/services/parent.service'
-import type { CreateParent, UpdateParent, Parent } from '@/types/entities'
+import type { CreateParent, UpdateParent } from '@/types/entities'
 
 const PARENTS_QUERY_KEY = ['parents'] as const
 
@@ -69,7 +69,7 @@ export function useAddStudentToParent() {
   return useMutation({
     mutationFn: ({ parentId, studentId }: { parentId: string; studentId: string }) =>
       parentService.addStudent(parentId, studentId),
-    onSuccess: (_, { parentId }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: PARENTS_QUERY_KEY })
       queryClient.invalidateQueries({ queryKey: ['students'] })
     },
@@ -82,7 +82,7 @@ export function useRemoveStudentFromParent() {
   return useMutation({
     mutationFn: ({ parentId, studentId }: { parentId: string; studentId: string }) =>
       parentService.removeStudent(parentId, studentId),
-    onSuccess: (_, { parentId }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: PARENTS_QUERY_KEY })
       queryClient.invalidateQueries({ queryKey: ['students'] })
     },

@@ -26,7 +26,7 @@ export function useStudentsByStatus(status: 'active' | 'inactive' | 'suspended')
   })
 }
 
-export function useStudentsByLevel(level: string) {
+export function useStudentsByLevel(level: Student['level']) {
   return useQuery({
     queryKey: [...STUDENTS_QUERY_KEY, 'level', level],
     queryFn: () => studentService.getByLevel(level),

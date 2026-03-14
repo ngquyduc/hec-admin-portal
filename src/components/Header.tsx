@@ -9,7 +9,7 @@ export default function Header() {
 
   const handleSignOut = async () => {
     await signOut.mutateAsync()
-    navigate({ to: '/login' })
+    navigate({ to: '/login', search: { redirect: undefined } })
   }
 
   return (

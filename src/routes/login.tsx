@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useSignIn, useCurrentUser, useSendOtp, useVerifyOtp } from '@/hooks/useAuth'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 
 export const Route = createFileRoute('/login')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: typeof search.redirect === 'string' ? search.redirect : undefined,
+  }),
   component: LoginPage,
 })
 
@@ -15,10 +18,12 @@ type Step = 'email' | 'password' | 'otp-code'
 
 function LoginPage() {
   const navigate = useNavigate()
+  const router = useRouter()
   const signIn = useSignIn()
   const sendOtp = useSendOtp()
   const verifyOtp = useVerifyOtp()
   const { data: user, isLoading } = useCurrentUser()
+  const { redirect } = Route.useSearch()
 
   const [step, setStep] = useState<Step>('email')
   const [email, setEmail] = useState('')
@@ -26,11 +31,34 @@ function LoginPage() {
   const [otp, setOtp] = useState('')
   const otpRef = useRef<HTMLInputElement>(null)
 
+  const getSafeRedirectPath = () => {
+    if (!redirect) return null
+
+    try {
+      const url = new URL(redirect, window.location.origin)
+      if (url.origin !== window.location.origin) return null
+      return `${url.pathname}${url.search}${url.hash}`
+    } catch {
+      if (redirect.startsWith('/')) return redirect
+      return null
+    }
+  }
+
+  const navigateAfterAuth = (role: 'admin' | 'teacher') => {
+    const redirectPath = getSafeRedirectPath()
+    if (redirectPath) {
+      router.history.push(redirectPath)
+      return
+    }
+
+    navigate({ to: role === 'admin' ? '/' : '/teacher' })
+  }
+
   useEffect(() => {
     if (!isLoading && user) {
-      navigate({ to: user.role === 'admin' ? '/' : '/teacher' })
+      navigateAfterAuth(user.role)
     }
-  }, [user, isLoading, navigate])
+  }, [user, isLoading])
 
   useEffect(() => {
     if (step === 'otp-code') {
@@ -49,7 +77,7 @@ function LoginPage() {
     try {
       const loggedInUser = await signIn.mutateAsync({ email, password })
       toast.success('Signed in successfully')
-      navigate({ to: loggedInUser.role === 'admin' ? '/' : '/teacher' })
+      navigateAfterAuth(loggedInUser.role)
     } catch (err: any) {
       toast.error(err.message ?? 'Invalid email or password')
     }
@@ -75,7 +103,7 @@ function LoginPage() {
     try {
       const loggedInUser = await verifyOtp.mutateAsync({ email, token: otp })
       toast.success('Signed in successfully')
-      navigate({ to: loggedInUser.role === 'admin' ? '/' : '/teacher' })
+      navigateAfterAuth(loggedInUser.role)
     } catch (err: any) {
       toast.error(err.message ?? 'Invalid or expired code')
     }

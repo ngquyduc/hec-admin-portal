@@ -9,299 +9,350 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as TeachersIndexRouteImport } from './routes/teachers/index'
-import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
-import { Route as StudentsIndexRouteImport } from './routes/students/index'
-import { Route as StaffIndexRouteImport } from './routes/staff/index'
-import { Route as ParentsIndexRouteImport } from './routes/parents/index'
-import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
-import { Route as ClassesIndexRouteImport } from './routes/classes/index'
-import { Route as TeachersNewRouteImport } from './routes/teachers/new'
-import { Route as StudentsNewRouteImport } from './routes/students/new'
-import { Route as StaffNewRouteImport } from './routes/staff/new'
-import { Route as ParentsNewRouteImport } from './routes/parents/new'
-import { Route as ClassesNewRouteImport } from './routes/classes/new'
-import { Route as ClassesClassIdIndexRouteImport } from './routes/classes/$classId/index'
-import { Route as TeachersTeacherIdEditRouteImport } from './routes/teachers/$teacherId/edit'
-import { Route as StudentsStudentIdEditRouteImport } from './routes/students/$studentId/edit'
-import { Route as StaffStaffIdEditRouteImport } from './routes/staff/$staffId/edit'
-import { Route as ParentsParentIdEditRouteImport } from './routes/parents/$parentId/edit'
-import { Route as ClassesClassIdGradesRouteImport } from './routes/classes/$classId/grades'
-import { Route as ClassesClassIdEditRouteImport } from './routes/classes/$classId/edit'
-import { Route as TeacherClassesClassIdIndexRouteImport } from './routes/teacher/classes/$classId/index'
-import { Route as TeacherClassesClassIdGradesRouteImport } from './routes/teacher/classes/$classId/grades'
-import { Route as ClassesClassIdLessonsNewRouteImport } from './routes/classes/$classId/lessons/new'
-import { Route as TeacherClassesClassIdLessonsNewRouteImport } from './routes/teacher/classes/$classId/lessons/new'
-import { Route as ClassesClassIdLessonsLessonIdGradesRouteImport } from './routes/classes/$classId/lessons/$lessonId/grades'
-import { Route as ClassesClassIdLessonsLessonIdEditRouteImport } from './routes/classes/$classId/lessons/$lessonId/edit'
-import { Route as ClassesClassIdLessonsLessonIdAttendanceRouteImport } from './routes/classes/$classId/lessons/$lessonId/attendance'
-import { Route as TeacherClassesClassIdLessonsLessonIdEditRouteImport } from './routes/teacher/classes/$classId/lessons/$lessonId/edit'
-import { Route as TeacherClassesClassIdLessonsLessonIdAttendanceRouteImport } from './routes/teacher/classes/$classId/lessons/$lessonId/attendance'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthenticatedTeacherRouteImport } from './routes/_authenticated/_teacher'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/_admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/_admin/index'
+import { Route as AuthenticatedTeacherTeacherIndexRouteImport } from './routes/_authenticated/_teacher/teacher/index'
+import { Route as AuthenticatedAdminTeachersIndexRouteImport } from './routes/_authenticated/_admin/teachers/index'
+import { Route as AuthenticatedAdminStudentsIndexRouteImport } from './routes/_authenticated/_admin/students/index'
+import { Route as AuthenticatedAdminStaffIndexRouteImport } from './routes/_authenticated/_admin/staff/index'
+import { Route as AuthenticatedAdminParentsIndexRouteImport } from './routes/_authenticated/_admin/parents/index'
+import { Route as AuthenticatedAdminLessonsIndexRouteImport } from './routes/_authenticated/_admin/lessons/index'
+import { Route as AuthenticatedAdminClassesIndexRouteImport } from './routes/_authenticated/_admin/classes/index'
+import { Route as AuthenticatedAdminTeachersNewRouteImport } from './routes/_authenticated/_admin/teachers/new'
+import { Route as AuthenticatedAdminStudentsNewRouteImport } from './routes/_authenticated/_admin/students/new'
+import { Route as AuthenticatedAdminStaffNewRouteImport } from './routes/_authenticated/_admin/staff/new'
+import { Route as AuthenticatedAdminParentsNewRouteImport } from './routes/_authenticated/_admin/parents/new'
+import { Route as AuthenticatedAdminClassesNewRouteImport } from './routes/_authenticated/_admin/classes/new'
+import { Route as AuthenticatedAdminClassesClassIdIndexRouteImport } from './routes/_authenticated/_admin/classes/$classId/index'
+import { Route as AuthenticatedAdminTeachersTeacherIdEditRouteImport } from './routes/_authenticated/_admin/teachers/$teacherId/edit'
+import { Route as AuthenticatedAdminStudentsStudentIdEditRouteImport } from './routes/_authenticated/_admin/students/$studentId/edit'
+import { Route as AuthenticatedAdminStaffStaffIdEditRouteImport } from './routes/_authenticated/_admin/staff/$staffId/edit'
+import { Route as AuthenticatedAdminParentsParentIdEditRouteImport } from './routes/_authenticated/_admin/parents/$parentId/edit'
+import { Route as AuthenticatedAdminClassesClassIdGradesRouteImport } from './routes/_authenticated/_admin/classes/$classId/grades'
+import { Route as AuthenticatedAdminClassesClassIdEditRouteImport } from './routes/_authenticated/_admin/classes/$classId/edit'
+import { Route as AuthenticatedTeacherTeacherClassesClassIdIndexRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/index'
+import { Route as AuthenticatedTeacherTeacherClassesClassIdGradesRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/grades'
+import { Route as AuthenticatedAdminClassesClassIdLessonsNewRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/new'
+import { Route as AuthenticatedTeacherTeacherClassesClassIdLessonsNewRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/lessons/new'
+import { Route as AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades'
+import { Route as AuthenticatedAdminClassesClassIdLessonsLessonIdEditRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit'
+import { Route as AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance'
+import { Route as AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/edit'
+import { Route as AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTeacherRoute = AuthenticatedTeacherRouteImport.update({
+  id: '/_teacher',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
-const TeachersIndexRoute = TeachersIndexRouteImport.update({
-  id: '/teachers/',
-  path: '/teachers/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherIndexRoute = TeacherIndexRouteImport.update({
-  id: '/teacher/',
-  path: '/teacher/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentsIndexRoute = StudentsIndexRouteImport.update({
-  id: '/students/',
-  path: '/students/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StaffIndexRoute = StaffIndexRouteImport.update({
-  id: '/staff/',
-  path: '/staff/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ParentsIndexRoute = ParentsIndexRouteImport.update({
-  id: '/parents/',
-  path: '/parents/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LessonsIndexRoute = LessonsIndexRouteImport.update({
-  id: '/lessons/',
-  path: '/lessons/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesIndexRoute = ClassesIndexRouteImport.update({
-  id: '/classes/',
-  path: '/classes/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeachersNewRoute = TeachersNewRouteImport.update({
-  id: '/teachers/new',
-  path: '/teachers/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentsNewRoute = StudentsNewRouteImport.update({
-  id: '/students/new',
-  path: '/students/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StaffNewRoute = StaffNewRouteImport.update({
-  id: '/staff/new',
-  path: '/staff/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ParentsNewRoute = ParentsNewRouteImport.update({
-  id: '/parents/new',
-  path: '/parents/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesNewRoute = ClassesNewRouteImport.update({
-  id: '/classes/new',
-  path: '/classes/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesClassIdIndexRoute = ClassesClassIdIndexRouteImport.update({
-  id: '/classes/$classId/',
-  path: '/classes/$classId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeachersTeacherIdEditRoute = TeachersTeacherIdEditRouteImport.update({
-  id: '/teachers/$teacherId/edit',
-  path: '/teachers/$teacherId/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentsStudentIdEditRoute = StudentsStudentIdEditRouteImport.update({
-  id: '/students/$studentId/edit',
-  path: '/students/$studentId/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StaffStaffIdEditRoute = StaffStaffIdEditRouteImport.update({
-  id: '/staff/$staffId/edit',
-  path: '/staff/$staffId/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ParentsParentIdEditRoute = ParentsParentIdEditRouteImport.update({
-  id: '/parents/$parentId/edit',
-  path: '/parents/$parentId/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesClassIdGradesRoute = ClassesClassIdGradesRouteImport.update({
-  id: '/classes/$classId/grades',
-  path: '/classes/$classId/grades',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesClassIdEditRoute = ClassesClassIdEditRouteImport.update({
-  id: '/classes/$classId/edit',
-  path: '/classes/$classId/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherClassesClassIdIndexRoute =
-  TeacherClassesClassIdIndexRouteImport.update({
+const AuthenticatedTeacherTeacherIndexRoute =
+  AuthenticatedTeacherTeacherIndexRouteImport.update({
+    id: '/teacher/',
+    path: '/teacher/',
+    getParentRoute: () => AuthenticatedTeacherRoute,
+  } as any)
+const AuthenticatedAdminTeachersIndexRoute =
+  AuthenticatedAdminTeachersIndexRouteImport.update({
+    id: '/teachers/',
+    path: '/teachers/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminStudentsIndexRoute =
+  AuthenticatedAdminStudentsIndexRouteImport.update({
+    id: '/students/',
+    path: '/students/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminStaffIndexRoute =
+  AuthenticatedAdminStaffIndexRouteImport.update({
+    id: '/staff/',
+    path: '/staff/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminParentsIndexRoute =
+  AuthenticatedAdminParentsIndexRouteImport.update({
+    id: '/parents/',
+    path: '/parents/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminLessonsIndexRoute =
+  AuthenticatedAdminLessonsIndexRouteImport.update({
+    id: '/lessons/',
+    path: '/lessons/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminClassesIndexRoute =
+  AuthenticatedAdminClassesIndexRouteImport.update({
+    id: '/classes/',
+    path: '/classes/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminTeachersNewRoute =
+  AuthenticatedAdminTeachersNewRouteImport.update({
+    id: '/teachers/new',
+    path: '/teachers/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminStudentsNewRoute =
+  AuthenticatedAdminStudentsNewRouteImport.update({
+    id: '/students/new',
+    path: '/students/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminStaffNewRoute =
+  AuthenticatedAdminStaffNewRouteImport.update({
+    id: '/staff/new',
+    path: '/staff/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminParentsNewRoute =
+  AuthenticatedAdminParentsNewRouteImport.update({
+    id: '/parents/new',
+    path: '/parents/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminClassesNewRoute =
+  AuthenticatedAdminClassesNewRouteImport.update({
+    id: '/classes/new',
+    path: '/classes/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminClassesClassIdIndexRoute =
+  AuthenticatedAdminClassesClassIdIndexRouteImport.update({
+    id: '/classes/$classId/',
+    path: '/classes/$classId/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminTeachersTeacherIdEditRoute =
+  AuthenticatedAdminTeachersTeacherIdEditRouteImport.update({
+    id: '/teachers/$teacherId/edit',
+    path: '/teachers/$teacherId/edit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminStudentsStudentIdEditRoute =
+  AuthenticatedAdminStudentsStudentIdEditRouteImport.update({
+    id: '/students/$studentId/edit',
+    path: '/students/$studentId/edit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminStaffStaffIdEditRoute =
+  AuthenticatedAdminStaffStaffIdEditRouteImport.update({
+    id: '/staff/$staffId/edit',
+    path: '/staff/$staffId/edit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminParentsParentIdEditRoute =
+  AuthenticatedAdminParentsParentIdEditRouteImport.update({
+    id: '/parents/$parentId/edit',
+    path: '/parents/$parentId/edit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminClassesClassIdGradesRoute =
+  AuthenticatedAdminClassesClassIdGradesRouteImport.update({
+    id: '/classes/$classId/grades',
+    path: '/classes/$classId/grades',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminClassesClassIdEditRoute =
+  AuthenticatedAdminClassesClassIdEditRouteImport.update({
+    id: '/classes/$classId/edit',
+    path: '/classes/$classId/edit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedTeacherTeacherClassesClassIdIndexRoute =
+  AuthenticatedTeacherTeacherClassesClassIdIndexRouteImport.update({
     id: '/teacher/classes/$classId/',
     path: '/teacher/classes/$classId/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedTeacherRoute,
   } as any)
-const TeacherClassesClassIdGradesRoute =
-  TeacherClassesClassIdGradesRouteImport.update({
+const AuthenticatedTeacherTeacherClassesClassIdGradesRoute =
+  AuthenticatedTeacherTeacherClassesClassIdGradesRouteImport.update({
     id: '/teacher/classes/$classId/grades',
     path: '/teacher/classes/$classId/grades',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedTeacherRoute,
   } as any)
-const ClassesClassIdLessonsNewRoute =
-  ClassesClassIdLessonsNewRouteImport.update({
+const AuthenticatedAdminClassesClassIdLessonsNewRoute =
+  AuthenticatedAdminClassesClassIdLessonsNewRouteImport.update({
     id: '/classes/$classId/lessons/new',
     path: '/classes/$classId/lessons/new',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const TeacherClassesClassIdLessonsNewRoute =
-  TeacherClassesClassIdLessonsNewRouteImport.update({
+const AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute =
+  AuthenticatedTeacherTeacherClassesClassIdLessonsNewRouteImport.update({
     id: '/teacher/classes/$classId/lessons/new',
     path: '/teacher/classes/$classId/lessons/new',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedTeacherRoute,
   } as any)
-const ClassesClassIdLessonsLessonIdGradesRoute =
-  ClassesClassIdLessonsLessonIdGradesRouteImport.update({
+const AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute =
+  AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRouteImport.update({
     id: '/classes/$classId/lessons/$lessonId/grades',
     path: '/classes/$classId/lessons/$lessonId/grades',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const ClassesClassIdLessonsLessonIdEditRoute =
-  ClassesClassIdLessonsLessonIdEditRouteImport.update({
+const AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute =
+  AuthenticatedAdminClassesClassIdLessonsLessonIdEditRouteImport.update({
     id: '/classes/$classId/lessons/$lessonId/edit',
     path: '/classes/$classId/lessons/$lessonId/edit',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const ClassesClassIdLessonsLessonIdAttendanceRoute =
-  ClassesClassIdLessonsLessonIdAttendanceRouteImport.update({
+const AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute =
+  AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRouteImport.update({
     id: '/classes/$classId/lessons/$lessonId/attendance',
     path: '/classes/$classId/lessons/$lessonId/attendance',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const TeacherClassesClassIdLessonsLessonIdEditRoute =
-  TeacherClassesClassIdLessonsLessonIdEditRouteImport.update({
-    id: '/teacher/classes/$classId/lessons/$lessonId/edit',
-    path: '/teacher/classes/$classId/lessons/$lessonId/edit',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const TeacherClassesClassIdLessonsLessonIdAttendanceRoute =
-  TeacherClassesClassIdLessonsLessonIdAttendanceRouteImport.update({
-    id: '/teacher/classes/$classId/lessons/$lessonId/attendance',
-    path: '/teacher/classes/$classId/lessons/$lessonId/attendance',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute =
+  AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRouteImport.update(
+    {
+      id: '/teacher/classes/$classId/lessons/$lessonId/edit',
+      path: '/teacher/classes/$classId/lessons/$lessonId/edit',
+      getParentRoute: () => AuthenticatedTeacherRoute,
+    } as any,
+  )
+const AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute =
+  AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRouteImport.update(
+    {
+      id: '/teacher/classes/$classId/lessons/$lessonId/attendance',
+      path: '/teacher/classes/$classId/lessons/$lessonId/attendance',
+      getParentRoute: () => AuthenticatedTeacherRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedAdminIndexRoute
   '/login': typeof LoginRoute
-  '/classes/new': typeof ClassesNewRoute
-  '/parents/new': typeof ParentsNewRoute
-  '/staff/new': typeof StaffNewRoute
-  '/students/new': typeof StudentsNewRoute
-  '/teachers/new': typeof TeachersNewRoute
-  '/classes/': typeof ClassesIndexRoute
-  '/lessons/': typeof LessonsIndexRoute
-  '/parents/': typeof ParentsIndexRoute
-  '/staff/': typeof StaffIndexRoute
-  '/students/': typeof StudentsIndexRoute
-  '/teacher/': typeof TeacherIndexRoute
-  '/teachers/': typeof TeachersIndexRoute
-  '/classes/$classId/edit': typeof ClassesClassIdEditRoute
-  '/classes/$classId/grades': typeof ClassesClassIdGradesRoute
-  '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
-  '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
-  '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
-  '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
-  '/classes/$classId/': typeof ClassesClassIdIndexRoute
-  '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
-  '/teacher/classes/$classId/grades': typeof TeacherClassesClassIdGradesRoute
-  '/teacher/classes/$classId/': typeof TeacherClassesClassIdIndexRoute
-  '/classes/$classId/lessons/$lessonId/attendance': typeof ClassesClassIdLessonsLessonIdAttendanceRoute
-  '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
-  '/classes/$classId/lessons/$lessonId/grades': typeof ClassesClassIdLessonsLessonIdGradesRoute
-  '/teacher/classes/$classId/lessons/new': typeof TeacherClassesClassIdLessonsNewRoute
-  '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof TeacherClassesClassIdLessonsLessonIdAttendanceRoute
-  '/teacher/classes/$classId/lessons/$lessonId/edit': typeof TeacherClassesClassIdLessonsLessonIdEditRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/parents/new': typeof AuthenticatedAdminParentsNewRoute
+  '/staff/new': typeof AuthenticatedAdminStaffNewRoute
+  '/students/new': typeof AuthenticatedAdminStudentsNewRoute
+  '/teachers/new': typeof AuthenticatedAdminTeachersNewRoute
+  '/classes/': typeof AuthenticatedAdminClassesIndexRoute
+  '/lessons/': typeof AuthenticatedAdminLessonsIndexRoute
+  '/parents/': typeof AuthenticatedAdminParentsIndexRoute
+  '/staff/': typeof AuthenticatedAdminStaffIndexRoute
+  '/students/': typeof AuthenticatedAdminStudentsIndexRoute
+  '/teachers/': typeof AuthenticatedAdminTeachersIndexRoute
+  '/teacher/': typeof AuthenticatedTeacherTeacherIndexRoute
+  '/classes/$classId/edit': typeof AuthenticatedAdminClassesClassIdEditRoute
+  '/classes/$classId/grades': typeof AuthenticatedAdminClassesClassIdGradesRoute
+  '/parents/$parentId/edit': typeof AuthenticatedAdminParentsParentIdEditRoute
+  '/staff/$staffId/edit': typeof AuthenticatedAdminStaffStaffIdEditRoute
+  '/students/$studentId/edit': typeof AuthenticatedAdminStudentsStudentIdEditRoute
+  '/teachers/$teacherId/edit': typeof AuthenticatedAdminTeachersTeacherIdEditRoute
+  '/classes/$classId/': typeof AuthenticatedAdminClassesClassIdIndexRoute
+  '/classes/$classId/lessons/new': typeof AuthenticatedAdminClassesClassIdLessonsNewRoute
+  '/teacher/classes/$classId/grades': typeof AuthenticatedTeacherTeacherClassesClassIdGradesRoute
+  '/teacher/classes/$classId/': typeof AuthenticatedTeacherTeacherClassesClassIdIndexRoute
+  '/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
+  '/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
+  '/classes/$classId/lessons/$lessonId/grades': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+  '/teacher/classes/$classId/lessons/new': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
+  '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
+  '/teacher/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedAdminIndexRoute
   '/login': typeof LoginRoute
-  '/classes/new': typeof ClassesNewRoute
-  '/parents/new': typeof ParentsNewRoute
-  '/staff/new': typeof StaffNewRoute
-  '/students/new': typeof StudentsNewRoute
-  '/teachers/new': typeof TeachersNewRoute
-  '/classes': typeof ClassesIndexRoute
-  '/lessons': typeof LessonsIndexRoute
-  '/parents': typeof ParentsIndexRoute
-  '/staff': typeof StaffIndexRoute
-  '/students': typeof StudentsIndexRoute
-  '/teacher': typeof TeacherIndexRoute
-  '/teachers': typeof TeachersIndexRoute
-  '/classes/$classId/edit': typeof ClassesClassIdEditRoute
-  '/classes/$classId/grades': typeof ClassesClassIdGradesRoute
-  '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
-  '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
-  '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
-  '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
-  '/classes/$classId': typeof ClassesClassIdIndexRoute
-  '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
-  '/teacher/classes/$classId/grades': typeof TeacherClassesClassIdGradesRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdIndexRoute
-  '/classes/$classId/lessons/$lessonId/attendance': typeof ClassesClassIdLessonsLessonIdAttendanceRoute
-  '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
-  '/classes/$classId/lessons/$lessonId/grades': typeof ClassesClassIdLessonsLessonIdGradesRoute
-  '/teacher/classes/$classId/lessons/new': typeof TeacherClassesClassIdLessonsNewRoute
-  '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof TeacherClassesClassIdLessonsLessonIdAttendanceRoute
-  '/teacher/classes/$classId/lessons/$lessonId/edit': typeof TeacherClassesClassIdLessonsLessonIdEditRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/parents/new': typeof AuthenticatedAdminParentsNewRoute
+  '/staff/new': typeof AuthenticatedAdminStaffNewRoute
+  '/students/new': typeof AuthenticatedAdminStudentsNewRoute
+  '/teachers/new': typeof AuthenticatedAdminTeachersNewRoute
+  '/classes': typeof AuthenticatedAdminClassesIndexRoute
+  '/lessons': typeof AuthenticatedAdminLessonsIndexRoute
+  '/parents': typeof AuthenticatedAdminParentsIndexRoute
+  '/staff': typeof AuthenticatedAdminStaffIndexRoute
+  '/students': typeof AuthenticatedAdminStudentsIndexRoute
+  '/teachers': typeof AuthenticatedAdminTeachersIndexRoute
+  '/teacher': typeof AuthenticatedTeacherTeacherIndexRoute
+  '/classes/$classId/edit': typeof AuthenticatedAdminClassesClassIdEditRoute
+  '/classes/$classId/grades': typeof AuthenticatedAdminClassesClassIdGradesRoute
+  '/parents/$parentId/edit': typeof AuthenticatedAdminParentsParentIdEditRoute
+  '/staff/$staffId/edit': typeof AuthenticatedAdminStaffStaffIdEditRoute
+  '/students/$studentId/edit': typeof AuthenticatedAdminStudentsStudentIdEditRoute
+  '/teachers/$teacherId/edit': typeof AuthenticatedAdminTeachersTeacherIdEditRoute
+  '/classes/$classId': typeof AuthenticatedAdminClassesClassIdIndexRoute
+  '/classes/$classId/lessons/new': typeof AuthenticatedAdminClassesClassIdLessonsNewRoute
+  '/teacher/classes/$classId/grades': typeof AuthenticatedTeacherTeacherClassesClassIdGradesRoute
+  '/teacher/classes/$classId': typeof AuthenticatedTeacherTeacherClassesClassIdIndexRoute
+  '/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
+  '/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
+  '/classes/$classId/lessons/$lessonId/grades': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+  '/teacher/classes/$classId/lessons/new': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
+  '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
+  '/teacher/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
-  '/classes/new': typeof ClassesNewRoute
-  '/parents/new': typeof ParentsNewRoute
-  '/staff/new': typeof StaffNewRoute
-  '/students/new': typeof StudentsNewRoute
-  '/teachers/new': typeof TeachersNewRoute
-  '/classes/': typeof ClassesIndexRoute
-  '/lessons/': typeof LessonsIndexRoute
-  '/parents/': typeof ParentsIndexRoute
-  '/staff/': typeof StaffIndexRoute
-  '/students/': typeof StudentsIndexRoute
-  '/teacher/': typeof TeacherIndexRoute
-  '/teachers/': typeof TeachersIndexRoute
-  '/classes/$classId/edit': typeof ClassesClassIdEditRoute
-  '/classes/$classId/grades': typeof ClassesClassIdGradesRoute
-  '/parents/$parentId/edit': typeof ParentsParentIdEditRoute
-  '/staff/$staffId/edit': typeof StaffStaffIdEditRoute
-  '/students/$studentId/edit': typeof StudentsStudentIdEditRoute
-  '/teachers/$teacherId/edit': typeof TeachersTeacherIdEditRoute
-  '/classes/$classId/': typeof ClassesClassIdIndexRoute
-  '/classes/$classId/lessons/new': typeof ClassesClassIdLessonsNewRoute
-  '/teacher/classes/$classId/grades': typeof TeacherClassesClassIdGradesRoute
-  '/teacher/classes/$classId/': typeof TeacherClassesClassIdIndexRoute
-  '/classes/$classId/lessons/$lessonId/attendance': typeof ClassesClassIdLessonsLessonIdAttendanceRoute
-  '/classes/$classId/lessons/$lessonId/edit': typeof ClassesClassIdLessonsLessonIdEditRoute
-  '/classes/$classId/lessons/$lessonId/grades': typeof ClassesClassIdLessonsLessonIdGradesRoute
-  '/teacher/classes/$classId/lessons/new': typeof TeacherClassesClassIdLessonsNewRoute
-  '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof TeacherClassesClassIdLessonsLessonIdAttendanceRoute
-  '/teacher/classes/$classId/lessons/$lessonId/edit': typeof TeacherClassesClassIdLessonsLessonIdEditRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/_authenticated/_admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/_teacher': typeof AuthenticatedTeacherRouteWithChildren
+  '/_authenticated/_admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/_admin/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/_authenticated/_admin/parents/new': typeof AuthenticatedAdminParentsNewRoute
+  '/_authenticated/_admin/staff/new': typeof AuthenticatedAdminStaffNewRoute
+  '/_authenticated/_admin/students/new': typeof AuthenticatedAdminStudentsNewRoute
+  '/_authenticated/_admin/teachers/new': typeof AuthenticatedAdminTeachersNewRoute
+  '/_authenticated/_admin/classes/': typeof AuthenticatedAdminClassesIndexRoute
+  '/_authenticated/_admin/lessons/': typeof AuthenticatedAdminLessonsIndexRoute
+  '/_authenticated/_admin/parents/': typeof AuthenticatedAdminParentsIndexRoute
+  '/_authenticated/_admin/staff/': typeof AuthenticatedAdminStaffIndexRoute
+  '/_authenticated/_admin/students/': typeof AuthenticatedAdminStudentsIndexRoute
+  '/_authenticated/_admin/teachers/': typeof AuthenticatedAdminTeachersIndexRoute
+  '/_authenticated/_teacher/teacher/': typeof AuthenticatedTeacherTeacherIndexRoute
+  '/_authenticated/_admin/classes/$classId/edit': typeof AuthenticatedAdminClassesClassIdEditRoute
+  '/_authenticated/_admin/classes/$classId/grades': typeof AuthenticatedAdminClassesClassIdGradesRoute
+  '/_authenticated/_admin/parents/$parentId/edit': typeof AuthenticatedAdminParentsParentIdEditRoute
+  '/_authenticated/_admin/staff/$staffId/edit': typeof AuthenticatedAdminStaffStaffIdEditRoute
+  '/_authenticated/_admin/students/$studentId/edit': typeof AuthenticatedAdminStudentsStudentIdEditRoute
+  '/_authenticated/_admin/teachers/$teacherId/edit': typeof AuthenticatedAdminTeachersTeacherIdEditRoute
+  '/_authenticated/_admin/classes/$classId/': typeof AuthenticatedAdminClassesClassIdIndexRoute
+  '/_authenticated/_admin/classes/$classId/lessons/new': typeof AuthenticatedAdminClassesClassIdLessonsNewRoute
+  '/_authenticated/_teacher/teacher/classes/$classId/grades': typeof AuthenticatedTeacherTeacherClassesClassIdGradesRoute
+  '/_authenticated/_teacher/teacher/classes/$classId/': typeof AuthenticatedTeacherTeacherClassesClassIdIndexRoute
+  '/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
+  '/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
+  '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+  '/_authenticated/_teacher/teacher/classes/$classId/lessons/new': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
+  '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
+  '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
+    | '/unauthorized'
     | '/classes/new'
     | '/parents/new'
     | '/staff/new'
@@ -312,8 +363,8 @@ export interface FileRouteTypes {
     | '/parents/'
     | '/staff/'
     | '/students/'
-    | '/teacher/'
     | '/teachers/'
+    | '/teacher/'
     | '/classes/$classId/edit'
     | '/classes/$classId/grades'
     | '/parents/$parentId/edit'
@@ -334,6 +385,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/unauthorized'
     | '/classes/new'
     | '/parents/new'
     | '/staff/new'
@@ -344,8 +396,8 @@ export interface FileRouteTypes {
     | '/parents'
     | '/staff'
     | '/students'
-    | '/teacher'
     | '/teachers'
+    | '/teacher'
     | '/classes/$classId/edit'
     | '/classes/$classId/grades'
     | '/parents/$parentId/edit'
@@ -364,73 +416,57 @@ export interface FileRouteTypes {
     | '/teacher/classes/$classId/lessons/$lessonId/edit'
   id:
     | '__root__'
-    | '/'
+    | '/_authenticated'
     | '/login'
-    | '/classes/new'
-    | '/parents/new'
-    | '/staff/new'
-    | '/students/new'
-    | '/teachers/new'
-    | '/classes/'
-    | '/lessons/'
-    | '/parents/'
-    | '/staff/'
-    | '/students/'
-    | '/teacher/'
-    | '/teachers/'
-    | '/classes/$classId/edit'
-    | '/classes/$classId/grades'
-    | '/parents/$parentId/edit'
-    | '/staff/$staffId/edit'
-    | '/students/$studentId/edit'
-    | '/teachers/$teacherId/edit'
-    | '/classes/$classId/'
-    | '/classes/$classId/lessons/new'
-    | '/teacher/classes/$classId/grades'
-    | '/teacher/classes/$classId/'
-    | '/classes/$classId/lessons/$lessonId/attendance'
-    | '/classes/$classId/lessons/$lessonId/edit'
-    | '/classes/$classId/lessons/$lessonId/grades'
-    | '/teacher/classes/$classId/lessons/new'
-    | '/teacher/classes/$classId/lessons/$lessonId/attendance'
-    | '/teacher/classes/$classId/lessons/$lessonId/edit'
+    | '/unauthorized'
+    | '/_authenticated/_admin'
+    | '/_authenticated/_teacher'
+    | '/_authenticated/_admin/'
+    | '/_authenticated/_admin/classes/new'
+    | '/_authenticated/_admin/parents/new'
+    | '/_authenticated/_admin/staff/new'
+    | '/_authenticated/_admin/students/new'
+    | '/_authenticated/_admin/teachers/new'
+    | '/_authenticated/_admin/classes/'
+    | '/_authenticated/_admin/lessons/'
+    | '/_authenticated/_admin/parents/'
+    | '/_authenticated/_admin/staff/'
+    | '/_authenticated/_admin/students/'
+    | '/_authenticated/_admin/teachers/'
+    | '/_authenticated/_teacher/teacher/'
+    | '/_authenticated/_admin/classes/$classId/edit'
+    | '/_authenticated/_admin/classes/$classId/grades'
+    | '/_authenticated/_admin/parents/$parentId/edit'
+    | '/_authenticated/_admin/staff/$staffId/edit'
+    | '/_authenticated/_admin/students/$studentId/edit'
+    | '/_authenticated/_admin/teachers/$teacherId/edit'
+    | '/_authenticated/_admin/classes/$classId/'
+    | '/_authenticated/_admin/classes/$classId/lessons/new'
+    | '/_authenticated/_teacher/teacher/classes/$classId/grades'
+    | '/_authenticated/_teacher/teacher/classes/$classId/'
+    | '/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance'
+    | '/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit'
+    | '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades'
+    | '/_authenticated/_teacher/teacher/classes/$classId/lessons/new'
+    | '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance'
+    | '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
-  ClassesNewRoute: typeof ClassesNewRoute
-  ParentsNewRoute: typeof ParentsNewRoute
-  StaffNewRoute: typeof StaffNewRoute
-  StudentsNewRoute: typeof StudentsNewRoute
-  TeachersNewRoute: typeof TeachersNewRoute
-  ClassesIndexRoute: typeof ClassesIndexRoute
-  LessonsIndexRoute: typeof LessonsIndexRoute
-  ParentsIndexRoute: typeof ParentsIndexRoute
-  StaffIndexRoute: typeof StaffIndexRoute
-  StudentsIndexRoute: typeof StudentsIndexRoute
-  TeacherIndexRoute: typeof TeacherIndexRoute
-  TeachersIndexRoute: typeof TeachersIndexRoute
-  ClassesClassIdEditRoute: typeof ClassesClassIdEditRoute
-  ClassesClassIdGradesRoute: typeof ClassesClassIdGradesRoute
-  ParentsParentIdEditRoute: typeof ParentsParentIdEditRoute
-  StaffStaffIdEditRoute: typeof StaffStaffIdEditRoute
-  StudentsStudentIdEditRoute: typeof StudentsStudentIdEditRoute
-  TeachersTeacherIdEditRoute: typeof TeachersTeacherIdEditRoute
-  ClassesClassIdIndexRoute: typeof ClassesClassIdIndexRoute
-  ClassesClassIdLessonsNewRoute: typeof ClassesClassIdLessonsNewRoute
-  TeacherClassesClassIdGradesRoute: typeof TeacherClassesClassIdGradesRoute
-  TeacherClassesClassIdIndexRoute: typeof TeacherClassesClassIdIndexRoute
-  ClassesClassIdLessonsLessonIdAttendanceRoute: typeof ClassesClassIdLessonsLessonIdAttendanceRoute
-  ClassesClassIdLessonsLessonIdEditRoute: typeof ClassesClassIdLessonsLessonIdEditRoute
-  ClassesClassIdLessonsLessonIdGradesRoute: typeof ClassesClassIdLessonsLessonIdGradesRoute
-  TeacherClassesClassIdLessonsNewRoute: typeof TeacherClassesClassIdLessonsNewRoute
-  TeacherClassesClassIdLessonsLessonIdAttendanceRoute: typeof TeacherClassesClassIdLessonsLessonIdAttendanceRoute
-  TeacherClassesClassIdLessonsLessonIdEditRoute: typeof TeacherClassesClassIdLessonsLessonIdEditRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -438,248 +474,343 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/_teacher': {
+      id: '/_authenticated/_teacher'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedTeacherRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/_admin': {
+      id: '/_authenticated/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/_admin/': {
+      id: '/_authenticated/_admin/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/teachers/': {
-      id: '/teachers/'
-      path: '/teachers'
-      fullPath: '/teachers/'
-      preLoaderRoute: typeof TeachersIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher/': {
-      id: '/teacher/'
+    '/_authenticated/_teacher/teacher/': {
+      id: '/_authenticated/_teacher/teacher/'
       path: '/teacher'
       fullPath: '/teacher/'
-      preLoaderRoute: typeof TeacherIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherIndexRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
     }
-    '/students/': {
-      id: '/students/'
+    '/_authenticated/_admin/teachers/': {
+      id: '/_authenticated/_admin/teachers/'
+      path: '/teachers'
+      fullPath: '/teachers/'
+      preLoaderRoute: typeof AuthenticatedAdminTeachersIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/_admin/students/': {
+      id: '/_authenticated/_admin/students/'
       path: '/students'
       fullPath: '/students/'
-      preLoaderRoute: typeof StudentsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminStudentsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/staff/': {
-      id: '/staff/'
+    '/_authenticated/_admin/staff/': {
+      id: '/_authenticated/_admin/staff/'
       path: '/staff'
       fullPath: '/staff/'
-      preLoaderRoute: typeof StaffIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminStaffIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/parents/': {
-      id: '/parents/'
+    '/_authenticated/_admin/parents/': {
+      id: '/_authenticated/_admin/parents/'
       path: '/parents'
       fullPath: '/parents/'
-      preLoaderRoute: typeof ParentsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminParentsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/lessons/': {
-      id: '/lessons/'
+    '/_authenticated/_admin/lessons/': {
+      id: '/_authenticated/_admin/lessons/'
       path: '/lessons'
       fullPath: '/lessons/'
-      preLoaderRoute: typeof LessonsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminLessonsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/': {
-      id: '/classes/'
+    '/_authenticated/_admin/classes/': {
+      id: '/_authenticated/_admin/classes/'
       path: '/classes'
       fullPath: '/classes/'
-      preLoaderRoute: typeof ClassesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/teachers/new': {
-      id: '/teachers/new'
+    '/_authenticated/_admin/teachers/new': {
+      id: '/_authenticated/_admin/teachers/new'
       path: '/teachers/new'
       fullPath: '/teachers/new'
-      preLoaderRoute: typeof TeachersNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminTeachersNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/students/new': {
-      id: '/students/new'
+    '/_authenticated/_admin/students/new': {
+      id: '/_authenticated/_admin/students/new'
       path: '/students/new'
       fullPath: '/students/new'
-      preLoaderRoute: typeof StudentsNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminStudentsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/staff/new': {
-      id: '/staff/new'
+    '/_authenticated/_admin/staff/new': {
+      id: '/_authenticated/_admin/staff/new'
       path: '/staff/new'
       fullPath: '/staff/new'
-      preLoaderRoute: typeof StaffNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminStaffNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/parents/new': {
-      id: '/parents/new'
+    '/_authenticated/_admin/parents/new': {
+      id: '/_authenticated/_admin/parents/new'
       path: '/parents/new'
       fullPath: '/parents/new'
-      preLoaderRoute: typeof ParentsNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminParentsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/new': {
-      id: '/classes/new'
+    '/_authenticated/_admin/classes/new': {
+      id: '/_authenticated/_admin/classes/new'
       path: '/classes/new'
       fullPath: '/classes/new'
-      preLoaderRoute: typeof ClassesNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/$classId/': {
-      id: '/classes/$classId/'
+    '/_authenticated/_admin/classes/$classId/': {
+      id: '/_authenticated/_admin/classes/$classId/'
       path: '/classes/$classId'
       fullPath: '/classes/$classId/'
-      preLoaderRoute: typeof ClassesClassIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/teachers/$teacherId/edit': {
-      id: '/teachers/$teacherId/edit'
+    '/_authenticated/_admin/teachers/$teacherId/edit': {
+      id: '/_authenticated/_admin/teachers/$teacherId/edit'
       path: '/teachers/$teacherId/edit'
       fullPath: '/teachers/$teacherId/edit'
-      preLoaderRoute: typeof TeachersTeacherIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminTeachersTeacherIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/students/$studentId/edit': {
-      id: '/students/$studentId/edit'
+    '/_authenticated/_admin/students/$studentId/edit': {
+      id: '/_authenticated/_admin/students/$studentId/edit'
       path: '/students/$studentId/edit'
       fullPath: '/students/$studentId/edit'
-      preLoaderRoute: typeof StudentsStudentIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminStudentsStudentIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/staff/$staffId/edit': {
-      id: '/staff/$staffId/edit'
+    '/_authenticated/_admin/staff/$staffId/edit': {
+      id: '/_authenticated/_admin/staff/$staffId/edit'
       path: '/staff/$staffId/edit'
       fullPath: '/staff/$staffId/edit'
-      preLoaderRoute: typeof StaffStaffIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminStaffStaffIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/parents/$parentId/edit': {
-      id: '/parents/$parentId/edit'
+    '/_authenticated/_admin/parents/$parentId/edit': {
+      id: '/_authenticated/_admin/parents/$parentId/edit'
       path: '/parents/$parentId/edit'
       fullPath: '/parents/$parentId/edit'
-      preLoaderRoute: typeof ParentsParentIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminParentsParentIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/$classId/grades': {
-      id: '/classes/$classId/grades'
+    '/_authenticated/_admin/classes/$classId/grades': {
+      id: '/_authenticated/_admin/classes/$classId/grades'
       path: '/classes/$classId/grades'
       fullPath: '/classes/$classId/grades'
-      preLoaderRoute: typeof ClassesClassIdGradesRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdGradesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/$classId/edit': {
-      id: '/classes/$classId/edit'
+    '/_authenticated/_admin/classes/$classId/edit': {
+      id: '/_authenticated/_admin/classes/$classId/edit'
       path: '/classes/$classId/edit'
       fullPath: '/classes/$classId/edit'
-      preLoaderRoute: typeof ClassesClassIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/teacher/classes/$classId/': {
-      id: '/teacher/classes/$classId/'
+    '/_authenticated/_teacher/teacher/classes/$classId/': {
+      id: '/_authenticated/_teacher/teacher/classes/$classId/'
       path: '/teacher/classes/$classId'
       fullPath: '/teacher/classes/$classId/'
-      preLoaderRoute: typeof TeacherClassesClassIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdIndexRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
     }
-    '/teacher/classes/$classId/grades': {
-      id: '/teacher/classes/$classId/grades'
+    '/_authenticated/_teacher/teacher/classes/$classId/grades': {
+      id: '/_authenticated/_teacher/teacher/classes/$classId/grades'
       path: '/teacher/classes/$classId/grades'
       fullPath: '/teacher/classes/$classId/grades'
-      preLoaderRoute: typeof TeacherClassesClassIdGradesRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdGradesRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
     }
-    '/classes/$classId/lessons/new': {
-      id: '/classes/$classId/lessons/new'
+    '/_authenticated/_admin/classes/$classId/lessons/new': {
+      id: '/_authenticated/_admin/classes/$classId/lessons/new'
       path: '/classes/$classId/lessons/new'
       fullPath: '/classes/$classId/lessons/new'
-      preLoaderRoute: typeof ClassesClassIdLessonsNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdLessonsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/teacher/classes/$classId/lessons/new': {
-      id: '/teacher/classes/$classId/lessons/new'
+    '/_authenticated/_teacher/teacher/classes/$classId/lessons/new': {
+      id: '/_authenticated/_teacher/teacher/classes/$classId/lessons/new'
       path: '/teacher/classes/$classId/lessons/new'
       fullPath: '/teacher/classes/$classId/lessons/new'
-      preLoaderRoute: typeof TeacherClassesClassIdLessonsNewRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
     }
-    '/classes/$classId/lessons/$lessonId/grades': {
-      id: '/classes/$classId/lessons/$lessonId/grades'
+    '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades': {
+      id: '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades'
       path: '/classes/$classId/lessons/$lessonId/grades'
       fullPath: '/classes/$classId/lessons/$lessonId/grades'
-      preLoaderRoute: typeof ClassesClassIdLessonsLessonIdGradesRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/$classId/lessons/$lessonId/edit': {
-      id: '/classes/$classId/lessons/$lessonId/edit'
+    '/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit': {
+      id: '/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit'
       path: '/classes/$classId/lessons/$lessonId/edit'
       fullPath: '/classes/$classId/lessons/$lessonId/edit'
-      preLoaderRoute: typeof ClassesClassIdLessonsLessonIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/classes/$classId/lessons/$lessonId/attendance': {
-      id: '/classes/$classId/lessons/$lessonId/attendance'
+    '/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance': {
+      id: '/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance'
       path: '/classes/$classId/lessons/$lessonId/attendance'
       fullPath: '/classes/$classId/lessons/$lessonId/attendance'
-      preLoaderRoute: typeof ClassesClassIdLessonsLessonIdAttendanceRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/teacher/classes/$classId/lessons/$lessonId/edit': {
-      id: '/teacher/classes/$classId/lessons/$lessonId/edit'
+    '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/edit': {
+      id: '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/edit'
       path: '/teacher/classes/$classId/lessons/$lessonId/edit'
       fullPath: '/teacher/classes/$classId/lessons/$lessonId/edit'
-      preLoaderRoute: typeof TeacherClassesClassIdLessonsLessonIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
     }
-    '/teacher/classes/$classId/lessons/$lessonId/attendance': {
-      id: '/teacher/classes/$classId/lessons/$lessonId/attendance'
+    '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance': {
+      id: '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance'
       path: '/teacher/classes/$classId/lessons/$lessonId/attendance'
       fullPath: '/teacher/classes/$classId/lessons/$lessonId/attendance'
-      preLoaderRoute: typeof TeacherClassesClassIdLessonsLessonIdAttendanceRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
     }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminClassesNewRoute: typeof AuthenticatedAdminClassesNewRoute
+  AuthenticatedAdminParentsNewRoute: typeof AuthenticatedAdminParentsNewRoute
+  AuthenticatedAdminStaffNewRoute: typeof AuthenticatedAdminStaffNewRoute
+  AuthenticatedAdminStudentsNewRoute: typeof AuthenticatedAdminStudentsNewRoute
+  AuthenticatedAdminTeachersNewRoute: typeof AuthenticatedAdminTeachersNewRoute
+  AuthenticatedAdminClassesIndexRoute: typeof AuthenticatedAdminClassesIndexRoute
+  AuthenticatedAdminLessonsIndexRoute: typeof AuthenticatedAdminLessonsIndexRoute
+  AuthenticatedAdminParentsIndexRoute: typeof AuthenticatedAdminParentsIndexRoute
+  AuthenticatedAdminStaffIndexRoute: typeof AuthenticatedAdminStaffIndexRoute
+  AuthenticatedAdminStudentsIndexRoute: typeof AuthenticatedAdminStudentsIndexRoute
+  AuthenticatedAdminTeachersIndexRoute: typeof AuthenticatedAdminTeachersIndexRoute
+  AuthenticatedAdminClassesClassIdEditRoute: typeof AuthenticatedAdminClassesClassIdEditRoute
+  AuthenticatedAdminClassesClassIdGradesRoute: typeof AuthenticatedAdminClassesClassIdGradesRoute
+  AuthenticatedAdminParentsParentIdEditRoute: typeof AuthenticatedAdminParentsParentIdEditRoute
+  AuthenticatedAdminStaffStaffIdEditRoute: typeof AuthenticatedAdminStaffStaffIdEditRoute
+  AuthenticatedAdminStudentsStudentIdEditRoute: typeof AuthenticatedAdminStudentsStudentIdEditRoute
+  AuthenticatedAdminTeachersTeacherIdEditRoute: typeof AuthenticatedAdminTeachersTeacherIdEditRoute
+  AuthenticatedAdminClassesClassIdIndexRoute: typeof AuthenticatedAdminClassesClassIdIndexRoute
+  AuthenticatedAdminClassesClassIdLessonsNewRoute: typeof AuthenticatedAdminClassesClassIdLessonsNewRoute
+  AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute: typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
+  AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute: typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
+  AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute: typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminClassesNewRoute: AuthenticatedAdminClassesNewRoute,
+  AuthenticatedAdminParentsNewRoute: AuthenticatedAdminParentsNewRoute,
+  AuthenticatedAdminStaffNewRoute: AuthenticatedAdminStaffNewRoute,
+  AuthenticatedAdminStudentsNewRoute: AuthenticatedAdminStudentsNewRoute,
+  AuthenticatedAdminTeachersNewRoute: AuthenticatedAdminTeachersNewRoute,
+  AuthenticatedAdminClassesIndexRoute: AuthenticatedAdminClassesIndexRoute,
+  AuthenticatedAdminLessonsIndexRoute: AuthenticatedAdminLessonsIndexRoute,
+  AuthenticatedAdminParentsIndexRoute: AuthenticatedAdminParentsIndexRoute,
+  AuthenticatedAdminStaffIndexRoute: AuthenticatedAdminStaffIndexRoute,
+  AuthenticatedAdminStudentsIndexRoute: AuthenticatedAdminStudentsIndexRoute,
+  AuthenticatedAdminTeachersIndexRoute: AuthenticatedAdminTeachersIndexRoute,
+  AuthenticatedAdminClassesClassIdEditRoute:
+    AuthenticatedAdminClassesClassIdEditRoute,
+  AuthenticatedAdminClassesClassIdGradesRoute:
+    AuthenticatedAdminClassesClassIdGradesRoute,
+  AuthenticatedAdminParentsParentIdEditRoute:
+    AuthenticatedAdminParentsParentIdEditRoute,
+  AuthenticatedAdminStaffStaffIdEditRoute:
+    AuthenticatedAdminStaffStaffIdEditRoute,
+  AuthenticatedAdminStudentsStudentIdEditRoute:
+    AuthenticatedAdminStudentsStudentIdEditRoute,
+  AuthenticatedAdminTeachersTeacherIdEditRoute:
+    AuthenticatedAdminTeachersTeacherIdEditRoute,
+  AuthenticatedAdminClassesClassIdIndexRoute:
+    AuthenticatedAdminClassesClassIdIndexRoute,
+  AuthenticatedAdminClassesClassIdLessonsNewRoute:
+    AuthenticatedAdminClassesClassIdLessonsNewRoute,
+  AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute:
+    AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute,
+  AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute:
+    AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute,
+  AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute:
+    AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedTeacherRouteChildren {
+  AuthenticatedTeacherTeacherIndexRoute: typeof AuthenticatedTeacherTeacherIndexRoute
+  AuthenticatedTeacherTeacherClassesClassIdGradesRoute: typeof AuthenticatedTeacherTeacherClassesClassIdGradesRoute
+  AuthenticatedTeacherTeacherClassesClassIdIndexRoute: typeof AuthenticatedTeacherTeacherClassesClassIdIndexRoute
+  AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
+  AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
+  AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute
+}
+
+const AuthenticatedTeacherRouteChildren: AuthenticatedTeacherRouteChildren = {
+  AuthenticatedTeacherTeacherIndexRoute: AuthenticatedTeacherTeacherIndexRoute,
+  AuthenticatedTeacherTeacherClassesClassIdGradesRoute:
+    AuthenticatedTeacherTeacherClassesClassIdGradesRoute,
+  AuthenticatedTeacherTeacherClassesClassIdIndexRoute:
+    AuthenticatedTeacherTeacherClassesClassIdIndexRoute,
+  AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute:
+    AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute,
+  AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute:
+    AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute,
+  AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute:
+    AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdEditRoute,
+}
+
+const AuthenticatedTeacherRouteWithChildren =
+  AuthenticatedTeacherRoute._addFileChildren(AuthenticatedTeacherRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedTeacherRoute: typeof AuthenticatedTeacherRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedTeacherRoute: AuthenticatedTeacherRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
-  ClassesNewRoute: ClassesNewRoute,
-  ParentsNewRoute: ParentsNewRoute,
-  StaffNewRoute: StaffNewRoute,
-  StudentsNewRoute: StudentsNewRoute,
-  TeachersNewRoute: TeachersNewRoute,
-  ClassesIndexRoute: ClassesIndexRoute,
-  LessonsIndexRoute: LessonsIndexRoute,
-  ParentsIndexRoute: ParentsIndexRoute,
-  StaffIndexRoute: StaffIndexRoute,
-  StudentsIndexRoute: StudentsIndexRoute,
-  TeacherIndexRoute: TeacherIndexRoute,
-  TeachersIndexRoute: TeachersIndexRoute,
-  ClassesClassIdEditRoute: ClassesClassIdEditRoute,
-  ClassesClassIdGradesRoute: ClassesClassIdGradesRoute,
-  ParentsParentIdEditRoute: ParentsParentIdEditRoute,
-  StaffStaffIdEditRoute: StaffStaffIdEditRoute,
-  StudentsStudentIdEditRoute: StudentsStudentIdEditRoute,
-  TeachersTeacherIdEditRoute: TeachersTeacherIdEditRoute,
-  ClassesClassIdIndexRoute: ClassesClassIdIndexRoute,
-  ClassesClassIdLessonsNewRoute: ClassesClassIdLessonsNewRoute,
-  TeacherClassesClassIdGradesRoute: TeacherClassesClassIdGradesRoute,
-  TeacherClassesClassIdIndexRoute: TeacherClassesClassIdIndexRoute,
-  ClassesClassIdLessonsLessonIdAttendanceRoute:
-    ClassesClassIdLessonsLessonIdAttendanceRoute,
-  ClassesClassIdLessonsLessonIdEditRoute:
-    ClassesClassIdLessonsLessonIdEditRoute,
-  ClassesClassIdLessonsLessonIdGradesRoute:
-    ClassesClassIdLessonsLessonIdGradesRoute,
-  TeacherClassesClassIdLessonsNewRoute: TeacherClassesClassIdLessonsNewRoute,
-  TeacherClassesClassIdLessonsLessonIdAttendanceRoute:
-    TeacherClassesClassIdLessonsLessonIdAttendanceRoute,
-  TeacherClassesClassIdLessonsLessonIdEditRoute:
-    TeacherClassesClassIdLessonsLessonIdEditRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { staffService } from '@/services/staff.service'
-import type { CreateStaff, UpdateStaff, Staff } from '@/types/entities'
+import type { CreateStaff, UpdateStaff } from '@/types/entities'
 
 const STAFF_QUERY_KEY = ['staff'] as const
 

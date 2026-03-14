@@ -136,7 +136,7 @@ export const studentService = {
     return data.map(transformStudentRow)
   },
 
-  async getByLevel(level: string): Promise<Student[]> {
+  async getByLevel(level: Student['level']): Promise<Student[]> {
     const { data, error } = await supabase
       .from('student')
       .select('*')

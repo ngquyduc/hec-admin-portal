@@ -2,21 +2,16 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
-  useNavigate,
-  useLocation,
+  Link,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import { useEffect } from 'react'
-
-import Navigation from '../components/Navigation'
-import Header from '../components/Header'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 import { Toaster } from 'sonner'
-import { useCurrentUser } from '@/hooks/useAuth'
+import { Button } from '@/components/ui/button'
 
 import type { QueryClient } from '@tanstack/react-query'
 
@@ -46,49 +41,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
 
+  notFoundComponent: NotFoundPage,
+
   shellComponent: RootDocument,
 })
 
-function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { data: user, isLoading } = useCurrentUser()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const isLoginPage = location.pathname === '/login'
-  const isAdminRoute = !location.pathname.startsWith('/teacher') && location.pathname !== '/login'
-
-  useEffect(() => {
-    if (isLoading) return
-    if (!user && !isLoginPage) {
-      navigate({ to: '/login' })
-    }
-    if (user && isLoginPage) {
-      navigate({ to: user.role === 'admin' ? '/' : '/teacher' })
-    }
-    if (user && user.role === 'teacher' && isAdminRoute) {
-      navigate({ to: '/teacher' })
-    }
-  }, [user, isLoading, isLoginPage, isAdminRoute, navigate])
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-gray-400 text-sm">Loading...</div>
-      </div>
-    )
-  }
-
-  if (!user && !isLoginPage) return null
-
-  if (user && user.role === 'teacher' && isAdminRoute) return null
-
-  if (isLoginPage) return <>{children}</>
-
+function NotFoundPage() {
   return (
-    <>
-      <Header />
-      <Navigation />
-      {children}
-    </>
+    <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-lg border bg-card p-8 text-center space-y-4">
+        <h1 className="text-2xl font-semibold">Page not found</h1>
+        <p className="text-sm text-muted-foreground">The page you requested does not exist or has moved.</p>
+        <Button asChild className="w-full">
+          <Link to="/">Go to dashboard</Link>
+        </Button>
+      </div>
+    </div>
   )
 }
 
@@ -99,7 +67,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <AuthGuard>{children}</AuthGuard>
+        {children}
         <TanStackDevtools
           config={{
             position: 'bottom-right',

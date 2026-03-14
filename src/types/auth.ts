@@ -5,4 +5,5 @@ export interface AuthUser {
   email: string
   role: UserRole
   teacherId?: string // only populated when role === 'teacher'
+  permissions?: string[]
 }

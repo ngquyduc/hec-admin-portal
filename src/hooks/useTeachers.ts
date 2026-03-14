@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { teacherService } from '@/services/teacher.service'
-import type { CreateTeacher, UpdateTeacher, Teacher } from '@/types/entities'
+import type { CreateTeacher, UpdateTeacher } from '@/types/entities'
 
 const TEACHERS_QUERY_KEY = ['teachers'] as const
 
