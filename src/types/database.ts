@@ -116,10 +116,11 @@ export type Database = {
           id: string
           name: string
           email: string | null
-          phone: string | null
-          date_of_birth: string
+          phone: string
+          date_of_birth: string | null
           enrollment_date: string
-          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          entry_result: string | null
+          exit_target: string | null
           status: 'active' | 'inactive' | 'suspended'
           parent_id: string | null
           address: string | null
@@ -131,10 +132,11 @@ export type Database = {
           id?: string
           name: string
           email?: string | null
-          phone?: string | null
-          date_of_birth: string
+          phone: string
+          date_of_birth?: string | null
           enrollment_date: string
-          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          entry_result?: string | null
+          exit_target?: string | null
           status?: 'active' | 'inactive' | 'suspended'
           parent_id?: string | null
           address?: string | null
@@ -146,10 +148,11 @@ export type Database = {
           id?: string
           name?: string
           email?: string | null
-          phone?: string | null
-          date_of_birth?: string
+          phone?: string
+          date_of_birth?: string | null
           enrollment_date?: string
-          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          entry_result?: string | null
+          exit_target?: string | null
           status?: 'active' | 'inactive' | 'suspended'
           parent_id?: string | null
           address?: string | null

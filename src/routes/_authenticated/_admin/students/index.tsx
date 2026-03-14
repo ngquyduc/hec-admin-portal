@@ -4,7 +4,7 @@ import { Pencil, Trash2, Plus } from 'lucide-react'
 import { useStudents, useDeleteStudent } from '@/hooks/useStudents'
 import { DataTable } from '@/components/DataTable'
 import type { Student } from '@/types/entities'
-import { ENGLISH_LEVEL_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
+import { STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -33,17 +33,24 @@ function StudentsListPage() {
       ),
     },
     {
-      accessorKey: 'email',
-      header: 'Email',
+      accessorKey: 'phone',
+      header: 'Phone',
       cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.email || '-'}</div>
+        <div className="text-muted-foreground">{row.original.phone || '-'}</div>
       ),
     },
     {
-      accessorKey: 'level',
-      header: 'Level',
+      accessorKey: 'entryResult',
+      header: 'Entry Result',
       cell: ({ row }) => (
-        <Badge variant="secondary">{ENGLISH_LEVEL_LABELS[row.original.level]}</Badge>
+        <div className="text-muted-foreground">{row.original.entryResult || '-'}</div>
+      ),
+    },
+    {
+      accessorKey: 'exitTarget',
+      header: 'Exit Target',
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">{row.original.exitTarget || '-'}</div>
       ),
     },
     {

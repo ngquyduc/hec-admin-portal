@@ -6,15 +6,26 @@ type StudentRow = Database['public']['Tables']['student']['Row']
 type StudentInsert = Database['public']['Tables']['student']['Insert']
 type StudentUpdate = Database['public']['Tables']['student']['Update']
 
+function transformDate(value: string | Date | undefined): string | null {
+  if (!value) return null
+
+  if (typeof value === 'string') {
+    return value.trim() ? value : null
+  }
+
+  return value.toISOString()
+}
+
 function transformStudentRow(row: StudentRow): Student {
   return {
     id: row.id,
     name: row.name,
     email: row.email ?? undefined,
-    phone: row.phone ?? undefined,
-    dateOfBirth: row.date_of_birth,
+    phone: row.phone,
+    dateOfBirth: row.date_of_birth ?? undefined,
     enrollmentDate: row.enrollment_date,
-    level: row.level,
+    entryResult: row.entry_result ?? undefined,
+    exitTarget: row.exit_target ?? undefined,
     status: row.status,
     parentId: row.parent_id ?? undefined,
     address: row.address ?? undefined,
@@ -27,11 +38,12 @@ function transformStudentRow(row: StudentRow): Student {
 function transformCreateStudent(data: CreateStudent): StudentInsert {
   return {
     name: data.name,
-    email: data.email ?? null,
-    phone: data.phone ?? null,
-    date_of_birth: typeof data.dateOfBirth === 'string' ? data.dateOfBirth : data.dateOfBirth.toISOString(),
+    email: data.email?.trim() ? data.email : null,
+    phone: data.phone,
+    date_of_birth: transformDate(data.dateOfBirth),
     enrollment_date: typeof data.enrollmentDate === 'string' ? data.enrollmentDate : data.enrollmentDate.toISOString(),
-    level: data.level,
+    entry_result: data.entryResult ?? null,
+    exit_target: data.exitTarget ?? null,
     status: data.status,
     parent_id: data.parentId ?? null,
     address: data.address ?? null,
@@ -43,15 +55,16 @@ function transformUpdateStudent(data: UpdateStudent): StudentUpdate {
   const update: StudentUpdate = {}
   
   if (data.name !== undefined) update.name = data.name
-  if (data.email !== undefined) update.email = data.email ?? null
-  if (data.phone !== undefined) update.phone = data.phone ?? null
+  if (data.email !== undefined) update.email = data.email?.trim() ? data.email : null
+  if (data.phone !== undefined) update.phone = data.phone
   if (data.dateOfBirth !== undefined) {
-    update.date_of_birth = typeof data.dateOfBirth === 'string' ? data.dateOfBirth : data.dateOfBirth.toISOString()
+    update.date_of_birth = transformDate(data.dateOfBirth)
   }
   if (data.enrollmentDate !== undefined) {
     update.enrollment_date = typeof data.enrollmentDate === 'string' ? data.enrollmentDate : data.enrollmentDate.toISOString()
   }
-  if (data.level !== undefined) update.level = data.level
+  if (data.entryResult !== undefined) update.entry_result = data.entryResult ?? null
+  if (data.exitTarget !== undefined) update.exit_target = data.exitTarget ?? null
   if (data.status !== undefined) update.status = data.status
   if (data.parentId !== undefined) update.parent_id = data.parentId ?? null
   if (data.address !== undefined) update.address = data.address ?? null
@@ -130,17 +143,6 @@ export const studentService = {
       .from('student')
       .select('*')
       .eq('status', status)
-      .order('created_at', { ascending: false })
-
-    if (error) throw error
-    return data.map(transformStudentRow)
-  },
-
-  async getByLevel(level: Student['level']): Promise<Student[]> {
-    const { data, error } = await supabase
-      .from('student')
-      .select('*')
-      .eq('level', level)
       .order('created_at', { ascending: false })
 
     if (error) throw error

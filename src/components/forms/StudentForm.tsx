@@ -3,7 +3,6 @@ import { useNavigate } from '@tanstack/react-router'
 import { useCreateStudent, useUpdateStudent } from '@/hooks/useStudents'
 import { useParents, useParentsSearch } from '@/hooks/useParents'
 import { CreateStudentSchema, UpdateStudentSchema, type Student } from '@/types/entities'
-import { ENGLISH_LEVEL_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -19,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ZodError } from 'zod'
 
 interface StudentFormProps {
   student?: Student
@@ -46,7 +46,8 @@ export function StudentForm({ student, mode }: StudentFormProps) {
       email: student?.email ?? '',
       phone: student?.phone ?? '',
       dateOfBirth: (typeof student?.dateOfBirth === 'string' ? student.dateOfBirth : student?.dateOfBirth ? new Date(student.dateOfBirth).toISOString().split('T')[0] : ''),
-      englishLevel: student?.level ?? ('beginner' as const),
+      entryResult: student?.entryResult ?? '',
+      exitTarget: student?.exitTarget ?? '',
       enrollmentDate: (typeof student?.enrollmentDate === 'string' ? student.enrollmentDate : student?.enrollmentDate ? new Date(student.enrollmentDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
       status: student?.status ?? ('active' as const),
       address: student?.address ?? '',
@@ -55,12 +56,13 @@ export function StudentForm({ student, mode }: StudentFormProps) {
     },
     onSubmit: async ({ value }) => {
       try {
-        const { englishLevel, ...rest } = value
         const submitData = {
-          ...rest,
-          level: englishLevel,
+          ...value,
+          email: value.email.trim() || undefined,
+          phone: value.phone.trim(),
+          dateOfBirth: value.dateOfBirth || undefined,
           status: mode === 'create' ? ('active' as const) : value.status,
-          parentId: value.parentId || null,
+          parentId: value.parentId || undefined,
         }
         
         if (mode === 'create') {
@@ -73,7 +75,7 @@ export function StudentForm({ student, mode }: StudentFormProps) {
         navigate({ to: '/students' })
       } catch (error) {
         console.error('Form submission error:', error)
-        toast.error(error instanceof Error ? error.message : 'Failed to save student. Please try again.')
+        toast.error(error instanceof ZodError ? error.message : 'Failed to save student. Please try again.')
       }
     },
   })
@@ -111,6 +113,48 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           )}
         </form.Field>
 
+        {/* Date of Birth */}
+        <form.Field name="dateOfBirth">
+          {(field) => (
+            <div className="space-y-1.5">
+              <Label>Date of Birth</Label>
+              <Input
+                type="date"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                onBlur={field.handleBlur}
+              />
+              {field.state.meta.errors && (
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+              )}
+            </div>
+          )}
+        </form.Field>
+
+        {/* Phone */}
+        <form.Field
+          name="phone"
+          validators={{
+            onChange: CreateStudentSchema.shape.phone,
+          }}
+        >
+          {(field) => (
+            <div className="space-y-1.5">
+              <Label>Phone <span className="text-destructive">*</span></Label>
+              <Input
+                type="tel"
+                required
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                onBlur={field.handleBlur}
+              />
+              {field.state.meta.errors && (
+                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+              )}
+            </div>
+          )}
+        </form.Field>
+
         {/* Email */}
         <form.Field name="email">
           {(field) => (
@@ -129,13 +173,13 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           )}
         </form.Field>
 
-        {/* Phone */}
-        <form.Field name="phone">
+        {/* Entry Result */}
+        <form.Field name="entryResult">
           {(field) => (
             <div className="space-y-1.5">
-              <Label>Phone</Label>
+              <Label>Entry Result</Label>
               <Input
-                type="tel"
+                type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
@@ -147,39 +191,17 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           )}
         </form.Field>
 
-        {/* Date of Birth */}
-        <form.Field name="dateOfBirth">
+        {/* Exit Target */}
+        <form.Field name="exitTarget">
           {(field) => (
             <div className="space-y-1.5">
-              <Label>Date of Birth <span className="text-destructive">*</span></Label>
+              <Label>Exit Target</Label>
               <Input
-                type="date"
+                type="text"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
               />
-              {field.state.meta.errors && (
-                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        {/* English Level */}
-        <form.Field name="englishLevel">
-          {(field) => (
-            <div className="space-y-1.5">
-              <Label>English Level <span className="text-destructive">*</span></Label>
-              <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(ENGLISH_LEVEL_LABELS).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               {field.state.meta.errors && (
                 <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
               )}
@@ -205,8 +227,8 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           )}
         </form.Field>
 
-        {/* Status — only editable in edit mode */}
-        {mode === 'edit' ? (
+        {/* Status — only visible in edit mode */}
+        {mode === 'edit' && (
           <form.Field name="status">
             {(field) => (
               <div className="space-y-1.5">
@@ -224,29 +246,7 @@ export function StudentForm({ student, mode }: StudentFormProps) {
               </div>
             )}
           </form.Field>
-        ) : (
-          <div className="space-y-1.5">
-            <Label>Status</Label>
-            <div className="flex h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
-              Active
-            </div>
-            <p className="text-xs text-muted-foreground">New students are always set to Active</p>
-          </div>
         )}
-
-        {/* Address */}
-        <form.Field name="address">
-          {(field) => (
-            <div className="md:col-span-2 space-y-1.5">
-              <Label>Address</Label>
-              <Input
-                type="text"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </div>
-          )}
-        </form.Field>
 
         {/* Parent Selector */}
         <form.Field name="parentId">
@@ -315,9 +315,20 @@ export function StudentForm({ student, mode }: StudentFormProps) {
                   )}
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">
-                Search and select a parent to link this student
-              </p>
+            </div>
+          )}
+        </form.Field>
+
+        {/* Address */}
+        <form.Field name="address">
+          {(field) => (
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Address</Label>
+              <Input
+                type="text"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
             </div>
           )}
         </form.Field>

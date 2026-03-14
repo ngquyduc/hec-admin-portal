@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { studentService } from '@/services/student.service'
-import type { CreateStudent, UpdateStudent, Student } from '@/types/entities'
+import type { CreateStudent, UpdateStudent } from '@/types/entities'
 
 const STUDENTS_QUERY_KEY = ['students'] as const
 
@@ -23,14 +23,6 @@ export function useStudentsByStatus(status: 'active' | 'inactive' | 'suspended')
   return useQuery({
     queryKey: [...STUDENTS_QUERY_KEY, 'status', status],
     queryFn: () => studentService.getByStatus(status),
-  })
-}
-
-export function useStudentsByLevel(level: Student['level']) {
-  return useQuery({
-    queryKey: [...STUDENTS_QUERY_KEY, 'level', level],
-    queryFn: () => studentService.getByLevel(level),
-    enabled: !!level,
   })
 }
 
