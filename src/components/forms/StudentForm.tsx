@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -118,11 +119,12 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           {(field) => (
             <div className="space-y-1.5">
               <Label>Date of Birth</Label>
-              <Input
-                type="date"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
+              <DatePicker
+                value={field.state.value || undefined}
+                onChange={(value) => field.handleChange(value ?? '')}
+                placeholder="Pick date of birth"
+                fromYear={1950}
+                toYear={new Date().getFullYear()}
               />
               {field.state.meta.errors && (
                 <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
@@ -214,11 +216,11 @@ export function StudentForm({ student, mode }: StudentFormProps) {
           {(field) => (
             <div className="space-y-1.5">
               <Label>Enrollment Date <span className="text-destructive">*</span></Label>
-              <Input
-                type="date"
+              <DatePicker
                 value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
+                onChange={(value) => field.handleChange(value ?? '')}
+                fromYear={2000}
+                toYear={new Date().getFullYear() + 5}
               />
               {field.state.meta.errors && (
                 <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>

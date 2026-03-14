@@ -7,6 +7,7 @@ import { ArrowLeft, X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -223,11 +224,11 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
           {(field) => (
             <div className="space-y-1.5">
               <Label>Hire Date <span className="text-destructive">*</span></Label>
-              <Input
-                type="date"
+              <DatePicker
                 value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
+                onChange={(value) => field.handleChange(value ?? '')}
+                fromYear={2000}
+                toYear={new Date().getFullYear() + 2}
               />
               {field.state.meta.errors && (
                 <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>

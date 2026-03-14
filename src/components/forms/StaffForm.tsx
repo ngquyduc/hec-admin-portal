@@ -6,6 +6,7 @@ import { STAFF_ROLE_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -169,11 +170,11 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
           {(field) => (
             <div className="space-y-1.5">
               <Label>Hire Date <span className="text-destructive">*</span></Label>
-              <Input
-                type="date"
+              <DatePicker
                 value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
+                onChange={(value) => field.handleChange(value ?? '')}
+                fromYear={2000}
+                toYear={new Date().getFullYear() + 2}
               />
               {field.state.meta.errors && (
                 <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>

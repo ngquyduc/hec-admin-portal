@@ -33,13 +33,6 @@ function ParentsListPage() {
       ),
     },
     {
-      accessorKey: 'email',
-      header: 'Email',
-      cell: ({ row }) => (
-        <div className="text-muted-foreground">{row.original.email}</div>
-      ),
-    },
-    {
       accessorKey: 'phone',
       header: 'Phone',
       cell: ({ row }) => (
