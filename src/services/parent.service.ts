@@ -6,6 +6,12 @@ type ParentRow = Database['public']['Tables']['parent']['Row']
 type ParentInsert = Database['public']['Tables']['parent']['Insert']
 type ParentUpdate = Database['public']['Tables']['parent']['Update']
 
+function normalizeNullableText(value: string | null | undefined): string | null | undefined {
+  if (value === undefined) return undefined
+  if (value === null) return null
+  return value.trim() === '' ? null : value
+}
+
 function transformParentRow(row: ParentRow): Parent {
   return {
     id: row.id,
@@ -25,29 +31,29 @@ function transformParentRow(row: ParentRow): Parent {
 function transformCreateParent(data: CreateParent): ParentInsert {
   return {
     name: data.name,
-    email: data.email ?? null,
+    email: normalizeNullableText(data.email) ?? null,
     phone: data.phone,
     relationship: data.relationship,
     student_ids: data.studentIds,
-    address: data.address ?? null,
-    occupation: data.occupation ?? null,
-    notes: data.notes ?? null,
+    address: normalizeNullableText(data.address) ?? null,
+    occupation: normalizeNullableText(data.occupation) ?? null,
+    notes: normalizeNullableText(data.notes) ?? null,
   }
 }
 
 function transformUpdateParent(data: UpdateParent): ParentUpdate {
-  const update: ParentUpdate = {}
+  const update: Omit<ParentUpdate, 'email'> & { email?: string | null } = {}
   
   if (data.name !== undefined) update.name = data.name
-  if (data.email !== undefined) update.email = data.email
+  if (data.email !== undefined) update.email = normalizeNullableText(data.email) ?? null
   if (data.phone !== undefined) update.phone = data.phone
   if (data.relationship !== undefined) update.relationship = data.relationship
   if (data.studentIds !== undefined) update.student_ids = data.studentIds
-  if (data.address !== undefined) update.address = data.address ?? null
-  if (data.occupation !== undefined) update.occupation = data.occupation ?? null
-  if (data.notes !== undefined) update.notes = data.notes ?? null
+  if (data.address !== undefined) update.address = normalizeNullableText(data.address) ?? null
+  if (data.occupation !== undefined) update.occupation = normalizeNullableText(data.occupation) ?? null
+  if (data.notes !== undefined) update.notes = normalizeNullableText(data.notes) ?? null
   
-  return update
+  return update as ParentUpdate
 }
 
 export const parentService = {
