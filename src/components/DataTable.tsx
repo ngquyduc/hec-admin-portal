@@ -8,7 +8,7 @@ import {
   type SortingState,
   type ColumnFiltersState,
 } from '@tanstack/react-table'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { ChevronDown, ChevronUp, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import {
@@ -26,6 +26,7 @@ interface DataTableProps<TData, TValue> {
   searchPlaceholder?: string
   searchColumn?: string
   onRowClick?: (row: TData) => void
+  toolbarContent?: ReactNode
 }
 
 interface DataTableColumnMeta {
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   searchPlaceholder = 'Search...',
   searchColumn,
   onRowClick,
+  toolbarContent,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -76,6 +78,7 @@ export function DataTable<TData, TValue>({
               className="pl-9"
             />
           </div>
+          {toolbarContent}
         </div>
       )}
 

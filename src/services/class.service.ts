@@ -40,6 +40,7 @@ function transformClassRow(
     description: row.description ?? undefined,
     mainTeacherIds,
     teachingAssistantIds,
+    classType: row.class_type,
     level: row.level,
     status: row.status,
     notes: row.notes ?? undefined,
@@ -52,6 +53,7 @@ function transformCreateClass(data: CreateClass): ClassInsert {
   return {
     name: data.name,
     description: data.description ?? null,
+    class_type: data.classType,
     level: data.level,
     status: data.status,
     notes: data.notes ?? null,
@@ -62,6 +64,7 @@ function transformUpdateClass(data: UpdateClass): ClassUpdate {
   const update: ClassUpdate = {}
   if (data.name !== undefined) update.name = data.name
   if (data.description !== undefined) update.description = data.description ?? null
+  if (data.classType !== undefined) update.class_type = data.classType
   if (data.level !== undefined) update.level = data.level
   if (data.status !== undefined) update.status = data.status
   if (data.notes !== undefined) update.notes = data.notes ?? null

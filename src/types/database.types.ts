@@ -223,7 +223,8 @@ export type Database = {
           id: string
           name: string
           description: string | null
-          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          class_type: 'ielts' | 'communication-english'
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.0-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
           status: 'active' | 'inactive' | 'suspended'
           notes: string | null
           created_at: string
@@ -233,7 +234,8 @@ export type Database = {
           id?: string
           name: string
           description?: string | null
-          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          class_type?: 'ielts' | 'communication-english'
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.0-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
           status?: 'active' | 'inactive' | 'suspended'
           notes?: string | null
           created_at?: string
@@ -243,7 +245,8 @@ export type Database = {
           id?: string
           name?: string
           description?: string | null
-          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
+          class_type?: 'ielts' | 'communication-english'
+          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.0-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
           status?: 'active' | 'inactive' | 'suspended'
           notes?: string | null
           created_at?: string

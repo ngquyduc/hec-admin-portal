@@ -1,13 +1,21 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { type ColumnDef } from '@tanstack/react-table'
-import { Pencil, Trash2, Plus, Eye } from 'lucide-react'
+import { Pencil, Trash2, Plus } from 'lucide-react'
+import { useState } from 'react'
 import { useClasses, useDeleteClass } from '@/hooks/useClasses'
 import { DataTable } from '@/components/DataTable'
-import type { Class } from '@/types/entities'
-import { ENGLISH_LEVEL_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
+import type { Class, Status } from '@/types/entities'
+import { CLASS_LEVEL_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const Route = createFileRoute('/_authenticated/_admin/classes/')({
   component: ClassesListPage,
@@ -17,6 +25,10 @@ function ClassesListPage() {
   const { data: classes = [], isLoading, error } = useClasses()
   const deleteClass = useDeleteClass()
   const navigate = useNavigate()
+  const [statusFilter, setStatusFilter] = useState<Status | 'all'>('active')
+  const filteredClasses = statusFilter === 'all'
+    ? classes
+    : classes.filter((classItem) => classItem.status === statusFilter)
 
   const handleDelete = async (id: string, name: string) => {
     if (confirm(`Are you sure you want to delete "${name}"? This will also delete all its lessons.`)) {
@@ -42,7 +54,7 @@ function ClassesListPage() {
       accessorKey: 'level',
       header: 'Level',
       cell: ({ row }) => (
-        <Badge variant="secondary">{ENGLISH_LEVEL_LABELS[row.original.level]}</Badge>
+        <Badge variant="secondary">{CLASS_LEVEL_LABELS[row.original.level]}</Badge>
       ),
     },
     {
@@ -69,12 +81,6 @@ function ClassesListPage() {
       },
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon-sm"
-            onClick={() => navigate({ to: '/classes/$classId', params: { classId: row.original.id } })}
-            title="View details"
-          >
-            <Eye className="h-4 w-4" />
-          </Button>
           <Button variant="ghost" size="icon-sm"
             onClick={() => navigate({ to: '/classes/$classId/edit', params: { classId: row.original.id } })}
             title="Edit"
@@ -108,7 +114,7 @@ function ClassesListPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold">Classes</h1>
-          <p className="text-muted-foreground mt-1">{classes.length} class{classes.length !== 1 ? 'es' : ''}</p>
+          <p className="text-muted-foreground mt-1">{filteredClasses.length} class{filteredClasses.length !== 1 ? 'es' : ''}</p>
         </div>
         <Button asChild>
           <Link to="/classes/new">
@@ -129,9 +135,25 @@ function ClassesListPage() {
           <CardContent className="p-6">
             <DataTable
               columns={columns}
-              data={classes}
+              data={filteredClasses}
               searchColumn="name"
               searchPlaceholder="Search classes..."
+              toolbarContent={(
+                <Select
+                  value={statusFilter}
+                  onValueChange={(value) => setStatusFilter(value as Status | 'all')}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Filter status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">{STATUS_LABELS.active}</SelectItem>
+                    <SelectItem value="inactive">{STATUS_LABELS.inactive}</SelectItem>
+                    <SelectItem value="suspended">{STATUS_LABELS.suspended}</SelectItem>
+                    <SelectItem value="all">All statuses</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             />
           </CardContent>
         </Card>

@@ -3,7 +3,7 @@ import { useClassById, useClassStudents } from '@/hooks/useClasses'
 import { useLessonsByClass } from '@/hooks/useLessons'
 import { useStudents } from '@/hooks/useStudents'
 import { useCurrentUser } from '@/hooks/useAuth'
-import { ENGLISH_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
+import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
 import { ArrowLeft, Plus, ClipboardList, Star, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -77,7 +77,7 @@ function TeacherClassDetail() {
                   {STATUS_LABELS[cls.status]}
                 </Badge>
                 <Badge variant="secondary">
-                  {ENGLISH_LEVEL_LABELS[cls.level]}
+                  {CLASS_LEVEL_LABELS[cls.level]}
                 </Badge>
               </div>
               {cls.description && (

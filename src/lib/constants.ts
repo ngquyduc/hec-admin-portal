@@ -1,4 +1,4 @@
-import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole, LessonStatus, AttendanceStatus, GradeType, GradePeriod } from '@/types/entities'
+import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole, LessonStatus, AttendanceStatus, GradeType, GradePeriod, ClassLevel } from '@/types/entities'
 
 // Display labels for entity types
 export const ENTITY_LABELS = {
@@ -32,6 +32,20 @@ export const ENGLISH_LEVEL_LABELS: Record<EnglishLevel, string> = {
   'upper-intermediate': 'Upper-Intermediate',
   advanced: 'Advanced',
   proficient: 'Proficient',
+}
+
+// Class level labels
+export const CLASS_LEVEL_LABELS: Record<ClassLevel, string> = {
+  beginner: 'Beginner',
+  elementary: 'Elementary',
+  'pre-intermediate': 'Pre-Intermediate',
+  intermediate: 'Intermediate',
+  'upper-intermediate': 'Upper-Intermediate',
+  'pre-ielts': 'Pre-IELTS (dưới 3.4)',
+  '3.0-4.5': '3.0-4.5',
+  '4.5-5.5': '4.5-5.5',
+  '5.5-6.5': '5.5-6.5',
+  '6.5-7.0+': '6.5-7.0+',
 }
 
 // Relationship labels

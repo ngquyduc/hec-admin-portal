@@ -2,8 +2,8 @@ import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
 import { useCreateClass, useUpdateClass } from '@/hooks/useClasses'
 import { useTeachers, useTeachersSearch } from '@/hooks/useTeachers'
-import { CreateClassSchema, UpdateClassSchema, type Class } from '@/types/entities'
-import { ENGLISH_LEVEL_LABELS } from '@/lib/constants'
+import { CreateClassSchema, UpdateClassSchema, type Class, type ClassLevel, type ClassType } from '@/types/entities'
+import { CLASS_LEVEL_LABELS } from '@/lib/constants'
 import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -23,6 +23,34 @@ import {
 interface ClassFormProps {
   classData?: Class
   mode: 'create' | 'edit'
+}
+
+const IELTS_LEVEL_OPTIONS: Array<{ value: ClassLevel; label: string }> = [
+  { value: 'pre-ielts', label: CLASS_LEVEL_LABELS['pre-ielts'] },
+  { value: '3.0-4.5', label: CLASS_LEVEL_LABELS['3.0-4.5'] },
+  { value: '4.5-5.5', label: CLASS_LEVEL_LABELS['4.5-5.5'] },
+  { value: '5.5-6.5', label: CLASS_LEVEL_LABELS['5.5-6.5'] },
+  { value: '6.5-7.0+', label: CLASS_LEVEL_LABELS['6.5-7.0+'] },
+]
+
+const COMMUNICATION_LEVEL_OPTIONS: Array<{ value: ClassLevel; label: string }> = [
+  { value: 'beginner', label: CLASS_LEVEL_LABELS.beginner },
+  { value: 'elementary', label: CLASS_LEVEL_LABELS.elementary },
+  { value: 'pre-intermediate', label: CLASS_LEVEL_LABELS['pre-intermediate'] },
+  { value: 'intermediate', label: CLASS_LEVEL_LABELS.intermediate },
+  { value: 'upper-intermediate', label: CLASS_LEVEL_LABELS['upper-intermediate'] },
+]
+
+const IELTS_LEVELS: ClassLevel[] = [
+  'pre-ielts',
+  '3.0-4.5',
+  '4.5-5.5',
+  '5.5-6.5',
+  '6.5-7.0+',
+]
+
+function inferClassTypeFromLevel(level: ClassLevel): ClassType {
+  return IELTS_LEVELS.includes(level) ? 'ielts' : 'communication-english'
 }
 
 function TeacherSelector({
@@ -134,6 +162,9 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
   const navigate = useNavigate()
   const createClass = useCreateClass()
   const updateClass = useUpdateClass()
+  const [classType, setClassType] = useState<ClassType>(
+    classData?.classType ?? inferClassTypeFromLevel(classData?.level ?? 'beginner'),
+  )
 
   const handleCancel = () => {
     if (mode === 'edit' && window.history.length > 1) {
@@ -149,14 +180,22 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
       description: classData?.description ?? '',
       mainTeacherIds: classData?.mainTeacherIds ?? [],
       teachingAssistantIds: classData?.teachingAssistantIds ?? [],
-      level: classData?.level ?? ('beginner' as const),
+      level: classData?.level ?? (classType === 'ielts' ? 'pre-ielts' : 'beginner'),
       status: classData?.status ?? ('active' as const),
       notes: classData?.notes ?? '',
     },
     onSubmit: async ({ value }) => {
       try {
+        const allowedLevels = (classType === 'ielts' ? IELTS_LEVEL_OPTIONS : COMMUNICATION_LEVEL_OPTIONS)
+          .map((option) => option.value)
+        const normalizedLevel = allowedLevels.includes(value.level)
+          ? value.level
+          : allowedLevels[0]
+
         const submitData = {
           ...value,
+          classType,
+          level: normalizedLevel,
           status: mode === 'create' ? ('active' as const) : value.status,
           mainTeacherIds: [...new Set(value.mainTeacherIds)],
           teachingAssistantIds: [...new Set(value.teachingAssistantIds)],
@@ -178,6 +217,8 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
       }
     },
   })
+
+  const levelOptions = classType === 'ielts' ? IELTS_LEVEL_OPTIONS : COMMUNICATION_LEVEL_OPTIONS
 
   return (
     <form
@@ -208,6 +249,26 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
           )}
         </form.Field>
 
+        <div className="space-y-1.5">
+          <Label>Class Type <span className="text-destructive">*</span></Label>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              type="button"
+              variant={classType === 'ielts' ? 'default' : 'outline'}
+              onClick={() => setClassType('ielts')}
+            >
+              IELTS
+            </Button>
+            <Button
+              type="button"
+              variant={classType === 'communication-english' ? 'default' : 'outline'}
+              onClick={() => setClassType('communication-english')}
+            >
+              Communication
+            </Button>
+          </div>
+        </div>
+
         {/* Level */}
         <form.Field name="level">
           {(field) => (
@@ -216,8 +277,8 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
               <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {Object.entries(ENGLISH_LEVEL_LABELS).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  {levelOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -286,7 +347,7 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
         </form.Field>
 
         {/* Status — edit mode only */}
-        {mode === 'edit' ? (
+        {mode === 'edit' && (
           <form.Field name="status">
             {(field) => (
               <div className="space-y-1.5">
@@ -302,14 +363,6 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
               </div>
             )}
           </form.Field>
-        ) : (
-          <div className="space-y-1.5">
-            <Label>Status</Label>
-            <div className="flex h-9 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
-              Active
-            </div>
-            <p className="text-xs text-muted-foreground">New classes are always set to Active</p>
-          </div>
         )}
 
         {/* Notes */}

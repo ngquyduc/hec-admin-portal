@@ -164,7 +164,12 @@ create table public.classes (
   id uuid primary key default uuid_generate_v4(),
   name text not null,
   description text,
-  level text not null check (level in ('beginner', 'elementary', 'pre-intermediate', 'intermediate', 'upper-intermediate', 'advanced', 'proficient')),
+  class_type text not null default 'communication-english' check (class_type in ('ielts', 'communication-english')),
+  level text not null check (
+    (class_type = 'communication-english' and level in ('beginner', 'elementary', 'pre-intermediate', 'intermediate', 'upper-intermediate'))
+    or
+    (class_type = 'ielts' and level in ('pre-ielts', '3.0-4.5', '4.5-5.5', '5.5-6.5', '6.5-7.0+'))
+  ),
   status text not null default 'active' check (status in ('active', 'inactive', 'suspended')),
   notes text,
   created_at timestamp with time zone default now(),

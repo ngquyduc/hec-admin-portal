@@ -3,7 +3,7 @@ import { useClassById, useClassStudents, useRemoveStudentFromClass, useAddStuden
 import { useLessonsByClass, useDeleteLesson, useLessonAttendance } from '@/hooks/useLessons'
 import { useStudents } from '@/hooks/useStudents'
 import { useTeachers } from '@/hooks/useTeachers'
-import { ENGLISH_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
+import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
 import type { Lesson } from '@/types/entities'
 import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, Star, BookOpen } from 'lucide-react'
 import { useState } from 'react'
@@ -169,7 +169,7 @@ function ClassDetailPage() {
               {STATUS_LABELS[classData.status]}
             </Badge>
             <Badge variant="secondary">
-              {ENGLISH_LEVEL_LABELS[classData.level]}
+              {CLASS_LEVEL_LABELS[classData.level]}
             </Badge>
           </div>
           {classData.description && (

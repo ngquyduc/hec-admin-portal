@@ -204,13 +204,29 @@ export type CreateParent = z.infer<typeof CreateParentSchema>
 export type UpdateParent = z.infer<typeof UpdateParentSchema>
 
 // ============= Class Schema =============
+export const ClassTypeSchema = SubjectSchema
+
+export const ClassLevelSchema = z.enum([
+  'beginner',
+  'elementary',
+  'pre-intermediate',
+  'intermediate',
+  'upper-intermediate',
+  'pre-ielts',
+  '3.0-4.5',
+  '4.5-5.5',
+  '5.5-6.5',
+  '6.5-7.0+',
+])
+
 export const ClassSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Class name is required'),
   description: z.string().optional(),
   mainTeacherIds: z.array(z.string()).min(1, 'At least one main teacher is required'),
   teachingAssistantIds: z.array(z.string()).min(1, 'At least one teaching assistant is required'),
-  level: EnglishLevelSchema,
+  classType: ClassTypeSchema,
+  level: ClassLevelSchema,
   status: StatusSchema,
   notes: z.string().optional(),
   createdAt: z.string().or(z.date()),
@@ -226,6 +242,8 @@ export const CreateClassSchema = ClassSchema.omit({
 export const UpdateClassSchema = CreateClassSchema.partial()
 
 export type Class = z.infer<typeof ClassSchema>
+export type ClassType = z.infer<typeof ClassTypeSchema>
+export type ClassLevel = z.infer<typeof ClassLevelSchema>
 export type CreateClass = z.infer<typeof CreateClassSchema>
 export type UpdateClass = z.infer<typeof UpdateClassSchema>
 
