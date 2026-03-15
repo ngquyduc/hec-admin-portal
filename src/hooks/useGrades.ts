@@ -7,6 +7,8 @@ const CLASS_ASSESSMENT_SCORES_KEY = ['class_assessment_scores'] as const
 const CLASS_ASSESSMENTS_KEY = ['class_assessments'] as const
 const ASSESSMENT_KEY = ['assessment'] as const
 const ASSESSMENT_SCORES_KEY = ['assessment_scores'] as const
+const ASSESSMENT_COMPONENTS_KEY = ['assessment_components'] as const
+const ASSESSMENT_COMPONENT_SCORES_KEY = ['assessment_component_scores'] as const
 
 type UpsertAssessmentScoresInput = {
   classId: string
@@ -30,11 +32,27 @@ type CreateAssessmentInput = {
   weight?: number
   dueAt?: string
   notes?: string
+  components?: {
+    title: string
+    isScorable: boolean
+    maxScore?: number
+    notes?: string
+  }[]
 }
 
 type UpsertAssessmentScoresByIdInput = {
   assessmentId: string
   records: {
+    studentId: string
+    score: number | null
+    feedback?: string
+  }[]
+}
+
+type UpsertAssessmentComponentScoresByAssessmentInput = {
+  assessmentId: string
+  records: {
+    componentId: string
     studentId: string
     score: number | null
     feedback?: string
@@ -108,6 +126,22 @@ export function useAssessmentScores(assessmentId: string) {
   })
 }
 
+export function useAssessmentComponents(assessmentId: string) {
+  return useQuery({
+    queryKey: [...ASSESSMENT_COMPONENTS_KEY, assessmentId],
+    queryFn: () => gradeService.getAssessmentComponents(assessmentId),
+    enabled: !!assessmentId,
+  })
+}
+
+export function useAssessmentComponentScores(assessmentId: string) {
+  return useQuery({
+    queryKey: [...ASSESSMENT_COMPONENT_SCORES_KEY, assessmentId],
+    queryFn: () => gradeService.getAssessmentComponentScores(assessmentId),
+    enabled: !!assessmentId,
+  })
+}
+
 export function useUpsertAssessmentScoresById() {
   const queryClient = useQueryClient()
 
@@ -115,6 +149,22 @@ export function useUpsertAssessmentScoresById() {
     mutationFn: (payload: UpsertAssessmentScoresByIdInput) =>
       gradeService.upsertAssessmentScoresById(payload),
     onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_SCORES_KEY, payload.assessmentId] })
+      queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENTS_KEY })
+      queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENT_SCORES_KEY })
+      queryClient.invalidateQueries({ queryKey: LESSON_ASSESSMENT_SCORES_KEY })
+    },
+  })
+}
+
+export function useUpsertAssessmentComponentScoresByAssessmentId() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (payload: UpsertAssessmentComponentScoresByAssessmentInput) =>
+      gradeService.upsertAssessmentComponentScoresByAssessmentId(payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_COMPONENT_SCORES_KEY, payload.assessmentId] })
       queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_SCORES_KEY, payload.assessmentId] })
       queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENTS_KEY })
       queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENT_SCORES_KEY })

@@ -353,6 +353,40 @@ export const CreateAssessmentScoreSchema = AssessmentScoreSchema.omit({
   updatedAt: true,
 })
 
+export const AssessmentComponentSchema = z.object({
+  id: z.string(),
+  assessmentId: z.string(),
+  title: z.string().min(1, 'Title is required'),
+  isScorable: z.boolean().default(true),
+  maxScore: z.number().min(0.1).optional(),
+  displayOrder: z.number().int().min(0).default(0),
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateAssessmentComponentSchema = AssessmentComponentSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export const AssessmentComponentScoreSchema = z.object({
+  id: z.string(),
+  componentId: z.string(),
+  studentId: z.string(),
+  score: z.number().min(0).nullable(),
+  feedback: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateAssessmentComponentScoreSchema = AssessmentComponentScoreSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
 export const AssessmentScoreRecordSchema = z.object({
   assessmentId: z.string(),
   classId: z.string(),
@@ -371,6 +405,10 @@ export type Assessment = z.infer<typeof AssessmentSchema>
 export type CreateAssessment = z.infer<typeof CreateAssessmentSchema>
 export type AssessmentScore = z.infer<typeof AssessmentScoreSchema>
 export type CreateAssessmentScore = z.infer<typeof CreateAssessmentScoreSchema>
+export type AssessmentComponent = z.infer<typeof AssessmentComponentSchema>
+export type CreateAssessmentComponent = z.infer<typeof CreateAssessmentComponentSchema>
+export type AssessmentComponentScore = z.infer<typeof AssessmentComponentScoreSchema>
+export type CreateAssessmentComponentScore = z.infer<typeof CreateAssessmentComponentScoreSchema>
 export type AssessmentScoreRecord = z.infer<typeof AssessmentScoreRecordSchema>
 
 // ============= Feedback Schema =============

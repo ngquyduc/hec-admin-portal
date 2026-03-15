@@ -520,6 +520,95 @@ export type Database = {
           }
         ]
       }
+      assessment_components: {
+        Row: {
+          id: string
+          assessment_id: string
+          title: string
+          is_scorable: boolean
+          max_score: number | null
+          display_order: number
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          assessment_id: string
+          title: string
+          is_scorable?: boolean
+          max_score?: number | null
+          display_order?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          assessment_id?: string
+          title?: string
+          is_scorable?: boolean
+          max_score?: number | null
+          display_order?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'assessment_components_assessment_id_fkey'
+            columns: ['assessment_id']
+            isOneToOne: false
+            referencedRelation: 'assessments'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      assessment_component_scores: {
+        Row: {
+          id: string
+          component_id: string
+          student_id: string
+          score: number | null
+          feedback: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          component_id: string
+          student_id: string
+          score?: number | null
+          feedback?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          component_id?: string
+          student_id?: string
+          score?: number | null
+          feedback?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'assessment_component_scores_component_id_fkey'
+            columns: ['component_id']
+            isOneToOne: false
+            referencedRelation: 'assessment_components'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'assessment_component_scores_student_id_fkey'
+            columns: ['student_id']
+            isOneToOne: false
+            referencedRelation: 'students'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       user_roles: {
         Row: {
           user_id: string

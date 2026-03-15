@@ -1,9 +1,17 @@
 import { supabase } from '@/lib/supabase'
-import type { Assessment, AssessmentType, AssessmentScoreRecord } from '@/types/entities'
+import type {
+  Assessment,
+  AssessmentComponent,
+  AssessmentComponentScore,
+  AssessmentType,
+  AssessmentScoreRecord,
+} from '@/types/entities'
 import type { Database } from '@/types/database'
 
 type AssessmentRow = Database['public']['Tables']['assessments']['Row']
 type AssessmentScoreRow = Database['public']['Tables']['assessment_scores']['Row']
+type AssessmentComponentRow = Database['public']['Tables']['assessment_components']['Row']
+type AssessmentComponentScoreRow = Database['public']['Tables']['assessment_component_scores']['Row']
 
 type UpsertAssessmentScoresInput = {
   classId: string
@@ -27,11 +35,27 @@ type CreateAssessmentInput = {
   weight?: number
   dueAt?: string
   notes?: string
+  components?: {
+    title: string
+    isScorable: boolean
+    maxScore?: number
+    notes?: string
+  }[]
 }
 
 type UpsertAssessmentScoresByIdInput = {
   assessmentId: string
   records: {
+    studentId: string
+    score: number | null
+    feedback?: string
+  }[]
+}
+
+type UpsertAssessmentComponentScoresByAssessmentInput = {
+  assessmentId: string
+  records: {
+    componentId: string
     studentId: string
     score: number | null
     feedback?: string
@@ -73,6 +97,32 @@ function mapAssessment(assessment: AssessmentRow): Assessment {
   }
 }
 
+function mapAssessmentComponent(component: AssessmentComponentRow): AssessmentComponent {
+  return {
+    id: component.id,
+    assessmentId: component.assessment_id,
+    title: component.title,
+    isScorable: component.is_scorable,
+    maxScore: component.max_score === null ? undefined : Number(component.max_score),
+    displayOrder: component.display_order,
+    notes: component.notes ?? undefined,
+    createdAt: component.created_at,
+    updatedAt: component.updated_at,
+  }
+}
+
+function mapAssessmentComponentScore(score: AssessmentComponentScoreRow): AssessmentComponentScore {
+  return {
+    id: score.id,
+    componentId: score.component_id,
+    studentId: score.student_id,
+    score: score.score,
+    feedback: score.feedback ?? undefined,
+    createdAt: score.created_at,
+    updatedAt: score.updated_at,
+  }
+}
+
 export const gradeService = {
   async createAssessment(payload: CreateAssessmentInput): Promise<Assessment> {
     const { data, error } = await supabase
@@ -91,6 +141,24 @@ export const gradeService = {
       .single()
 
     if (error) throw error
+
+    if (payload.components && payload.components.length > 0) {
+      const componentRows = payload.components.map((component, index) => ({
+        assessment_id: data.id,
+        title: component.title,
+        is_scorable: component.isScorable,
+        max_score: component.isScorable ? (component.maxScore ?? 10) : null,
+        display_order: index,
+        notes: component.notes ?? null,
+      }))
+
+      const { error: componentError } = await supabase
+        .from('assessment_components')
+        .insert(componentRows)
+
+      if (componentError) throw componentError
+    }
+
     return mapAssessment(data)
   },
 
@@ -131,6 +199,37 @@ export const gradeService = {
     if (scoreError) throw scoreError
 
     return scoreRows.map((scoreRow) => mapRecord(assessment, scoreRow))
+  },
+
+  async getAssessmentComponents(assessmentId: string): Promise<AssessmentComponent[]> {
+    const { data, error } = await supabase
+      .from('assessment_components')
+      .select('*')
+      .eq('assessment_id', assessmentId)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true })
+
+    if (error) throw error
+    return data.map(mapAssessmentComponent)
+  },
+
+  async getAssessmentComponentScores(assessmentId: string): Promise<AssessmentComponentScore[]> {
+    const { data: components, error: componentError } = await supabase
+      .from('assessment_components')
+      .select('id')
+      .eq('assessment_id', assessmentId)
+
+    if (componentError) throw componentError
+    if (components.length === 0) return []
+
+    const componentIds = components.map((component) => component.id)
+    const { data, error } = await supabase
+      .from('assessment_component_scores')
+      .select('*')
+      .in('component_id', componentIds)
+
+    if (error) throw error
+    return data.map(mapAssessmentComponentScore)
   },
 
   async getLessonAssessmentScores(classId: string, lessonId: string): Promise<AssessmentScoreRecord[]> {
@@ -287,6 +386,25 @@ export const gradeService = {
     const { error } = await supabase
       .from('assessment_scores')
       .upsert(rows, { onConflict: 'assessment_id,student_id' })
+
+    if (error) throw error
+  },
+
+  async upsertAssessmentComponentScoresByAssessmentId(
+    payload: UpsertAssessmentComponentScoresByAssessmentInput,
+  ): Promise<void> {
+    if (payload.records.length === 0) return
+
+    const rows = payload.records.map((record) => ({
+      component_id: record.componentId,
+      student_id: record.studentId,
+      score: record.score,
+      feedback: record.feedback ?? null,
+    }))
+
+    const { error } = await supabase
+      .from('assessment_component_scores')
+      .upsert(rows, { onConflict: 'component_id,student_id' })
 
     if (error) throw error
   },

@@ -492,6 +492,72 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_components: {
+        Row: {
+          id: string
+          assessment_id: string
+          title: string
+          is_scorable: boolean
+          max_score: number | null
+          display_order: number
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          assessment_id: string
+          title: string
+          is_scorable?: boolean
+          max_score?: number | null
+          display_order?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          assessment_id?: string
+          title?: string
+          is_scorable?: boolean
+          max_score?: number | null
+          display_order?: number
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      assessment_component_scores: {
+        Row: {
+          id: string
+          component_id: string
+          student_id: string
+          score: number | null
+          feedback: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          component_id: string
+          student_id: string
+          score?: number | null
+          feedback?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          component_id?: string
+          student_id?: string
+          score?: number | null
+          feedback?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           id: string
