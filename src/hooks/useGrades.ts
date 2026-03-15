@@ -9,6 +9,7 @@ const ASSESSMENT_KEY = ['assessment'] as const
 const ASSESSMENT_SCORES_KEY = ['assessment_scores'] as const
 const ASSESSMENT_COMPONENTS_KEY = ['assessment_components'] as const
 const ASSESSMENT_COMPONENT_SCORES_KEY = ['assessment_component_scores'] as const
+const CLASS_GRADEBOOK_KEY = ['class_gradebook'] as const
 
 type UpsertAssessmentScoresInput = {
   classId: string
@@ -99,6 +100,14 @@ export function useClassAssessments(classId: string) {
   })
 }
 
+export function useClassGradebook(classId: string) {
+  return useQuery({
+    queryKey: [...CLASS_GRADEBOOK_KEY, classId],
+    queryFn: () => gradeService.getClassGradebook(classId),
+    enabled: !!classId,
+  })
+}
+
 export function useCreateAssessment() {
   const queryClient = useQueryClient()
 
@@ -151,6 +160,7 @@ export function useUpsertAssessmentScoresById() {
     onSuccess: (_, payload) => {
       queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_SCORES_KEY, payload.assessmentId] })
       queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENTS_KEY })
+      queryClient.invalidateQueries({ queryKey: CLASS_GRADEBOOK_KEY })
       queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENT_SCORES_KEY })
       queryClient.invalidateQueries({ queryKey: LESSON_ASSESSMENT_SCORES_KEY })
     },
@@ -167,6 +177,7 @@ export function useUpsertAssessmentComponentScoresByAssessmentId() {
       queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_COMPONENT_SCORES_KEY, payload.assessmentId] })
       queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_SCORES_KEY, payload.assessmentId] })
       queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENTS_KEY })
+      queryClient.invalidateQueries({ queryKey: CLASS_GRADEBOOK_KEY })
       queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENT_SCORES_KEY })
       queryClient.invalidateQueries({ queryKey: LESSON_ASSESSMENT_SCORES_KEY })
     },
@@ -181,6 +192,7 @@ export function useUpsertClassAssessmentScores() {
     onSuccess: (_, payload) => {
       queryClient.invalidateQueries({ queryKey: [...CLASS_ASSESSMENT_SCORES_KEY, payload.classId] })
       queryClient.invalidateQueries({ queryKey: [...CLASS_ASSESSMENTS_KEY, payload.classId] })
+      queryClient.invalidateQueries({ queryKey: [...CLASS_GRADEBOOK_KEY, payload.classId] })
       if (payload.lessonId) {
         queryClient.invalidateQueries({
           queryKey: [...LESSON_ASSESSMENT_SCORES_KEY, payload.classId, payload.lessonId],

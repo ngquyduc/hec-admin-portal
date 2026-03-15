@@ -62,6 +62,13 @@ type UpsertAssessmentComponentScoresByAssessmentInput = {
   }[]
 }
 
+type ClassGradebookData = {
+  assessments: Assessment[]
+  components: AssessmentComponent[]
+  overallScores: AssessmentScoreRecord[]
+  componentScores: AssessmentComponentScore[]
+}
+
 function mapRecord(
   assessment: AssessmentRow,
   scoreRow: AssessmentScoreRow,
@@ -230,6 +237,73 @@ export const gradeService = {
 
     if (error) throw error
     return data.map(mapAssessmentComponentScore)
+  },
+
+  async getClassGradebook(classId: string): Promise<ClassGradebookData> {
+    const { data: assessmentRows, error: assessmentError } = await supabase
+      .from('assessments')
+      .select('*')
+      .eq('class_id', classId)
+      .order('assigned_at', { ascending: true })
+      .order('created_at', { ascending: true })
+
+    if (assessmentError) throw assessmentError
+
+    if (assessmentRows.length === 0) {
+      return {
+        assessments: [],
+        components: [],
+        overallScores: [],
+        componentScores: [],
+      }
+    }
+
+    const assessmentById = new Map(assessmentRows.map((assessment) => [assessment.id, assessment]))
+    const assessmentIds = assessmentRows.map((assessment) => assessment.id)
+
+    const { data: scoreRows, error: scoreError } = await supabase
+      .from('assessment_scores')
+      .select('*')
+      .in('assessment_id', assessmentIds)
+
+    if (scoreError) throw scoreError
+
+    const { data: componentRows, error: componentError } = await supabase
+      .from('assessment_components')
+      .select('*')
+      .in('assessment_id', assessmentIds)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true })
+
+    if (componentError) throw componentError
+
+    let componentScores: AssessmentComponentScore[] = []
+
+    if (componentRows.length > 0) {
+      const componentIds = componentRows.map((component) => component.id)
+      const { data: componentScoreRows, error: componentScoreError } = await supabase
+        .from('assessment_component_scores')
+        .select('*')
+        .in('component_id', componentIds)
+
+      if (componentScoreError) throw componentScoreError
+      componentScores = componentScoreRows.map(mapAssessmentComponentScore)
+    }
+
+    const overallScores = scoreRows
+      .map((scoreRow) => {
+        const assessment = assessmentById.get(scoreRow.assessment_id)
+        if (!assessment) return null
+        return mapRecord(assessment, scoreRow)
+      })
+      .filter((record): record is AssessmentScoreRecord => record !== null)
+
+    return {
+      assessments: assessmentRows.map(mapAssessment),
+      components: componentRows.map(mapAssessmentComponent),
+      overallScores,
+      componentScores,
+    }
   },
 
   async getLessonAssessmentScores(classId: string, lessonId: string): Promise<AssessmentScoreRecord[]> {
