@@ -317,6 +317,24 @@ export type ClassGrade = z.infer<typeof ClassGradeSchema>
 export type GradePeriod = z.infer<typeof GradePeriodSchema>
 export type CreateClassGrade = z.infer<typeof CreateClassGradeSchema>
 
+// ============= Feedback Schema =============
+export const FeedbackSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  userRole: z.enum(['admin', 'teacher']),
+  title: z.string().min(1, 'Title is required'),
+  message: z.string().min(10, 'Feedback message must be at least 10 characters'),
+  createdAt: z.string().or(z.date()),
+})
+
+export const CreateFeedbackSchema = FeedbackSchema.omit({
+  id: true,
+  createdAt: true,
+})
+
+export type Feedback = z.infer<typeof FeedbackSchema>
+export type CreateFeedback = z.infer<typeof CreateFeedbackSchema>
+
 // ============= Utility Types =============
 export type EntityType = 'staff' | 'teacher' | 'student' | 'parent' | 'class' | 'lesson'
 

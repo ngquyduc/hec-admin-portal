@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Users, GraduationCap, UserCircle, BookOpen, School, CalendarDays } from 'lucide-react'
+import { Users, GraduationCap, UserCircle, BookOpen, School, CalendarDays, MessageSquare } from 'lucide-react'
 import { useCurrentUser, useIsAdmin } from '@/hooks/useAuth'
 
 export default function Navigation() {
@@ -16,10 +16,12 @@ export default function Navigation() {
     { to: '/parents' as const, label: 'Parents', icon: UserCircle },
     { to: '/classes' as const, label: 'Classes', icon: School },
     { to: '/lessons' as const, label: 'Lessons', icon: CalendarDays },
+    { to: '/feedback' as const, label: 'Feedback', icon: MessageSquare },
   ]
 
   const teacherNavItems = [
     { to: '/teacher' as const, label: 'My Classes', icon: School },
+    { to: '/feedback' as const, label: 'Feedback', icon: MessageSquare },
   ]
 
   const navItems = isAdmin ? adminNavItems : teacherNavItems

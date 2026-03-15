@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthenticatedFeedbackRouteImport } from './routes/_authenticated/feedback'
 import { Route as AuthenticatedTeacherRouteImport } from './routes/_authenticated/_teacher'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/_admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/_admin/index'
@@ -62,6 +63,11 @@ const LoginRoute = LoginRouteImport.update({
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedFeedbackRoute = AuthenticatedFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedTeacherRoute = AuthenticatedTeacherRouteImport.update({
   id: '/_teacher',
@@ -283,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedAdminIndexRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/feedback': typeof AuthenticatedFeedbackRoute
   '/classes/new': typeof AuthenticatedAdminClassesNewRoute
   '/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/staff/new': typeof AuthenticatedAdminStaffNewRoute
@@ -321,6 +328,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedAdminIndexRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/feedback': typeof AuthenticatedFeedbackRoute
   '/classes/new': typeof AuthenticatedAdminClassesNewRoute
   '/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/staff/new': typeof AuthenticatedAdminStaffNewRoute
@@ -362,6 +370,7 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/_admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/_teacher': typeof AuthenticatedTeacherRouteWithChildren
+  '/_authenticated/feedback': typeof AuthenticatedFeedbackRoute
   '/_authenticated/_admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/_admin/classes/new': typeof AuthenticatedAdminClassesNewRoute
   '/_authenticated/_admin/parents/new': typeof AuthenticatedAdminParentsNewRoute
@@ -403,6 +412,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/unauthorized'
+    | '/feedback'
     | '/classes/new'
     | '/parents/new'
     | '/staff/new'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/unauthorized'
+    | '/feedback'
     | '/classes/new'
     | '/parents/new'
     | '/staff/new'
@@ -481,6 +492,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/_authenticated/_admin'
     | '/_authenticated/_teacher'
+    | '/_authenticated/feedback'
     | '/_authenticated/_admin/'
     | '/_authenticated/_admin/classes/new'
     | '/_authenticated/_admin/parents/new'
@@ -545,6 +557,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/feedback': {
+      id: '/_authenticated/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof AuthenticatedFeedbackRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/_teacher': {
       id: '/_authenticated/_teacher'
@@ -911,11 +930,13 @@ const AuthenticatedTeacherRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedTeacherRoute: typeof AuthenticatedTeacherRouteWithChildren
+  AuthenticatedFeedbackRoute: typeof AuthenticatedFeedbackRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedTeacherRoute: AuthenticatedTeacherRouteWithChildren,
+  AuthenticatedFeedbackRoute: AuthenticatedFeedbackRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

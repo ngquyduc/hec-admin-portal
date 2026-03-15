@@ -402,6 +402,33 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          id: string
+          user_id: string
+          user_role: 'admin' | 'teacher'
+          title: string
+          message: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          user_role: 'admin' | 'teacher'
+          title: string
+          message: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          user_role?: 'admin' | 'teacher'
+          title?: string
+          message?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           user_id: string
