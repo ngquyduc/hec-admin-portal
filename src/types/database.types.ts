@@ -224,7 +224,7 @@ export type Database = {
           name: string
           description: string | null
           class_type: 'ielts' | 'communication-english'
-          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.0-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.5-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
           status: 'active' | 'inactive' | 'suspended'
           notes: string | null
           created_at: string
@@ -235,7 +235,7 @@ export type Database = {
           name: string
           description?: string | null
           class_type?: 'ielts' | 'communication-english'
-          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.0-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
+          level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.5-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
           status?: 'active' | 'inactive' | 'suspended'
           notes?: string | null
           created_at?: string
@@ -246,7 +246,7 @@ export type Database = {
           name?: string
           description?: string | null
           class_type?: 'ielts' | 'communication-english'
-          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.0-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
+          level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'pre-ielts' | '3.5-4.5' | '4.5-5.5' | '5.5-6.5' | '6.5-7.0+'
           status?: 'active' | 'inactive' | 'suspended'
           notes?: string | null
           created_at?: string
@@ -415,65 +415,17 @@ export type Database = {
           }
         ]
       }
-      lesson_grades: {
-        Row: {
-          id: string
-          lesson_id: string
-          student_id: string
-          score: number | null
-          max_score: number
-          grade_type: 'homework' | 'quiz' | 'exercise' | 'participation'
-          notes: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          lesson_id: string
-          student_id: string
-          score?: number | null
-          max_score?: number
-          grade_type: 'homework' | 'quiz' | 'exercise' | 'participation'
-          notes?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          lesson_id?: string
-          student_id?: string
-          score?: number | null
-          max_score?: number
-          grade_type?: 'homework' | 'quiz' | 'exercise' | 'participation'
-          notes?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'lesson_grades_lesson_id_fkey'
-            columns: ['lesson_id']
-            isOneToOne: false
-            referencedRelation: 'lessons'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'lesson_grades_student_id_fkey'
-            columns: ['student_id']
-            isOneToOne: false
-            referencedRelation: 'students'
-            referencedColumns: ['id']
-          }
-        ]
-      }
-      class_grades: {
+      assessments: {
         Row: {
           id: string
           class_id: string
-          student_id: string
-          period: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
-          score: number | null
+          lesson_id: string | null
+          type: 'classwork' | 'homework' | 'progress-check'
+          title: string
           max_score: number
+          weight: number
+          assigned_at: string
+          due_at: string | null
           notes: string | null
           created_at: string
           updated_at: string
@@ -481,10 +433,13 @@ export type Database = {
         Insert: {
           id?: string
           class_id: string
-          student_id: string
-          period: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
-          score?: number | null
+          lesson_id?: string | null
+          type: 'classwork' | 'homework' | 'progress-check'
+          title: string
           max_score?: number
+          weight?: number
+          assigned_at?: string
+          due_at?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string
@@ -492,24 +447,72 @@ export type Database = {
         Update: {
           id?: string
           class_id?: string
-          student_id?: string
-          period?: 'midterm' | 'final' | 'Q1' | 'Q2' | 'Q3' | 'Q4'
-          score?: number | null
+          lesson_id?: string | null
+          type?: 'classwork' | 'homework' | 'progress-check'
+          title?: string
           max_score?: number
+          weight?: number
+          assigned_at?: string
+          due_at?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: 'class_grades_class_id_fkey'
+            foreignKeyName: 'assessments_class_id_fkey'
             columns: ['class_id']
             isOneToOne: false
             referencedRelation: 'classes'
             referencedColumns: ['id']
           },
           {
-            foreignKeyName: 'class_grades_student_id_fkey'
+            foreignKeyName: 'assessments_lesson_id_fkey'
+            columns: ['lesson_id']
+            isOneToOne: false
+            referencedRelation: 'lessons'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      assessment_scores: {
+        Row: {
+          id: string
+          assessment_id: string
+          student_id: string
+          score: number | null
+          feedback: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          assessment_id: string
+          student_id: string
+          score?: number | null
+          feedback?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          assessment_id?: string
+          student_id?: string
+          score?: number | null
+          feedback?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'assessment_scores_assessment_id_fkey'
+            columns: ['assessment_id']
+            isOneToOne: false
+            referencedRelation: 'assessments'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'assessment_scores_student_id_fkey'
             columns: ['student_id']
             isOneToOne: false
             referencedRelation: 'students'

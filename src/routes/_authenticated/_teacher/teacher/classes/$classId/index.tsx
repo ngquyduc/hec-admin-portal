@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useClassById, useClassStudents } from '@/hooks/useClasses'
 import { useLessonsByClass } from '@/hooks/useLessons'
+import { useClassAssessments } from '@/hooks/useGrades'
 import { useStudents } from '@/hooks/useStudents'
 import { useCurrentUser } from '@/hooks/useAuth'
-import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
+import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS, ASSESSMENT_TYPE_LABELS } from '@/lib/constants'
 import { ArrowLeft, Plus, ClipboardList, Star, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -22,6 +23,7 @@ function TeacherClassDetail() {
   const { data: enrolledLinks = [] } = useClassStudents(classId)
   const { data: allStudents = [] } = useStudents()
   const { data: lessons = [] } = useLessonsByClass(classId)
+  const { data: assessments = [] } = useClassAssessments(classId)
 
   if (isLoading) {
     return (
@@ -107,6 +109,44 @@ function TeacherClassDetail() {
                 <li key={s.id} className="py-2 flex items-center gap-3">
                   <span className="font-medium">{s.name}</span>
                   {s.phone && <span className="text-sm text-muted-foreground">{s.phone}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Assignments */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold mb-4">
+            Assignments ({assessments.length})
+          </h2>
+
+          {assessments.length === 0 ? (
+            <p className="text-muted-foreground text-sm">No assignments yet.</p>
+          ) : (
+            <ul className="divide-y">
+              {assessments.map((assessment) => (
+                <li key={assessment.id} className="py-3 flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{assessment.title}</p>
+                    <div className="text-sm text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                      <span>Loại: {ASSESSMENT_TYPE_LABELS[assessment.type]}</span>
+                      <span>Điểm tối đa: {assessment.maxScore}</span>
+                      {assessment.dueAt && (
+                        <span>Hạn nộp: {new Date(assessment.dueAt).toLocaleString()}</span>
+                      )}
+                    </div>
+                  </div>
+                  <Button asChild size="sm" variant="outline">
+                    <Link
+                      to="/teacher/classes/$classId/assignments/$assessmentId/grade"
+                      params={{ classId, assessmentId: assessment.id }}
+                    >
+                      Chấm điểm
+                    </Link>
+                  </Button>
                 </li>
               ))}
             </ul>

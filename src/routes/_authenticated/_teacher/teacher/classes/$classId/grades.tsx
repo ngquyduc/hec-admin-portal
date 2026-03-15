@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useClassById, useClassStudents } from '@/hooks/useClasses'
 import { useStudents } from '@/hooks/useStudents'
-import { useClassGrades } from '@/hooks/useGrades'
-import { GRADE_PERIOD_LABELS } from '@/lib/constants'
-import type { GradePeriod } from '@/types/entities'
+import { useClassAssessmentScores } from '@/hooks/useGrades'
+import { ASSESSMENT_TYPE_LABELS } from '@/lib/constants'
+import type { AssessmentType } from '@/types/entities'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_authenticated/_teacher/teacher/classes/$
   component: TeacherGradesPage,
 })
 
-const PERIODS = Object.keys(GRADE_PERIOD_LABELS) as GradePeriod[]
+const ASSESSMENT_TYPES = Object.keys(ASSESSMENT_TYPE_LABELS) as AssessmentType[]
 
 function TeacherGradesPage() {
   const { classId } = Route.useParams()
@@ -21,11 +21,11 @@ function TeacherGradesPage() {
   const { data: cls } = useClassById(classId)
   const { data: enrolledLinks = [] } = useClassStudents(classId)
   const { data: allStudents = [] } = useStudents()
-  const { data: grades = [] } = useClassGrades(classId)
+  const { data: scores = [] } = useClassAssessmentScores(classId)
 
   const enrolledIds = new Set(enrolledLinks.map((l) => l.studentId))
   const enrolledStudents = allStudents.filter((s) => enrolledIds.has(s.id))
-  const gradedPeriods = PERIODS.filter((p) => grades.some((g) => g.period === p))
+  const gradedTypes = ASSESSMENT_TYPES.filter((type) => scores.some((score) => score.type === type))
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
@@ -40,7 +40,7 @@ function TeacherGradesPage() {
         {cls && <p className="text-muted-foreground text-sm mt-1">{cls.name}</p>}
       </div>
 
-      {gradedPeriods.length === 0 ? (
+      {gradedTypes.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center text-muted-foreground">
             No grades recorded yet.
@@ -55,12 +55,12 @@ function TeacherGradesPage() {
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                   Học sinh
                 </th>
-                {gradedPeriods.map((p) => (
+                {gradedTypes.map((type) => (
                   <th
-                    key={p}
+                    key={type}
                     className="px-4 py-3 text-center font-medium text-muted-foreground"
                   >
-                    {GRADE_PERIOD_LABELS[p]}
+                    {ASSESSMENT_TYPE_LABELS[type]}
                   </th>
                 ))}
               </tr>
@@ -71,16 +71,16 @@ function TeacherGradesPage() {
                   <td className="px-4 py-3 font-medium">
                     {student.name}
                   </td>
-                  {gradedPeriods.map((p) => {
-                    const record = grades.find(
-                      (g) => g.studentId === student.id && g.period === p,
+                  {gradedTypes.map((type) => {
+                    const record = scores.find(
+                      (score) => score.studentId === student.id && score.type === type,
                     )
                     const pct =
                       record?.score != null && record.maxScore > 0
                         ? Math.round((record.score / record.maxScore) * 100)
                         : null
                     return (
-                      <td key={p} className="px-4 py-3 text-center">
+                      <td key={type} className="px-4 py-3 text-center">
                         {record?.score != null ? (
                           <span
                             className={`font-medium ${

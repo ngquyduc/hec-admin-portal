@@ -1,4 +1,4 @@
-import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole, LessonStatus, AttendanceStatus, GradeType, GradePeriod, ClassLevel } from '@/types/entities'
+import type { StaffRole, Subject, EnglishLevel, Relationship, Status, TeacherRole, LessonStatus, AttendanceStatus, AssessmentType, ClassLevel } from '@/types/entities'
 
 // Display labels for entity types
 export const ENTITY_LABELS = {
@@ -42,7 +42,7 @@ export const CLASS_LEVEL_LABELS: Record<ClassLevel, string> = {
   intermediate: 'Intermediate',
   'upper-intermediate': 'Upper-Intermediate',
   'pre-ielts': 'Pre-IELTS (dưới 3.4)',
-  '3.0-4.5': '3.0-4.5',
+  '3.5-4.5': '3.5-4.5',
   '4.5-5.5': '4.5-5.5',
   '5.5-6.5': '5.5-6.5',
   '6.5-7.0+': '6.5-7.0+',
@@ -110,22 +110,11 @@ export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, string> = {
   absent_unexcused: 'text-red-600 bg-red-50',
 }
 
-// Grade type labels (Vietnamese)
-export const GRADE_TYPE_LABELS: Record<GradeType, string> = {
+// Assessment type labels (Vietnamese)
+export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
+  classwork: 'Bài tập trên lớp',
   homework: 'Bài tập về nhà',
-  quiz: 'Kiểm tra nhanh',
-  exercise: 'Bài tập trên lớp',
-  participation: 'Tham gia',
-}
-
-// Grade period labels
-export const GRADE_PERIOD_LABELS: Record<GradePeriod, string> = {
-  Q1: 'Quý 1',
-  Q2: 'Quý 2',
-  Q3: 'Quý 3',
-  Q4: 'Quý 4',
-  midterm: 'Giữa kỳ',
-  final: 'Cuối kỳ',
+  'progress-check': 'Kiểm tra tiến độ',
 }
 
 // Absence reason options (Vietnamese)

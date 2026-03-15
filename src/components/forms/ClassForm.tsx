@@ -27,7 +27,7 @@ interface ClassFormProps {
 
 const IELTS_LEVEL_OPTIONS: Array<{ value: ClassLevel; label: string }> = [
   { value: 'pre-ielts', label: CLASS_LEVEL_LABELS['pre-ielts'] },
-  { value: '3.0-4.5', label: CLASS_LEVEL_LABELS['3.0-4.5'] },
+  { value: '3.5-4.5', label: CLASS_LEVEL_LABELS['3.5-4.5'] },
   { value: '4.5-5.5', label: CLASS_LEVEL_LABELS['4.5-5.5'] },
   { value: '5.5-6.5', label: CLASS_LEVEL_LABELS['5.5-6.5'] },
   { value: '6.5-7.0+', label: CLASS_LEVEL_LABELS['6.5-7.0+'] },
@@ -43,7 +43,7 @@ const COMMUNICATION_LEVEL_OPTIONS: Array<{ value: ClassLevel; label: string }> =
 
 const IELTS_LEVELS: ClassLevel[] = [
   'pre-ielts',
-  '3.0-4.5',
+  '3.5-4.5',
   '4.5-5.5',
   '5.5-6.5',
   '6.5-7.0+',
@@ -213,6 +213,16 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
         navigate({ to: '/classes' })
       } catch (error) {
         console.error('Form submission error:', error)
+        if (
+          typeof error === 'object' &&
+          error !== null &&
+          'code' in error &&
+          (error as { code?: string }).code === '23514'
+        ) {
+          toast.error('Class type and level do not match. Please choose a valid level for the selected class type.')
+          return
+        }
+
         toast.error(error instanceof Error ? error.message : 'Failed to save class. Please try again.')
       }
     },

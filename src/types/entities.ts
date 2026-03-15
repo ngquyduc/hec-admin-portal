@@ -213,7 +213,7 @@ export const ClassLevelSchema = z.enum([
   'intermediate',
   'upper-intermediate',
   'pre-ielts',
-  '3.0-4.5',
+  '3.5-4.5',
   '4.5-5.5',
   '5.5-6.5',
   '6.5-7.0+',
@@ -309,66 +309,69 @@ export type Attendance = z.infer<typeof AttendanceSchema>
 export type AttendanceStatus = z.infer<typeof AttendanceStatusSchema>
 export type CreateAttendance = z.infer<typeof CreateAttendanceSchema>
 
-// ============= Grade Schemas =============
-export const GradeTypeSchema = z.enum([
+// ============= Assessment Schemas =============
+export const AssessmentTypeSchema = z.enum([
+  'classwork',
   'homework',
-  'quiz',
-  'exercise',
-  'participation',
+  'progress-check',
 ])
 
-export const GradePeriodSchema = z.enum([
-  'Q1',
-  'Q2',
-  'Q3',
-  'Q4',
-  'midterm',
-  'final',
-])
-
-export const LessonGradeSchema = z.object({
-  id: z.string(),
-  lessonId: z.string(),
-  studentId: z.string(),
-  score: z.number().min(0).nullable(),
-  maxScore: z.number().min(0).default(10),
-  gradeType: GradeTypeSchema,
-  notes: z.string().optional(),
-  createdAt: z.string().or(z.date()),
-  updatedAt: z.string().or(z.date()),
-})
-
-export const CreateLessonGradeSchema = LessonGradeSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-})
-
-export type LessonGrade = z.infer<typeof LessonGradeSchema>
-export type GradeType = z.infer<typeof GradeTypeSchema>
-export type CreateLessonGrade = z.infer<typeof CreateLessonGradeSchema>
-
-export const ClassGradeSchema = z.object({
+export const AssessmentSchema = z.object({
   id: z.string(),
   classId: z.string(),
-  studentId: z.string(),
-  period: GradePeriodSchema,
-  score: z.number().min(0).max(100).nullable(),
-  maxScore: z.number().default(100),
+  lessonId: z.string().optional(),
+  type: AssessmentTypeSchema,
+  title: z.string().min(1, 'Title is required'),
+  maxScore: z.number().min(0.1).default(10),
+  weight: z.number().min(0.1).default(1),
+  assignedAt: z.string().or(z.date()),
+  dueAt: z.string().or(z.date()).optional(),
   notes: z.string().optional(),
   createdAt: z.string().or(z.date()),
   updatedAt: z.string().or(z.date()),
 })
 
-export const CreateClassGradeSchema = ClassGradeSchema.omit({
+export const CreateAssessmentSchema = AssessmentSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 })
 
-export type ClassGrade = z.infer<typeof ClassGradeSchema>
-export type GradePeriod = z.infer<typeof GradePeriodSchema>
-export type CreateClassGrade = z.infer<typeof CreateClassGradeSchema>
+export const AssessmentScoreSchema = z.object({
+  id: z.string(),
+  assessmentId: z.string(),
+  studentId: z.string(),
+  score: z.number().min(0).nullable(),
+  feedback: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateAssessmentScoreSchema = AssessmentScoreSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export const AssessmentScoreRecordSchema = z.object({
+  assessmentId: z.string(),
+  classId: z.string(),
+  lessonId: z.string().optional(),
+  type: AssessmentTypeSchema,
+  title: z.string(),
+  maxScore: z.number().min(0.1),
+  weight: z.number().min(0.1),
+  studentId: z.string(),
+  score: z.number().min(0).nullable(),
+  feedback: z.string().optional(),
+})
+
+export type AssessmentType = z.infer<typeof AssessmentTypeSchema>
+export type Assessment = z.infer<typeof AssessmentSchema>
+export type CreateAssessment = z.infer<typeof CreateAssessmentSchema>
+export type AssessmentScore = z.infer<typeof AssessmentScoreSchema>
+export type CreateAssessmentScore = z.infer<typeof CreateAssessmentScoreSchema>
+export type AssessmentScoreRecord = z.infer<typeof AssessmentScoreRecordSchema>
 
 // ============= Feedback Schema =============
 export const FeedbackSchema = z.object({

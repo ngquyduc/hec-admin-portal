@@ -2,9 +2,9 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useLessonById } from '@/hooks/useLessons'
 import { useClassStudents } from '@/hooks/useClasses'
 import { useStudents } from '@/hooks/useStudents'
-import { useLessonGrades, useUpsertLessonGrades } from '@/hooks/useGrades'
-import { GRADE_TYPE_LABELS } from '@/lib/constants'
-import type { GradeType } from '@/types/entities'
+import { useLessonAssessmentScores, useUpsertLessonAssessmentScores } from '@/hooks/useGrades'
+import { ASSESSMENT_TYPE_LABELS } from '@/lib/constants'
+import type { AssessmentType } from '@/types/entities'
 import { ArrowLeft, Star } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_authenticated/_admin/classes/$classId/le
   component: LessonGradesPage,
 })
 
-const GRADE_TYPES = Object.keys(GRADE_TYPE_LABELS) as GradeType[]
+const ASSESSMENT_TYPES = Object.keys(ASSESSMENT_TYPE_LABELS) as AssessmentType[]
 
 function LessonGradesPage() {
   const { classId, lessonId } = Route.useParams()
@@ -24,10 +24,10 @@ function LessonGradesPage() {
   const { data: lesson, isLoading: lessonLoading, error: lessonError } = useLessonById(lessonId)
   const { data: enrolledLinks = [] } = useClassStudents(classId)
   const { data: allStudents = [] } = useStudents()
-  const { data: existingGrades = [], isLoading: gradesLoading } = useLessonGrades(lessonId)
-  const upsertGrades = useUpsertLessonGrades()
+  const { data: existingScores = [], isLoading: gradesLoading } = useLessonAssessmentScores(classId, lessonId)
+  const upsertScores = useUpsertLessonAssessmentScores()
 
-  const [gradeType, setGradeType] = useState<GradeType>('quiz')
+  const [assessmentType, setAssessmentType] = useState<AssessmentType>('progress-check')
   const [maxScore, setMaxScore] = useState<number>(10)
   // Map studentId → score string (empty = not graded)
   const [scores, setScores] = useState<Record<string, string>>({})
@@ -35,12 +35,12 @@ function LessonGradesPage() {
   const enrolledStudentIds = enrolledLinks.map((l) => l.studentId)
   const enrolledStudents = allStudents.filter((s) => enrolledStudentIds.includes(s.id))
 
-  // Seed scores from existing records for the selected gradeType
+  // Seed scores from existing records for the selected assessment type
   useEffect(() => {
     const seed: Record<string, string> = {}
     enrolledStudents.forEach((s) => {
-      const found = existingGrades.find(
-        (g) => g.studentId === s.id && g.gradeType === gradeType,
+      const found = existingScores.find(
+        (g) => g.studentId === s.id && g.type === assessmentType,
       )
       if (found && found.score !== null) {
         seed[s.id] = String(found.score)
@@ -48,23 +48,28 @@ function LessonGradesPage() {
     })
     setScores(seed)
     // Also sync maxScore from first existing record for this type
-    const firstRecord = existingGrades.find((g) => g.gradeType === gradeType)
+    const firstRecord = existingScores.find((g) => g.type === assessmentType)
     if (firstRecord) setMaxScore(firstRecord.maxScore)
-  }, [enrolledStudents.length, existingGrades.length, gradeType])
+  }, [enrolledStudents.length, existingScores.length, assessmentType])
 
   const gradedCount = Object.values(scores).filter((v) => v !== '').length
 
   const handleSubmit = async () => {
     const records = enrolledStudents.map((s) => ({
-      lessonId,
       studentId: s.id,
       score: scores[s.id] !== '' && scores[s.id] !== undefined ? Number(scores[s.id]) : null,
-      maxScore,
-      gradeType,
     }))
 
     try {
-      await upsertGrades.mutateAsync(records)
+      const lessonTitle = lesson?.title ?? 'Assessment'
+      await upsertScores.mutateAsync({
+        classId,
+        lessonId,
+        type: assessmentType,
+        title: `${lessonTitle} - ${ASSESSMENT_TYPE_LABELS[assessmentType]}`,
+        maxScore,
+        records,
+      })
       toast.success('Điểm đã được lưu thành công!')
       navigate({ to: '/classes/$classId', params: { classId } })
     } catch (error) {
@@ -135,21 +140,21 @@ function LessonGradesPage() {
         </CardContent>
       </Card>
 
-      {/* Grade type and max score selector */}
+      {/* Assessment type and max score selector */}
       <Card>
         <CardContent className="p-4 flex flex-wrap gap-6 items-end">
         <div>
-          <label className="block text-sm font-medium mb-1">Loại điểm</label>
+          <label className="block text-sm font-medium mb-1">Loại đánh giá</label>
           <div className="flex gap-2 flex-wrap">
-            {GRADE_TYPES.map((type) => (
+            {ASSESSMENT_TYPES.map((type) => (
               <Button
                 key={type}
                 type="button"
-                variant={gradeType === type ? 'secondary' : 'outline'}
+                variant={assessmentType === type ? 'secondary' : 'outline'}
                 size="sm"
-                onClick={() => setGradeType(type)}
+                onClick={() => setAssessmentType(type)}
               >
-                {GRADE_TYPE_LABELS[type]}
+                {ASSESSMENT_TYPE_LABELS[type]}
               </Button>
             ))}
           </div>
@@ -264,9 +269,9 @@ function LessonGradesPage() {
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={upsertGrades.isPending}
+            disabled={upsertScores.isPending}
           >
-            {upsertGrades.isPending ? 'Đang lưu...' : 'Lưu điểm'}
+            {upsertScores.isPending ? 'Đang lưu...' : 'Lưu điểm'}
           </Button>
         </div>
       )}

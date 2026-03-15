@@ -1,68 +1,149 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { gradeService } from '@/services/grade.service'
-import type { CreateLessonGrade, CreateClassGrade, GradePeriod } from '@/types/entities'
+import type { AssessmentType } from '@/types/entities'
 
-const LESSON_GRADES_KEY = ['lesson_grades'] as const
-const CLASS_GRADES_KEY = ['class_grades'] as const
+const LESSON_ASSESSMENT_SCORES_KEY = ['lesson_assessment_scores'] as const
+const CLASS_ASSESSMENT_SCORES_KEY = ['class_assessment_scores'] as const
+const CLASS_ASSESSMENTS_KEY = ['class_assessments'] as const
+const ASSESSMENT_KEY = ['assessment'] as const
+const ASSESSMENT_SCORES_KEY = ['assessment_scores'] as const
 
-// ─── Lesson Grades ──────────────────────────────────────────────────
+type UpsertAssessmentScoresInput = {
+  classId: string
+  lessonId?: string
+  type: AssessmentType
+  title: string
+  maxScore: number
+  records: {
+    studentId: string
+    score: number | null
+    feedback?: string
+  }[]
+}
 
-export function useLessonGrades(lessonId: string) {
+type CreateAssessmentInput = {
+  classId: string
+  lessonId?: string
+  type: AssessmentType
+  title: string
+  maxScore: number
+  weight?: number
+  dueAt?: string
+  notes?: string
+}
+
+type UpsertAssessmentScoresByIdInput = {
+  assessmentId: string
+  records: {
+    studentId: string
+    score: number | null
+    feedback?: string
+  }[]
+}
+
+export function useLessonAssessmentScores(classId: string, lessonId: string) {
   return useQuery({
-    queryKey: [...LESSON_GRADES_KEY, lessonId],
-    queryFn: () => gradeService.getLessonGrades(lessonId),
-    enabled: !!lessonId,
+    queryKey: [...LESSON_ASSESSMENT_SCORES_KEY, classId, lessonId],
+    queryFn: () => gradeService.getLessonAssessmentScores(classId, lessonId),
+    enabled: !!lessonId && !!classId,
   })
 }
 
-export function useUpsertLessonGrades() {
+export function useUpsertLessonAssessmentScores() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (records: CreateLessonGrade[]) => gradeService.upsertLessonGrades(records),
-    onSuccess: (_, records) => {
-      const lessonId = records[0]?.lessonId
-      if (lessonId) {
-        queryClient.invalidateQueries({ queryKey: [...LESSON_GRADES_KEY, lessonId] })
+    mutationFn: (payload: UpsertAssessmentScoresInput) =>
+      gradeService.upsertAssessmentScores(payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({ queryKey: [...CLASS_ASSESSMENTS_KEY, payload.classId] })
+      if (payload.lessonId) {
+        queryClient.invalidateQueries({
+          queryKey: [...LESSON_ASSESSMENT_SCORES_KEY, payload.classId, payload.lessonId],
+        })
       }
     },
   })
 }
 
-// ─── Class Grades ────────────────────────────────────────────────────
-
-export function useClassGrades(classId: string) {
+export function useClassAssessmentScores(classId: string) {
   return useQuery({
-    queryKey: [...CLASS_GRADES_KEY, classId],
-    queryFn: () => gradeService.getClassGrades(classId),
+    queryKey: [...CLASS_ASSESSMENT_SCORES_KEY, classId],
+    queryFn: () => gradeService.getClassAssessmentScores(classId),
     enabled: !!classId,
   })
 }
 
-export function useClassGradesByPeriod(classId: string, period: GradePeriod) {
+export function useClassAssessments(classId: string) {
   return useQuery({
-    queryKey: [...CLASS_GRADES_KEY, classId, period],
-    queryFn: () => gradeService.getClassGradesByPeriod(classId, period),
-    enabled: !!classId && !!period,
+    queryKey: [...CLASS_ASSESSMENTS_KEY, classId],
+    queryFn: () => gradeService.getClassAssessments(classId),
+    enabled: !!classId,
   })
 }
 
-export function useUpsertClassGrades() {
+export function useCreateAssessment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (payload: CreateAssessmentInput) => gradeService.createAssessment(payload),
+    onSuccess: (assessment) => {
+      queryClient.invalidateQueries({ queryKey: [...CLASS_ASSESSMENTS_KEY, assessment.classId] })
+    },
+  })
+}
+
+export function useAssessmentById(assessmentId: string) {
+  return useQuery({
+    queryKey: [...ASSESSMENT_KEY, assessmentId],
+    queryFn: () => gradeService.getAssessmentById(assessmentId),
+    enabled: !!assessmentId,
+  })
+}
+
+export function useAssessmentScores(assessmentId: string) {
+  return useQuery({
+    queryKey: [...ASSESSMENT_SCORES_KEY, assessmentId],
+    queryFn: () => gradeService.getAssessmentScores(assessmentId),
+    enabled: !!assessmentId,
+  })
+}
+
+export function useUpsertAssessmentScoresById() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (payload: UpsertAssessmentScoresByIdInput) =>
+      gradeService.upsertAssessmentScoresById(payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({ queryKey: [...ASSESSMENT_SCORES_KEY, payload.assessmentId] })
+      queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENTS_KEY })
+      queryClient.invalidateQueries({ queryKey: CLASS_ASSESSMENT_SCORES_KEY })
+      queryClient.invalidateQueries({ queryKey: LESSON_ASSESSMENT_SCORES_KEY })
+    },
+  })
+}
+
+export function useUpsertClassAssessmentScores() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (records: CreateClassGrade[]) => gradeService.upsertClassGrades(records),
-    onSuccess: (_, records) => {
-      const classId = records[0]?.classId
-      if (classId) {
-        queryClient.invalidateQueries({ queryKey: [...CLASS_GRADES_KEY, classId] })
+    mutationFn: (payload: UpsertAssessmentScoresInput) =>
+      gradeService.upsertAssessmentScores(payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({ queryKey: [...CLASS_ASSESSMENT_SCORES_KEY, payload.classId] })
+      queryClient.invalidateQueries({ queryKey: [...CLASS_ASSESSMENTS_KEY, payload.classId] })
+      if (payload.lessonId) {
+        queryClient.invalidateQueries({
+          queryKey: [...LESSON_ASSESSMENT_SCORES_KEY, payload.classId, payload.lessonId],
+        })
       }
     },
   })
 }
 
-export function useStudentGrades(studentId: string) {
+export function useStudentAssessmentScores(studentId: string) {
   return useQuery({
-    queryKey: [...CLASS_GRADES_KEY, 'student', studentId],
-    queryFn: () => gradeService.getStudentGrades(studentId),
+    queryKey: [...CLASS_ASSESSMENT_SCORES_KEY, 'student', studentId],
+    queryFn: () => gradeService.getStudentAssessmentScores(studentId),
     enabled: !!studentId,
   })
 }

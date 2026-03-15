@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useClassById, useClassStudents, useRemoveStudentFromClass, useAddStudentToClass } from '@/hooks/useClasses'
 import { useLessonsByClass, useDeleteLesson, useLessonAttendance } from '@/hooks/useLessons'
+import { useClassAssessments } from '@/hooks/useGrades'
 import { useStudents } from '@/hooks/useStudents'
 import { useTeachers } from '@/hooks/useTeachers'
-import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
+import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS, ASSESSMENT_TYPE_LABELS } from '@/lib/constants'
 import type { Lesson } from '@/types/entities'
-import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, Star, BookOpen } from 'lucide-react'
+import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, BookOpen } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -69,21 +70,6 @@ function LessonRow({
         </Button>
         <Button
           type="button"
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            navigate({
-              to: '/classes/$classId/lessons/$lessonId/grades',
-              params: { classId, lessonId: lesson.id },
-            })
-          }
-          title="Chấm điểm"
-        >
-          <Star className="h-3.5 w-3.5" />
-          Chấm điểm
-        </Button>
-        <Button
-          type="button"
           variant="ghost"
           size="icon-sm"
           onClick={() =>
@@ -119,6 +105,7 @@ function ClassDetailPage() {
   const { data: enrolledLinks = [] } = useClassStudents(classId)
   const { data: allStudents = [] } = useStudents()
   const { data: lessons = [] } = useLessonsByClass(classId)
+  const { data: assessments = [] } = useClassAssessments(classId)
   const removeStudent = useRemoveStudentFromClass()
   const addStudent = useAddStudentToClass()
   const deleteLesson = useDeleteLesson()
@@ -133,6 +120,7 @@ function ClassDetailPage() {
   )
 
   const teacherNameMap = new Map(teachers.map((teacher) => [teacher.id, teacher.name]))
+  const lessonTitleMap = new Map(lessons.map((lesson) => [lesson.id, lesson.title]))
   const mainTeacherNames = classData
     ? classData.mainTeacherIds.map((teacherId) => teacherNameMap.get(teacherId) ?? teacherId)
     : []
@@ -212,6 +200,94 @@ function ClassDetailPage() {
             </div>
           )}
         </dl>
+        </CardContent>
+      </Card>
+
+      {/* Lessons */}
+      <Card>
+        <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">
+            Lessons ({lessons.length})
+          </h2>
+          <Button asChild size="sm">
+            <Link to="/classes/$classId/lessons/new" params={{ classId }}>
+              <Plus className="h-4 w-4" />
+              Add Lesson
+            </Link>
+          </Button>
+        </div>
+
+        {lessons.length === 0 ? (
+          <p className="text-muted-foreground text-sm">No lessons yet. Add the first lesson.</p>
+        ) : (
+          <ul className="divide-y">
+            {lessons.map((lesson) => (
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                classId={classId}
+                onDelete={async () => {
+                  if (confirm(`Delete lesson "${lesson.title}"?`)) {
+                    await deleteLesson.mutateAsync(lesson.id)
+                  }
+                }}
+              />
+            ))}
+          </ul>
+        )}
+        </CardContent>
+      </Card>
+
+      {/* Assignments */}
+      <Card>
+        <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">
+            Assignments ({assessments.length})
+          </h2>
+          <Button asChild size="sm">
+            <Link to="/classes/$classId/assignments/new" params={{ classId }}>
+              <Plus className="h-4 w-4" />
+              Add Assignment
+            </Link>
+          </Button>
+        </div>
+
+        {assessments.length === 0 ? (
+          <p className="text-muted-foreground text-sm">No assignments yet.</p>
+        ) : (
+          <ul className="divide-y">
+            {assessments.map((assessment) => (
+              <li key={assessment.id} className="py-3 flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{assessment.title}</p>
+                  <div className="text-sm text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                    <span>Loại: {ASSESSMENT_TYPE_LABELS[assessment.type]}</span>
+                    <span>Điểm tối đa: {assessment.maxScore}</span>
+                    {assessment.lessonId && (
+                      <span>Bài học: {lessonTitleMap.get(assessment.lessonId) ?? 'N/A'}</span>
+                    )}
+                    {assessment.dueAt && (
+                      <span>Hạn nộp: {new Date(assessment.dueAt).toLocaleString()}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button asChild size="sm" variant="outline">
+                    <Link
+                      to="/classes/$classId/assignments/$assessmentId/grade"
+                      params={{ classId, assessmentId: assessment.id }}
+                    >
+                      Chấm điểm
+                    </Link>
+                  </Button>
+                  <Badge variant="secondary">{ASSESSMENT_TYPE_LABELS[assessment.type]}</Badge>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
         </CardContent>
       </Card>
 
@@ -295,42 +371,6 @@ function ClassDetailPage() {
                   <UserMinus className="h-4 w-4" />
                 </Button>
               </li>
-            ))}
-          </ul>
-        )}
-        </CardContent>
-      </Card>
-
-      {/* Lessons */}
-      <Card>
-        <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">
-            Lessons ({lessons.length})
-          </h2>
-          <Button asChild size="sm">
-            <Link to="/classes/$classId/lessons/new" params={{ classId }}>
-              <Plus className="h-4 w-4" />
-              Add Lesson
-            </Link>
-          </Button>
-        </div>
-
-        {lessons.length === 0 ? (
-          <p className="text-muted-foreground text-sm">No lessons yet. Add the first lesson.</p>
-        ) : (
-          <ul className="divide-y">
-            {lessons.map((lesson) => (
-              <LessonRow
-                key={lesson.id}
-                lesson={lesson}
-                classId={classId}
-                onDelete={async () => {
-                  if (confirm(`Delete lesson "${lesson.title}"?`)) {
-                    await deleteLesson.mutateAsync(lesson.id)
-                  }
-                }}
-              />
             ))}
           </ul>
         )}
