@@ -27,6 +27,7 @@ import { Route as AuthenticatedAdminTeachersNewRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminStudentsNewRouteImport } from './routes/_authenticated/_admin/students/new'
 import { Route as AuthenticatedAdminStaffNewRouteImport } from './routes/_authenticated/_admin/staff/new'
 import { Route as AuthenticatedAdminParentsNewRouteImport } from './routes/_authenticated/_admin/parents/new'
+import { Route as AuthenticatedAdminLessonsNewRouteImport } from './routes/_authenticated/_admin/lessons/new'
 import { Route as AuthenticatedAdminClassesNewRouteImport } from './routes/_authenticated/_admin/classes/new'
 import { Route as AuthenticatedAdminTeachersTeacherIdIndexRouteImport } from './routes/_authenticated/_admin/teachers/$teacherId/index'
 import { Route as AuthenticatedAdminStudentsStudentIdIndexRouteImport } from './routes/_authenticated/_admin/students/$studentId/index'
@@ -146,6 +147,12 @@ const AuthenticatedAdminParentsNewRoute =
   AuthenticatedAdminParentsNewRouteImport.update({
     id: '/parents/new',
     path: '/parents/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminLessonsNewRoute =
+  AuthenticatedAdminLessonsNewRouteImport.update({
+    id: '/lessons/new',
+    path: '/lessons/new',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminClassesNewRoute =
@@ -291,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
   '/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/lessons/new': typeof AuthenticatedAdminLessonsNewRoute
   '/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/staff/new': typeof AuthenticatedAdminStaffNewRoute
   '/students/new': typeof AuthenticatedAdminStudentsNewRoute
@@ -330,6 +338,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
   '/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/lessons/new': typeof AuthenticatedAdminLessonsNewRoute
   '/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/staff/new': typeof AuthenticatedAdminStaffNewRoute
   '/students/new': typeof AuthenticatedAdminStudentsNewRoute
@@ -373,6 +382,7 @@ export interface FileRoutesById {
   '/_authenticated/feedback': typeof AuthenticatedFeedbackRoute
   '/_authenticated/_admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/_admin/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/_authenticated/_admin/lessons/new': typeof AuthenticatedAdminLessonsNewRoute
   '/_authenticated/_admin/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/_authenticated/_admin/staff/new': typeof AuthenticatedAdminStaffNewRoute
   '/_authenticated/_admin/students/new': typeof AuthenticatedAdminStudentsNewRoute
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/feedback'
     | '/classes/new'
+    | '/lessons/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
@@ -453,6 +464,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/feedback'
     | '/classes/new'
+    | '/lessons/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
@@ -495,6 +507,7 @@ export interface FileRouteTypes {
     | '/_authenticated/feedback'
     | '/_authenticated/_admin/'
     | '/_authenticated/_admin/classes/new'
+    | '/_authenticated/_admin/lessons/new'
     | '/_authenticated/_admin/parents/new'
     | '/_authenticated/_admin/staff/new'
     | '/_authenticated/_admin/students/new'
@@ -663,6 +676,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminParentsNewRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/lessons/new': {
+      id: '/_authenticated/_admin/lessons/new'
+      path: '/lessons/new'
+      fullPath: '/lessons/new'
+      preLoaderRoute: typeof AuthenticatedAdminLessonsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/classes/new': {
       id: '/_authenticated/_admin/classes/new'
       path: '/classes/new'
@@ -823,6 +843,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminClassesNewRoute: typeof AuthenticatedAdminClassesNewRoute
+  AuthenticatedAdminLessonsNewRoute: typeof AuthenticatedAdminLessonsNewRoute
   AuthenticatedAdminParentsNewRoute: typeof AuthenticatedAdminParentsNewRoute
   AuthenticatedAdminStaffNewRoute: typeof AuthenticatedAdminStaffNewRoute
   AuthenticatedAdminStudentsNewRoute: typeof AuthenticatedAdminStudentsNewRoute
@@ -854,6 +875,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminClassesNewRoute: AuthenticatedAdminClassesNewRoute,
+  AuthenticatedAdminLessonsNewRoute: AuthenticatedAdminLessonsNewRoute,
   AuthenticatedAdminParentsNewRoute: AuthenticatedAdminParentsNewRoute,
   AuthenticatedAdminStaffNewRoute: AuthenticatedAdminStaffNewRoute,
   AuthenticatedAdminStudentsNewRoute: AuthenticatedAdminStudentsNewRoute,
