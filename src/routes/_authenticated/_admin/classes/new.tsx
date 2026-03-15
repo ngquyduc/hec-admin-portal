@@ -11,7 +11,7 @@ function NewClassPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-foreground">Add New Class</h1>
-        <p className="text-muted-foreground mt-1">Create a new class and assign a teacher</p>
+        <p className="text-muted-foreground mt-1">Create a new class and assign teachers</p>
       </div>
       <Card>
         <CardContent className="p-6">

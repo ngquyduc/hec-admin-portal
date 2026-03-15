@@ -164,8 +164,6 @@ create table public.classes (
   id uuid primary key default uuid_generate_v4(),
   name text not null,
   description text,
-  teacher_id uuid not null references public.teachers(id) on delete restrict,
-  assistant_id uuid references public.teachers(id) on delete set null,
   level text not null check (level in ('beginner', 'elementary', 'pre-intermediate', 'intermediate', 'upper-intermediate', 'advanced', 'proficient')),
   status text not null default 'active' check (status in ('active', 'inactive', 'suspended')),
   notes text,
@@ -179,6 +177,16 @@ create table public.class_students (
   student_id uuid not null references public.students(id) on delete cascade,
   enrolled_at timestamp with time zone default now(),
   primary key (class_id, student_id)
+);
+
+-- Class-teacher assignment table
+create table public.class_teacher_assignments (
+  class_id uuid not null references public.classes(id) on delete cascade,
+  teacher_id uuid not null references public.teachers(id) on delete restrict,
+  role text not null check (role in ('main-teacher', 'teaching-assistant')),
+  created_at timestamp with time zone default now(),
+  primary key (class_id, teacher_id, role),
+  unique (class_id, teacher_id)
 );
 
 -- Lessons table
@@ -208,11 +216,13 @@ create table public.lesson_attendance (
 );
 
 -- Indexes
-create index idx_classes_teacher_id on public.classes(teacher_id);
 create index idx_classes_status on public.classes(status);
 create index idx_classes_level on public.classes(level);
 create index idx_class_students_class_id on public.class_students(class_id);
 create index idx_class_students_student_id on public.class_students(student_id);
+create index idx_class_teacher_assignments_class_id on public.class_teacher_assignments(class_id);
+create index idx_class_teacher_assignments_teacher_id on public.class_teacher_assignments(teacher_id);
+create index idx_class_teacher_assignments_role on public.class_teacher_assignments(role);
 create index idx_lessons_class_id on public.lessons(class_id);
 create index idx_lessons_status on public.lessons(status);
 create index idx_lessons_start_time on public.lessons(start_time);
@@ -235,6 +245,7 @@ create trigger set_lesson_attendance_updated_at
 -- RLS
 alter table public.classes enable row level security;
 alter table public.class_students enable row level security;
+alter table public.class_teacher_assignments enable row level security;
 alter table public.lessons enable row level security;
 alter table public.lesson_attendance enable row level security;
 
@@ -242,6 +253,9 @@ create policy "Enable all access for authenticated users" on public.classes
   for all using (auth.role() = 'authenticated');
 
 create policy "Enable all access for authenticated users" on public.class_students
+  for all using (auth.role() = 'authenticated');
+
+create policy "Enable all access for authenticated users" on public.class_teacher_assignments
   for all using (auth.role() = 'authenticated');
 
 create policy "Enable all access for authenticated users" on public.lessons

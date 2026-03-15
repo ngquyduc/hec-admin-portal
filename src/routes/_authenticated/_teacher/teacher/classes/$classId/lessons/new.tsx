@@ -33,7 +33,11 @@ function TeacherNewLessonPage() {
   }
 
   const isAuthorized =
-    user?.teacherId === cls.teacherId || user?.teacherId === cls.assistantId
+    !!user?.teacherId &&
+    (
+      cls.mainTeacherIds.includes(user.teacherId) ||
+      cls.teachingAssistantIds.includes(user.teacherId)
+    )
 
   if (!isAuthorized) {
     return (

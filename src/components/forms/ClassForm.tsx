@@ -27,90 +27,105 @@ interface ClassFormProps {
 
 function TeacherSelector({
   label,
-  value,
+  values,
   onChange,
-  excludeId,
-  optional,
+  excludeIds = [],
 }: {
   label: string
-  value: string
-  onChange: (id: string, displayName: string) => void
-  excludeId?: string
-  optional?: boolean
+  values: string[]
+  onChange: (ids: string[]) => void
+  excludeIds?: string[]
 }) {
   const [search, setSearch] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
-  const [selectedLabel, setSelectedLabel] = useState('')
 
   const { data: allTeachers = [] } = useTeachers()
   const { data: searchedTeachers = [] } = useTeachersSearch(search)
+
+  const selectedTeachers = values
+    .map((id) => allTeachers.find((teacher) => teacher.id === id))
+    .filter((teacher): teacher is NonNullable<typeof teacher> => Boolean(teacher))
+
+  const blockedTeacherIds = new Set([...excludeIds, ...values])
   const pool = (search.length > 0 ? searchedTeachers : allTeachers).filter(
-    (t) => t.id !== excludeId,
+    (teacher) => !blockedTeacherIds.has(teacher.id),
   )
 
   return (
     <div className="relative space-y-1.5">
       <Label>
-        {label} {!optional && <span className="text-destructive">*</span>}
+        {label} <span className="text-destructive">*</span>
       </Label>
 
-      {value ? (
-        <Badge variant="secondary" className="gap-2 mb-1">
-          {selectedLabel || value}
-          <button
-            type="button"
-            onClick={() => {
-              onChange('', '')
-              setSelectedLabel('')
-              setSearch('')
-            }}
-            className="hover:text-destructive font-bold leading-none"
-          >
-            ×
-          </button>
-        </Badge>
-      ) : (
-        <div className="relative">
-          <Input
-            type="text"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value)
-              setShowDropdown(true)
-            }}
-            onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
-            placeholder="Search by teacher name..."
-          />
-          {showDropdown && (
-            <div className="absolute z-10 mt-1 w-full bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
-              {pool.length === 0 ? (
-                <div className="px-4 py-3 text-sm text-muted-foreground">No teachers found</div>
-              ) : (
-                pool.map((teacher) => (
-                  <button
-                    key={teacher.id}
-                    type="button"
-                    onMouseDown={() => {
-                      const lbl = `${teacher.name}${teacher.phone ? ` — ${teacher.phone}` : ''}`
-                      setSelectedLabel(lbl)
-                      onChange(teacher.id, lbl)
-                      setSearch('')
-                      setShowDropdown(false)
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors"
-                  >
-                    <span className="font-medium">{teacher.name}</span>
-                    {teacher.phone && (
-                      <span className="ml-2 text-muted-foreground">{teacher.phone}</span>
-                    )}
-                  </button>
-                ))
-              )}
-            </div>
-          )}
+      {values.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedTeachers.map((teacher) => (
+            <Badge key={teacher.id} variant="secondary" className="gap-2">
+              {teacher.name}
+              <button
+                type="button"
+                onClick={() => onChange(values.filter((id) => id !== teacher.id))}
+                className="hover:text-destructive font-bold leading-none"
+              >
+                ×
+              </button>
+            </Badge>
+          ))}
+          {values
+            .filter((id) => !selectedTeachers.some((teacher) => teacher.id === id))
+            .map((id) => (
+              <Badge key={id} variant="secondary" className="gap-2">
+                {id}
+                <button
+                  type="button"
+                  onClick={() => onChange(values.filter((valueId) => valueId !== id))}
+                  className="hover:text-destructive font-bold leading-none"
+                >
+                  ×
+                </button>
+              </Badge>
+            ))}
         </div>
       )}
+
+      <div className="relative">
+        <Input
+          type="text"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            setShowDropdown(true)
+          }}
+          onFocus={() => setShowDropdown(true)}
+          onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+          placeholder="Search by teacher name..."
+        />
+        {showDropdown && (
+          <div className="absolute z-10 mt-1 w-full bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
+            {pool.length === 0 ? (
+              <div className="px-4 py-3 text-sm text-muted-foreground">No teachers found</div>
+            ) : (
+              pool.map((teacher) => (
+                <button
+                  key={teacher.id}
+                  type="button"
+                  onMouseDown={() => {
+                    onChange([...values, teacher.id])
+                    setSearch('')
+                    setShowDropdown(false)
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors"
+                >
+                  <span className="font-medium">{teacher.name}</span>
+                  {teacher.phone && (
+                    <span className="ml-2 text-muted-foreground">{teacher.phone}</span>
+                  )}
+                </button>
+              ))
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -132,8 +147,8 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
     defaultValues: {
       name: classData?.name ?? '',
       description: classData?.description ?? '',
-      teacherId: classData?.teacherId ?? '',
-      assistantId: classData?.assistantId ?? '',
+      mainTeacherIds: classData?.mainTeacherIds ?? [],
+      teachingAssistantIds: classData?.teachingAssistantIds ?? [],
       level: classData?.level ?? ('beginner' as const),
       status: classData?.status ?? ('active' as const),
       notes: classData?.notes ?? '',
@@ -143,7 +158,8 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
         const submitData = {
           ...value,
           status: mode === 'create' ? ('active' as const) : value.status,
-          assistantId: value.assistantId || undefined,
+          mainTeacherIds: [...new Set(value.mainTeacherIds)],
+          teachingAssistantIds: [...new Set(value.teachingAssistantIds)],
           description: value.description || undefined,
           notes: value.notes || undefined,
         }
@@ -223,33 +239,47 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
           )}
         </form.Field>
 
-        {/* Teacher */}
-        <form.Field name="teacherId">
+        {/* Main Teachers */}
+        <form.Field name="mainTeacherIds">
           {(field) => (
-            <TeacherSelector
-              label="Main Teacher"
-              value={field.state.value}
-              onChange={(id, _label) => {
-                field.handleChange(id)
-              }}
-            />
+            <form.Field name="teachingAssistantIds">
+              {(assistantField) => (
+                <div className="space-y-1.5">
+                  <TeacherSelector
+                    label="Main Teachers"
+                    values={field.state.value}
+                    onChange={(ids) => {
+                      field.handleChange(ids)
+                    }}
+                    excludeIds={assistantField.state.value}
+                  />
+                  {field.state.meta.errors?.length > 0 && (
+                    <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                  )}
+                </div>
+              )}
+            </form.Field>
           )}
         </form.Field>
 
-        {/* Assistant */}
-        <form.Field name="assistantId">
+        {/* Teaching Assistants */}
+        <form.Field name="teachingAssistantIds">
           {(field) => (
-            <form.Field name="teacherId">
-              {(teacherField) => (
+            <form.Field name="mainTeacherIds">
+              {(mainTeacherField) => (
+                <div className="space-y-1.5">
                 <TeacherSelector
-                  label="Teaching Assistant"
-                  value={field.state.value}
-                  onChange={(id, _label) => {
-                    field.handleChange(id)
+                  label="Teaching Assistants"
+                  values={field.state.value}
+                  onChange={(ids) => {
+                    field.handleChange(ids)
                   }}
-                  excludeId={teacherField.state.value || undefined}
-                  optional
+                  excludeIds={mainTeacherField.state.value}
                 />
+                {field.state.meta.errors?.length > 0 && (
+                  <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                )}
+                </div>
               )}
             </form.Field>
           )}

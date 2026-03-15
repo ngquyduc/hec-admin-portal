@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useClassById, useClassStudents, useRemoveStudentFromClass, useAddStudentToClass } from '@/hooks/useClasses'
 import { useLessonsByClass, useDeleteLesson, useLessonAttendance } from '@/hooks/useLessons'
 import { useStudents } from '@/hooks/useStudents'
-import { useTeacherById } from '@/hooks/useTeachers'
+import { useTeachers } from '@/hooks/useTeachers'
 import { ENGLISH_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
 import type { Lesson } from '@/types/entities'
 import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, Star, BookOpen } from 'lucide-react'
@@ -115,8 +115,7 @@ function ClassDetailPage() {
   const { classId } = Route.useParams()
 
   const { data: classData, isLoading, error } = useClassById(classId)
-  const { data: teacherData } = useTeacherById(classData?.teacherId ?? '')
-  const { data: assistantData } = useTeacherById(classData?.assistantId ?? '')
+  const { data: teachers = [] } = useTeachers()
   const { data: enrolledLinks = [] } = useClassStudents(classId)
   const { data: allStudents = [] } = useStudents()
   const { data: lessons = [] } = useLessonsByClass(classId)
@@ -132,6 +131,14 @@ function ClassDetailPage() {
   const unenrolledStudents = allStudents.filter(
     (s) => !enrolledIds.has(s.id) && s.name.toLowerCase().includes(studentSearch.toLowerCase()),
   )
+
+  const teacherNameMap = new Map(teachers.map((teacher) => [teacher.id, teacher.name]))
+  const mainTeacherNames = classData
+    ? classData.mainTeacherIds.map((teacherId) => teacherNameMap.get(teacherId) ?? teacherId)
+    : []
+  const assistantNames = classData
+    ? classData.teachingAssistantIds.map((teacherId) => teacherNameMap.get(teacherId) ?? teacherId)
+    : []
 
   if (isLoading) {
     return (
@@ -191,15 +198,13 @@ function ClassDetailPage() {
         <h2 className="text-lg font-semibold mb-4">Class Info</h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <dt className="text-sm text-muted-foreground">Main Teacher</dt>
-            <dd className="mt-1 font-medium">{teacherData?.name ?? classData.teacherId}</dd>
+            <dt className="text-sm text-muted-foreground">Main Teachers</dt>
+            <dd className="mt-1 font-medium">{mainTeacherNames.join(', ')}</dd>
           </div>
-          {classData.assistantId && (
-            <div>
-              <dt className="text-sm text-muted-foreground">Teaching Assistant</dt>
-              <dd className="mt-1 font-medium">{assistantData?.name ?? classData.assistantId}</dd>
-            </div>
-          )}
+          <div>
+            <dt className="text-sm text-muted-foreground">Teaching Assistants</dt>
+            <dd className="mt-1 font-medium">{assistantNames.join(', ')}</dd>
+          </div>
           {classData.notes && (
             <div className="sm:col-span-2">
               <dt className="text-sm text-muted-foreground">Notes</dt>

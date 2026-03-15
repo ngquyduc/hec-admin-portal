@@ -278,8 +278,6 @@ export type Database = {
           id: string
           name: string
           description: string | null
-          teacher_id: string
-          assistant_id: string | null
           level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
           status: 'active' | 'inactive' | 'suspended'
           notes: string | null
@@ -290,8 +288,6 @@ export type Database = {
           id?: string
           name: string
           description?: string | null
-          teacher_id: string
-          assistant_id?: string | null
           level: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
           status?: 'active' | 'inactive' | 'suspended'
           notes?: string | null
@@ -302,13 +298,32 @@ export type Database = {
           id?: string
           name?: string
           description?: string | null
-          teacher_id?: string
-          assistant_id?: string | null
           level?: 'beginner' | 'elementary' | 'pre-intermediate' | 'intermediate' | 'upper-intermediate' | 'advanced' | 'proficient'
           status?: 'active' | 'inactive' | 'suspended'
           notes?: string | null
           created_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      class_teacher_assignments: {
+        Row: {
+          class_id: string
+          teacher_id: string
+          role: 'main-teacher' | 'teaching-assistant'
+          created_at: string
+        }
+        Insert: {
+          class_id: string
+          teacher_id: string
+          role: 'main-teacher' | 'teaching-assistant'
+          created_at?: string
+        }
+        Update: {
+          class_id?: string
+          teacher_id?: string
+          role?: 'main-teacher' | 'teaching-assistant'
+          created_at?: string
         }
         Relationships: []
       }

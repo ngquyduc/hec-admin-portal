@@ -43,7 +43,11 @@ function TeacherClassDetail() {
 
   // Only the assigned teacher or assistant can view
   const isAuthorized =
-    user?.teacherId === cls.teacherId || user?.teacherId === cls.assistantId
+    !!user?.teacherId &&
+    (
+      cls.mainTeacherIds.includes(user.teacherId) ||
+      cls.teachingAssistantIds.includes(user.teacherId)
+    )
   if (!isAuthorized) {
     return (
       <div className="container mx-auto px-4 py-8">
