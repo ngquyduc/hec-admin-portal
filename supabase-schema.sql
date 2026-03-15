@@ -73,6 +73,22 @@ create table public.students (
   updated_at timestamp with time zone default now()
 );
 
+-- Entry test candidates table (pre-enrollment)
+create table public.entry_test_candidate (
+  id uuid primary key default uuid_generate_v4(),
+  name text not null,
+  email text,
+  phone text not null,
+  date_of_birth date,
+  test_date date not null default current_date,
+  entry_result text not null,
+  recommended_level text check (recommended_level in ('beginner', 'elementary', 'pre-intermediate', 'intermediate', 'upper-intermediate', 'advanced', 'proficient')),
+  decision_status text not null default 'pending' check (decision_status in ('pending', 'accepted', 'rejected')),
+  notes text,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
 -- Indexes for better query performance
 create index idx_staff_status on public.staff(status);
 create index idx_staff_role on public.staff(role);
@@ -80,6 +96,8 @@ create index idx_teachers_status on public.teachers(status);
 create index idx_students_status on public.students(status);
 create index idx_students_parent_id on public.students(parent_id);
 create index idx_parents_email on public.parents(email);
+create index idx_entry_test_candidate_test_date on public.entry_test_candidate(test_date);
+create index idx_entry_test_candidate_decision_status on public.entry_test_candidate(decision_status);
 
 -- Triggers for updated_at
 create or replace function public.handle_updated_at()
@@ -105,6 +123,11 @@ create trigger set_students_updated_at
   for each row
   execute procedure public.handle_updated_at();
 
+create trigger set_entry_test_candidate_updated_at
+  before update on public.entry_test_candidate
+  for each row
+  execute procedure public.handle_updated_at();
+
 create trigger set_parents_updated_at
   before update on public.parents
   for each row
@@ -115,6 +138,7 @@ alter table public.staff enable row level security;
 alter table public.teachers enable row level security;
 alter table public.students enable row level security;
 alter table public.parents enable row level security;
+alter table public.entry_test_candidate enable row level security;
 
 -- Policies (adjust based on your auth requirements)
 -- For now, allow authenticated users to do everything
@@ -128,6 +152,9 @@ create policy "Enable all access for authenticated users" on public.students
   for all using (auth.role() = 'authenticated');
 
 create policy "Enable all access for authenticated users" on public.parents
+  for all using (auth.role() = 'authenticated');
+
+create policy "Enable all access for authenticated users" on public.entry_test_candidate
   for all using (auth.role() = 'authenticated');
 
 -- =============================================

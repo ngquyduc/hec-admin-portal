@@ -127,6 +127,41 @@ export type EnglishLevel = z.infer<typeof EnglishLevelSchema>
 export type CreateStudent = z.infer<typeof CreateStudentSchema>
 export type UpdateStudent = z.infer<typeof UpdateStudentSchema>
 
+// ============= Entry Test Candidate Schema =============
+export const EntryTestDecisionStatusSchema = z.enum([
+  'pending',
+  'accepted',
+  'rejected',
+])
+
+export const EntryTestCandidateSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address').or(z.literal('')).optional(),
+  phone: z.string().min(1, 'Phone number is required'),
+  dateOfBirth: z.string().or(z.date()).optional(),
+  testDate: z.string().or(z.date()),
+  entryResult: z.string().min(1, 'Entry result is required'),
+  recommendedLevel: EnglishLevelSchema.optional(),
+  decisionStatus: EntryTestDecisionStatusSchema,
+  notes: z.string().optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+})
+
+export const CreateEntryTestCandidateSchema = EntryTestCandidateSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
+export const UpdateEntryTestCandidateSchema = CreateEntryTestCandidateSchema.partial()
+
+export type EntryTestCandidate = z.infer<typeof EntryTestCandidateSchema>
+export type EntryTestDecisionStatus = z.infer<typeof EntryTestDecisionStatusSchema>
+export type CreateEntryTestCandidate = z.infer<typeof CreateEntryTestCandidateSchema>
+export type UpdateEntryTestCandidate = z.infer<typeof UpdateEntryTestCandidateSchema>
+
 // ============= Parent Schema =============
 export const RelationshipSchema = z.enum([
   'mother',

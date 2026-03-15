@@ -22,12 +22,14 @@ import { Route as AuthenticatedAdminStudentsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminStaffIndexRouteImport } from './routes/_authenticated/_admin/staff/index'
 import { Route as AuthenticatedAdminParentsIndexRouteImport } from './routes/_authenticated/_admin/parents/index'
 import { Route as AuthenticatedAdminLessonsIndexRouteImport } from './routes/_authenticated/_admin/lessons/index'
+import { Route as AuthenticatedAdminEntryTestsIndexRouteImport } from './routes/_authenticated/_admin/entry-tests/index'
 import { Route as AuthenticatedAdminClassesIndexRouteImport } from './routes/_authenticated/_admin/classes/index'
 import { Route as AuthenticatedAdminTeachersNewRouteImport } from './routes/_authenticated/_admin/teachers/new'
 import { Route as AuthenticatedAdminStudentsNewRouteImport } from './routes/_authenticated/_admin/students/new'
 import { Route as AuthenticatedAdminStaffNewRouteImport } from './routes/_authenticated/_admin/staff/new'
 import { Route as AuthenticatedAdminParentsNewRouteImport } from './routes/_authenticated/_admin/parents/new'
 import { Route as AuthenticatedAdminLessonsNewRouteImport } from './routes/_authenticated/_admin/lessons/new'
+import { Route as AuthenticatedAdminEntryTestsNewRouteImport } from './routes/_authenticated/_admin/entry-tests/new'
 import { Route as AuthenticatedAdminClassesNewRouteImport } from './routes/_authenticated/_admin/classes/new'
 import { Route as AuthenticatedAdminTeachersTeacherIdIndexRouteImport } from './routes/_authenticated/_admin/teachers/$teacherId/index'
 import { Route as AuthenticatedAdminStudentsStudentIdIndexRouteImport } from './routes/_authenticated/_admin/students/$studentId/index'
@@ -39,6 +41,7 @@ import { Route as AuthenticatedAdminTeachersTeacherIdEditRouteImport } from './r
 import { Route as AuthenticatedAdminStudentsStudentIdEditRouteImport } from './routes/_authenticated/_admin/students/$studentId/edit'
 import { Route as AuthenticatedAdminStaffStaffIdEditRouteImport } from './routes/_authenticated/_admin/staff/$staffId/edit'
 import { Route as AuthenticatedAdminParentsParentIdEditRouteImport } from './routes/_authenticated/_admin/parents/$parentId/edit'
+import { Route as AuthenticatedAdminEntryTestsEntryTestIdEditRouteImport } from './routes/_authenticated/_admin/entry-tests/$entryTestId/edit'
 import { Route as AuthenticatedAdminClassesClassIdGradesRouteImport } from './routes/_authenticated/_admin/classes/$classId/grades'
 import { Route as AuthenticatedAdminClassesClassIdEditRouteImport } from './routes/_authenticated/_admin/classes/$classId/edit'
 import { Route as AuthenticatedTeacherTeacherClassesClassIdIndexRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/index'
@@ -119,6 +122,12 @@ const AuthenticatedAdminLessonsIndexRoute =
     path: '/lessons/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminEntryTestsIndexRoute =
+  AuthenticatedAdminEntryTestsIndexRouteImport.update({
+    id: '/entry-tests/',
+    path: '/entry-tests/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminClassesIndexRoute =
   AuthenticatedAdminClassesIndexRouteImport.update({
     id: '/classes/',
@@ -153,6 +162,12 @@ const AuthenticatedAdminLessonsNewRoute =
   AuthenticatedAdminLessonsNewRouteImport.update({
     id: '/lessons/new',
     path: '/lessons/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminEntryTestsNewRoute =
+  AuthenticatedAdminEntryTestsNewRouteImport.update({
+    id: '/entry-tests/new',
+    path: '/entry-tests/new',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminClassesNewRoute =
@@ -219,6 +234,12 @@ const AuthenticatedAdminParentsParentIdEditRoute =
   AuthenticatedAdminParentsParentIdEditRouteImport.update({
     id: '/parents/$parentId/edit',
     path: '/parents/$parentId/edit',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminEntryTestsEntryTestIdEditRoute =
+  AuthenticatedAdminEntryTestsEntryTestIdEditRouteImport.update({
+    id: '/entry-tests/$entryTestId/edit',
+    path: '/entry-tests/$entryTestId/edit',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminClassesClassIdGradesRoute =
@@ -298,12 +319,14 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
   '/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/entry-tests/new': typeof AuthenticatedAdminEntryTestsNewRoute
   '/lessons/new': typeof AuthenticatedAdminLessonsNewRoute
   '/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/staff/new': typeof AuthenticatedAdminStaffNewRoute
   '/students/new': typeof AuthenticatedAdminStudentsNewRoute
   '/teachers/new': typeof AuthenticatedAdminTeachersNewRoute
   '/classes/': typeof AuthenticatedAdminClassesIndexRoute
+  '/entry-tests/': typeof AuthenticatedAdminEntryTestsIndexRoute
   '/lessons/': typeof AuthenticatedAdminLessonsIndexRoute
   '/parents/': typeof AuthenticatedAdminParentsIndexRoute
   '/staff/': typeof AuthenticatedAdminStaffIndexRoute
@@ -312,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/teacher/': typeof AuthenticatedTeacherTeacherIndexRoute
   '/classes/$classId/edit': typeof AuthenticatedAdminClassesClassIdEditRoute
   '/classes/$classId/grades': typeof AuthenticatedAdminClassesClassIdGradesRoute
+  '/entry-tests/$entryTestId/edit': typeof AuthenticatedAdminEntryTestsEntryTestIdEditRoute
   '/parents/$parentId/edit': typeof AuthenticatedAdminParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof AuthenticatedAdminStaffStaffIdEditRoute
   '/students/$studentId/edit': typeof AuthenticatedAdminStudentsStudentIdEditRoute
@@ -338,12 +362,14 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/feedback': typeof AuthenticatedFeedbackRoute
   '/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/entry-tests/new': typeof AuthenticatedAdminEntryTestsNewRoute
   '/lessons/new': typeof AuthenticatedAdminLessonsNewRoute
   '/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/staff/new': typeof AuthenticatedAdminStaffNewRoute
   '/students/new': typeof AuthenticatedAdminStudentsNewRoute
   '/teachers/new': typeof AuthenticatedAdminTeachersNewRoute
   '/classes': typeof AuthenticatedAdminClassesIndexRoute
+  '/entry-tests': typeof AuthenticatedAdminEntryTestsIndexRoute
   '/lessons': typeof AuthenticatedAdminLessonsIndexRoute
   '/parents': typeof AuthenticatedAdminParentsIndexRoute
   '/staff': typeof AuthenticatedAdminStaffIndexRoute
@@ -352,6 +378,7 @@ export interface FileRoutesByTo {
   '/teacher': typeof AuthenticatedTeacherTeacherIndexRoute
   '/classes/$classId/edit': typeof AuthenticatedAdminClassesClassIdEditRoute
   '/classes/$classId/grades': typeof AuthenticatedAdminClassesClassIdGradesRoute
+  '/entry-tests/$entryTestId/edit': typeof AuthenticatedAdminEntryTestsEntryTestIdEditRoute
   '/parents/$parentId/edit': typeof AuthenticatedAdminParentsParentIdEditRoute
   '/staff/$staffId/edit': typeof AuthenticatedAdminStaffStaffIdEditRoute
   '/students/$studentId/edit': typeof AuthenticatedAdminStudentsStudentIdEditRoute
@@ -382,12 +409,14 @@ export interface FileRoutesById {
   '/_authenticated/feedback': typeof AuthenticatedFeedbackRoute
   '/_authenticated/_admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/_admin/classes/new': typeof AuthenticatedAdminClassesNewRoute
+  '/_authenticated/_admin/entry-tests/new': typeof AuthenticatedAdminEntryTestsNewRoute
   '/_authenticated/_admin/lessons/new': typeof AuthenticatedAdminLessonsNewRoute
   '/_authenticated/_admin/parents/new': typeof AuthenticatedAdminParentsNewRoute
   '/_authenticated/_admin/staff/new': typeof AuthenticatedAdminStaffNewRoute
   '/_authenticated/_admin/students/new': typeof AuthenticatedAdminStudentsNewRoute
   '/_authenticated/_admin/teachers/new': typeof AuthenticatedAdminTeachersNewRoute
   '/_authenticated/_admin/classes/': typeof AuthenticatedAdminClassesIndexRoute
+  '/_authenticated/_admin/entry-tests/': typeof AuthenticatedAdminEntryTestsIndexRoute
   '/_authenticated/_admin/lessons/': typeof AuthenticatedAdminLessonsIndexRoute
   '/_authenticated/_admin/parents/': typeof AuthenticatedAdminParentsIndexRoute
   '/_authenticated/_admin/staff/': typeof AuthenticatedAdminStaffIndexRoute
@@ -396,6 +425,7 @@ export interface FileRoutesById {
   '/_authenticated/_teacher/teacher/': typeof AuthenticatedTeacherTeacherIndexRoute
   '/_authenticated/_admin/classes/$classId/edit': typeof AuthenticatedAdminClassesClassIdEditRoute
   '/_authenticated/_admin/classes/$classId/grades': typeof AuthenticatedAdminClassesClassIdGradesRoute
+  '/_authenticated/_admin/entry-tests/$entryTestId/edit': typeof AuthenticatedAdminEntryTestsEntryTestIdEditRoute
   '/_authenticated/_admin/parents/$parentId/edit': typeof AuthenticatedAdminParentsParentIdEditRoute
   '/_authenticated/_admin/staff/$staffId/edit': typeof AuthenticatedAdminStaffStaffIdEditRoute
   '/_authenticated/_admin/students/$studentId/edit': typeof AuthenticatedAdminStudentsStudentIdEditRoute
@@ -424,12 +454,14 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/feedback'
     | '/classes/new'
+    | '/entry-tests/new'
     | '/lessons/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
     | '/teachers/new'
     | '/classes/'
+    | '/entry-tests/'
     | '/lessons/'
     | '/parents/'
     | '/staff/'
@@ -438,6 +470,7 @@ export interface FileRouteTypes {
     | '/teacher/'
     | '/classes/$classId/edit'
     | '/classes/$classId/grades'
+    | '/entry-tests/$entryTestId/edit'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
@@ -464,12 +497,14 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/feedback'
     | '/classes/new'
+    | '/entry-tests/new'
     | '/lessons/new'
     | '/parents/new'
     | '/staff/new'
     | '/students/new'
     | '/teachers/new'
     | '/classes'
+    | '/entry-tests'
     | '/lessons'
     | '/parents'
     | '/staff'
@@ -478,6 +513,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/classes/$classId/edit'
     | '/classes/$classId/grades'
+    | '/entry-tests/$entryTestId/edit'
     | '/parents/$parentId/edit'
     | '/staff/$staffId/edit'
     | '/students/$studentId/edit'
@@ -507,12 +543,14 @@ export interface FileRouteTypes {
     | '/_authenticated/feedback'
     | '/_authenticated/_admin/'
     | '/_authenticated/_admin/classes/new'
+    | '/_authenticated/_admin/entry-tests/new'
     | '/_authenticated/_admin/lessons/new'
     | '/_authenticated/_admin/parents/new'
     | '/_authenticated/_admin/staff/new'
     | '/_authenticated/_admin/students/new'
     | '/_authenticated/_admin/teachers/new'
     | '/_authenticated/_admin/classes/'
+    | '/_authenticated/_admin/entry-tests/'
     | '/_authenticated/_admin/lessons/'
     | '/_authenticated/_admin/parents/'
     | '/_authenticated/_admin/staff/'
@@ -521,6 +559,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_teacher/teacher/'
     | '/_authenticated/_admin/classes/$classId/edit'
     | '/_authenticated/_admin/classes/$classId/grades'
+    | '/_authenticated/_admin/entry-tests/$entryTestId/edit'
     | '/_authenticated/_admin/parents/$parentId/edit'
     | '/_authenticated/_admin/staff/$staffId/edit'
     | '/_authenticated/_admin/students/$studentId/edit'
@@ -641,6 +680,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLessonsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/_admin/entry-tests/': {
+      id: '/_authenticated/_admin/entry-tests/'
+      path: '/entry-tests'
+      fullPath: '/entry-tests/'
+      preLoaderRoute: typeof AuthenticatedAdminEntryTestsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/_admin/classes/': {
       id: '/_authenticated/_admin/classes/'
       path: '/classes'
@@ -681,6 +727,13 @@ declare module '@tanstack/react-router' {
       path: '/lessons/new'
       fullPath: '/lessons/new'
       preLoaderRoute: typeof AuthenticatedAdminLessonsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/_admin/entry-tests/new': {
+      id: '/_authenticated/_admin/entry-tests/new'
+      path: '/entry-tests/new'
+      fullPath: '/entry-tests/new'
+      preLoaderRoute: typeof AuthenticatedAdminEntryTestsNewRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/_admin/classes/new': {
@@ -758,6 +811,13 @@ declare module '@tanstack/react-router' {
       path: '/parents/$parentId/edit'
       fullPath: '/parents/$parentId/edit'
       preLoaderRoute: typeof AuthenticatedAdminParentsParentIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/_admin/entry-tests/$entryTestId/edit': {
+      id: '/_authenticated/_admin/entry-tests/$entryTestId/edit'
+      path: '/entry-tests/$entryTestId/edit'
+      fullPath: '/entry-tests/$entryTestId/edit'
+      preLoaderRoute: typeof AuthenticatedAdminEntryTestsEntryTestIdEditRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/_admin/classes/$classId/grades': {
@@ -843,12 +903,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminClassesNewRoute: typeof AuthenticatedAdminClassesNewRoute
+  AuthenticatedAdminEntryTestsNewRoute: typeof AuthenticatedAdminEntryTestsNewRoute
   AuthenticatedAdminLessonsNewRoute: typeof AuthenticatedAdminLessonsNewRoute
   AuthenticatedAdminParentsNewRoute: typeof AuthenticatedAdminParentsNewRoute
   AuthenticatedAdminStaffNewRoute: typeof AuthenticatedAdminStaffNewRoute
   AuthenticatedAdminStudentsNewRoute: typeof AuthenticatedAdminStudentsNewRoute
   AuthenticatedAdminTeachersNewRoute: typeof AuthenticatedAdminTeachersNewRoute
   AuthenticatedAdminClassesIndexRoute: typeof AuthenticatedAdminClassesIndexRoute
+  AuthenticatedAdminEntryTestsIndexRoute: typeof AuthenticatedAdminEntryTestsIndexRoute
   AuthenticatedAdminLessonsIndexRoute: typeof AuthenticatedAdminLessonsIndexRoute
   AuthenticatedAdminParentsIndexRoute: typeof AuthenticatedAdminParentsIndexRoute
   AuthenticatedAdminStaffIndexRoute: typeof AuthenticatedAdminStaffIndexRoute
@@ -856,6 +918,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminTeachersIndexRoute: typeof AuthenticatedAdminTeachersIndexRoute
   AuthenticatedAdminClassesClassIdEditRoute: typeof AuthenticatedAdminClassesClassIdEditRoute
   AuthenticatedAdminClassesClassIdGradesRoute: typeof AuthenticatedAdminClassesClassIdGradesRoute
+  AuthenticatedAdminEntryTestsEntryTestIdEditRoute: typeof AuthenticatedAdminEntryTestsEntryTestIdEditRoute
   AuthenticatedAdminParentsParentIdEditRoute: typeof AuthenticatedAdminParentsParentIdEditRoute
   AuthenticatedAdminStaffStaffIdEditRoute: typeof AuthenticatedAdminStaffStaffIdEditRoute
   AuthenticatedAdminStudentsStudentIdEditRoute: typeof AuthenticatedAdminStudentsStudentIdEditRoute
@@ -875,12 +938,15 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminClassesNewRoute: AuthenticatedAdminClassesNewRoute,
+  AuthenticatedAdminEntryTestsNewRoute: AuthenticatedAdminEntryTestsNewRoute,
   AuthenticatedAdminLessonsNewRoute: AuthenticatedAdminLessonsNewRoute,
   AuthenticatedAdminParentsNewRoute: AuthenticatedAdminParentsNewRoute,
   AuthenticatedAdminStaffNewRoute: AuthenticatedAdminStaffNewRoute,
   AuthenticatedAdminStudentsNewRoute: AuthenticatedAdminStudentsNewRoute,
   AuthenticatedAdminTeachersNewRoute: AuthenticatedAdminTeachersNewRoute,
   AuthenticatedAdminClassesIndexRoute: AuthenticatedAdminClassesIndexRoute,
+  AuthenticatedAdminEntryTestsIndexRoute:
+    AuthenticatedAdminEntryTestsIndexRoute,
   AuthenticatedAdminLessonsIndexRoute: AuthenticatedAdminLessonsIndexRoute,
   AuthenticatedAdminParentsIndexRoute: AuthenticatedAdminParentsIndexRoute,
   AuthenticatedAdminStaffIndexRoute: AuthenticatedAdminStaffIndexRoute,
@@ -890,6 +956,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminClassesClassIdEditRoute,
   AuthenticatedAdminClassesClassIdGradesRoute:
     AuthenticatedAdminClassesClassIdGradesRoute,
+  AuthenticatedAdminEntryTestsEntryTestIdEditRoute:
+    AuthenticatedAdminEntryTestsEntryTestIdEditRoute,
   AuthenticatedAdminParentsParentIdEditRoute:
     AuthenticatedAdminParentsParentIdEditRoute,
   AuthenticatedAdminStaffStaffIdEditRoute:

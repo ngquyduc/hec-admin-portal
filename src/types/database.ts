@@ -162,6 +162,75 @@ export type Database = {
         }
         Relationships: []
       }
+      entry_test_candidate: {
+        Row: {
+          id: string
+          name: string
+          email: string | null
+          phone: string
+          date_of_birth: string | null
+          test_date: string
+          entry_result: string
+          recommended_level:
+            | 'beginner'
+            | 'elementary'
+            | 'pre-intermediate'
+            | 'intermediate'
+            | 'upper-intermediate'
+            | 'advanced'
+            | 'proficient'
+            | null
+          decision_status: 'pending' | 'accepted' | 'rejected'
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email?: string | null
+          phone: string
+          date_of_birth?: string | null
+          test_date?: string
+          entry_result: string
+          recommended_level?:
+            | 'beginner'
+            | 'elementary'
+            | 'pre-intermediate'
+            | 'intermediate'
+            | 'upper-intermediate'
+            | 'advanced'
+            | 'proficient'
+            | null
+          decision_status?: 'pending' | 'accepted' | 'rejected'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string | null
+          phone?: string
+          date_of_birth?: string | null
+          test_date?: string
+          entry_result?: string
+          recommended_level?:
+            | 'beginner'
+            | 'elementary'
+            | 'pre-intermediate'
+            | 'intermediate'
+            | 'upper-intermediate'
+            | 'advanced'
+            | 'proficient'
+            | null
+          decision_status?: 'pending' | 'accepted' | 'rejected'
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       parent: {
         Row: {
           id: string

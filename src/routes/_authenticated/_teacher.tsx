@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AUTH_QUERY_KEY } from '@/hooks/useAuth'
 import { authService } from '@/services/auth.service'
+import { buildLoginRedirectPath } from '@/lib/utils'
 
 export const Route = createFileRoute('/_authenticated/_teacher')({
   beforeLoad: async ({ context, location }) => {
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/_authenticated/_teacher')({
     if (!user) {
       throw redirect({
         to: '/login',
-        search: { redirect: location.href },
+        search: { redirect: buildLoginRedirectPath(location.href) },
       })
     }
   },

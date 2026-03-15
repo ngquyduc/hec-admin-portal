@@ -1,8 +1,7 @@
-import { createFileRoute, Outlet, redirect, useLocation, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AUTH_QUERY_KEY } from '@/hooks/useAuth'
-import { useCurrentUser } from '@/hooks/useAuth'
 import { authService } from '@/services/auth.service'
+import { buildLoginRedirectPath } from '@/lib/utils'
 
 export const Route = createFileRoute('/_authenticated/_admin')({
   beforeLoad: async ({ context, location }) => {
@@ -20,7 +19,7 @@ export const Route = createFileRoute('/_authenticated/_admin')({
     if (!user) {
       throw redirect({
         to: '/login',
-        search: { redirect: location.href },
+        search: { redirect: buildLoginRedirectPath(location.href) },
       })
     }
 
@@ -32,29 +31,5 @@ export const Route = createFileRoute('/_authenticated/_admin')({
 })
 
 function AdminGuardLayout() {
-  const { data: user, isLoading } = useCurrentUser()
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  useEffect(() => {
-    if (isLoading) return
-
-    if (!user) {
-      navigate({
-        to: '/login',
-        search: { redirect: location.href },
-      })
-      return
-    }
-
-    if (user.role !== 'admin') {
-      navigate({ to: '/teacher' })
-    }
-  }, [isLoading, user, navigate, location.href])
-
-  if (isLoading || !user || user.role !== 'admin') {
-    return null
-  }
-
   return <Outlet />
 }

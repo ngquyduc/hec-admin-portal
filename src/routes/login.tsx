@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { sanitizeAuthRedirectPath } from '@/lib/utils'
 
 export const Route = createFileRoute('/login')({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -31,27 +32,14 @@ function LoginPage() {
   const [otp, setOtp] = useState('')
   const otpRef = useRef<HTMLInputElement>(null)
 
-  const getSafeRedirectPath = () => {
-    if (!redirect) return null
-
-    try {
-      const url = new URL(redirect, window.location.origin)
-      if (url.origin !== window.location.origin) return null
-      return `${url.pathname}${url.search}${url.hash}`
-    } catch {
-      if (redirect.startsWith('/')) return redirect
-      return null
-    }
-  }
-
   const navigateAfterAuth = (role: 'admin' | 'teacher') => {
-    const redirectPath = getSafeRedirectPath()
+    const redirectPath = sanitizeAuthRedirectPath(redirect)
     if (redirectPath) {
-      router.history.push(redirectPath)
+      router.history.replace(redirectPath)
       return
     }
 
-    navigate({ to: role === 'admin' ? '/' : '/teacher' })
+    navigate({ to: role === 'admin' ? '/' : '/teacher', replace: true })
   }
 
   useEffect(() => {

@@ -3,14 +3,12 @@ import {
   Outlet,
   redirect,
   isRedirect,
-  useLocation,
-  useNavigate,
 } from '@tanstack/react-router'
-import { useEffect } from 'react'
 import Header from '@/components/Header'
 import Navigation from '@/components/Navigation'
 import { AUTH_QUERY_KEY, useCurrentUser } from '@/hooks/useAuth'
 import { authService } from '@/services/auth.service'
+import { buildLoginRedirectPath } from '@/lib/utils'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ context, location }) => {
@@ -29,7 +27,7 @@ export const Route = createFileRoute('/_authenticated')({
       if (!user) {
         throw redirect({
           to: '/login',
-          search: { redirect: location.href },
+          search: { redirect: buildLoginRedirectPath(location.href) },
         })
       }
 
@@ -38,7 +36,7 @@ export const Route = createFileRoute('/_authenticated')({
       if (isRedirect(error)) throw error
       throw redirect({
         to: '/login',
-        search: { redirect: location.href },
+        search: { redirect: buildLoginRedirectPath(location.href) },
       })
     }
   },
@@ -47,19 +45,6 @@ export const Route = createFileRoute('/_authenticated')({
 
 function AuthenticatedLayout() {
   const { data: user, isLoading } = useCurrentUser()
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  useEffect(() => {
-    if (isLoading) return
-
-    if (!user) {
-      navigate({
-        to: '/login',
-        search: { redirect: location.href },
-      })
-    }
-  }, [isLoading, user, navigate, location.href])
 
   if (isLoading || !user) {
     return null
