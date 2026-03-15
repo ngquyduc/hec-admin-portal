@@ -60,10 +60,11 @@ create table public.students (
   first_name text not null,
   last_name text not null,
   email text,
-  phone text,
-  date_of_birth date not null,
+  phone text not null,
+  date_of_birth date,
   enrollment_date date not null,
-  level text not null check (level in ('beginner', 'elementary', 'pre-intermediate', 'intermediate', 'upper-intermediate', 'advanced', 'proficient')),
+  entry_result text,
+  exit_target text,
   status text not null default 'active' check (status in ('active', 'inactive', 'suspended')),
   parent_id uuid references public.parents(id) on delete set null,
   address text,
@@ -78,7 +79,6 @@ create index idx_staff_role on public.staff(role);
 create index idx_teachers_status on public.teachers(status);
 create index idx_students_status on public.students(status);
 create index idx_students_parent_id on public.students(parent_id);
-create index idx_students_level on public.students(level);
 create index idx_parents_email on public.parents(email);
 
 -- Triggers for updated_at

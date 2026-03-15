@@ -60,6 +60,20 @@ Run the development server and check if the connection works:
 pnpm dev
 ```
 
+## 8. Apply Schema Migrations (for existing projects)
+
+If your database already exists and you changed table fields in code, run the migration SQL file:
+
+1. Open **SQL Editor** in Supabase dashboard
+2. Click **New Query**
+3. Paste the content from [supabase/migrations/20260314_replace_student_level_with_entry_exit.sql](supabase/migrations/20260314_replace_student_level_with_entry_exit.sql)
+4. Click **Run**
+
+This migration:
+- Adds `entry_result` and `exit_target`
+- Copies old `level` values into `entry_result`
+- Drops the old `level` column
+
 ## Security Notes
 
 - **Never commit `.env` to git** (it's already in `.gitignore`)

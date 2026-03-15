@@ -25,6 +25,11 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchPlaceholder?: string
   searchColumn?: string
+  onRowClick?: (row: TData) => void
+}
+
+interface DataTableColumnMeta {
+  disableRowClick?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -32,6 +37,7 @@ export function DataTable<TData, TValue>({
   data,
   searchPlaceholder = 'Search...',
   searchColumn,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -125,14 +131,28 @@ export function DataTable<TData, TValue>({
             ) : (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    const meta = cell.column.columnDef.meta as DataTableColumnMeta | undefined
+                    const canClickCell = !!onRowClick && !meta?.disableRowClick
+
+                    return (
+                    <TableCell
+                      key={cell.id}
+                      className={canClickCell ? 'cursor-pointer hover:bg-muted/40' : undefined}
+                      onClick={canClickCell ? (event) => {
+                        const target = event.target as HTMLElement
+                        if (target.closest('a,button,input,select,textarea,label,[role="button"]')) {
+                          return
+                        }
+                        onRowClick(row.original)
+                      } : undefined}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
                     </TableCell>
-                  ))}
+                  )})}
                 </TableRow>
               ))
             )}

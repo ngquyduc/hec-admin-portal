@@ -61,12 +61,21 @@ function LessonsListPage() {
       accessorKey: 'title',
       header: 'Title',
       cell: ({ row }) => (
-        <div className="font-medium">{row.original.title}</div>
+        <Link
+          to="/lessons/$lessonId"
+          params={{ lessonId: row.original.id }}
+          className="font-medium text-primary hover:underline"
+        >
+          {row.original.title}
+        </Link>
       ),
     },
     {
       accessorKey: 'classId',
       header: 'Class',
+      meta: {
+        disableRowClick: true,
+      },
       cell: ({ row }) => (
         <Link
           to="/classes/$classId"
@@ -98,11 +107,17 @@ function LessonsListPage() {
     {
       id: 'attendance',
       header: 'Điểm danh',
+      meta: {
+        disableRowClick: true,
+      },
       cell: ({ row }) => <AttendanceCell lesson={row.original} />,
     },
     {
       id: 'actions',
       header: 'Actions',
+      meta: {
+        disableRowClick: true,
+      },
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon-sm"
@@ -119,7 +134,7 @@ function LessonsListPage() {
           <Button variant="ghost" size="icon-sm"
             onClick={() => handleDelete(row.original.id, row.original.title)}
             title="Delete"
-            className="text-destructive hover:text-destructive"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

@@ -31,6 +31,14 @@ export function StudentForm({ student, mode }: StudentFormProps) {
   const createStudent = useCreateStudent()
   const updateStudent = useUpdateStudent()
 
+  const handleCancel = () => {
+    if (mode === 'edit' && window.history.length > 1) {
+      window.history.back()
+      return
+    }
+    navigate({ to: '/students' })
+  }
+
   const [parentSearch, setParentSearch] = useState('')
   const [showParentDropdown, setShowParentDropdown] = useState(false)
   const [selectedParentLabel, setSelectedParentLabel] = useState<string>(() => {
@@ -352,7 +360,7 @@ export function StudentForm({ student, mode }: StudentFormProps) {
 
       {/* Form Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <Button type="button" variant="outline" onClick={() => navigate({ to: '/students' })}>
+        <Button type="button" variant="outline" onClick={handleCancel}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
         </Button>

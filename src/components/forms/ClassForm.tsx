@@ -120,6 +120,14 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
   const createClass = useCreateClass()
   const updateClass = useUpdateClass()
 
+  const handleCancel = () => {
+    if (mode === 'edit' && window.history.length > 1) {
+      window.history.back()
+      return
+    }
+    navigate({ to: '/classes' })
+  }
+
   const form = useForm({
     defaultValues: {
       name: classData?.name ?? '',
@@ -291,7 +299,7 @@ export function ClassForm({ classData, mode }: ClassFormProps) {
 
       {/* Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <Button type="button" variant="outline" onClick={() => navigate({ to: '/classes' })}>
+        <Button type="button" variant="outline" onClick={handleCancel}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
         </Button>

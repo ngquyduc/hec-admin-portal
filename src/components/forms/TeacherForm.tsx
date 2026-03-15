@@ -31,6 +31,14 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
   const updateTeacher = useUpdateTeacher()
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>(teacher?.subjects ?? [])
 
+  const handleCancel = () => {
+    if (mode === 'edit' && window.history.length > 1) {
+      window.history.back()
+      return
+    }
+    navigate({ to: '/teachers' })
+  }
+
   const form = useForm({
     defaultValues: {
       name: teacher?.name ?? '',
@@ -303,7 +311,7 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
 
       {/* Form Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <Button type="button" variant="outline" onClick={() => navigate({ to: '/teachers' })}>
+        <Button type="button" variant="outline" onClick={handleCancel}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
         </Button>

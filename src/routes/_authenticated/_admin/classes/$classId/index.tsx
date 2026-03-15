@@ -100,7 +100,7 @@ function LessonRow({
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="text-destructive hover:text-destructive"
+          className="text-destructive hover:text-destructive hover:bg-destructive/10"
           onClick={onDelete}
           title="Delete lesson"
         >
@@ -279,7 +279,7 @@ function ClassDetailPage() {
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  className="text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   onClick={async () => {
                     if (confirm(`Remove ${s.name} from this class?`)) {
                       await removeStudent.mutateAsync({ classId, studentId: s.id })

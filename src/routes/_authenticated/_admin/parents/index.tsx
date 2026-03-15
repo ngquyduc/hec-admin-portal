@@ -29,7 +29,13 @@ function ParentsListPage() {
       accessorKey: 'name',
       header: 'Name',
       cell: ({ row }) => (
-      <div className="font-medium">{row.original.name}</div>
+      <Link
+        to="/parents/$parentId"
+        params={{ parentId: row.original.id }}
+        className="font-medium text-primary hover:underline"
+      >
+        {row.original.name}
+      </Link>
       ),
     },
     {
@@ -60,6 +66,9 @@ function ParentsListPage() {
     {
       id: 'actions',
       header: 'Actions',
+      meta: {
+        disableRowClick: true,
+      },
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
           <Button
@@ -75,7 +84,7 @@ function ParentsListPage() {
             size="icon-sm"
             onClick={() => handleDelete(row.original.id, row.original.name)}
             title="Delete"
-            className="text-destructive hover:text-destructive"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

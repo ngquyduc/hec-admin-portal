@@ -29,6 +29,14 @@ export function LessonForm({ classId, lesson, mode, onSuccess }: LessonFormProps
   const createLesson = useCreateLesson()
   const updateLesson = useUpdateLesson()
 
+  const handleCancel = () => {
+    if (mode === 'edit' && window.history.length > 1) {
+      window.history.back()
+      return
+    }
+    navigate({ to: '/classes/$classId', params: { classId } })
+  }
+
   const toDatetimeLocal = (iso: string) => {
     if (!iso) return ''
     // Convert to local datetime-local format (YYYY-MM-DDTHH:MM)
@@ -193,7 +201,7 @@ export function LessonForm({ classId, lesson, mode, onSuccess }: LessonFormProps
 
       {/* Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <Button type="button" variant="outline" onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}>
+        <Button type="button" variant="outline" onClick={handleCancel}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
         </Button>

@@ -27,6 +27,14 @@ export function ParentForm({ parent, mode }: ParentFormProps) {
   const createParent = useCreateParent()
   const updateParent = useUpdateParent()
 
+  const handleCancel = () => {
+    if (mode === 'edit' && window.history.length > 1) {
+      window.history.back()
+      return
+    }
+    navigate({ to: '/parents' })
+  }
+
   const form = useForm({
     defaultValues: {
       name: parent?.name ?? '',
@@ -203,7 +211,7 @@ export function ParentForm({ parent, mode }: ParentFormProps) {
 
       {/* Form Actions */}
       <div className="flex items-center gap-4 pt-4 border-t">
-        <Button type="button" variant="outline" onClick={() => navigate({ to: '/parents' })}>
+        <Button type="button" variant="outline" onClick={handleCancel}>
           <ArrowLeft className="h-4 w-4" />
           Cancel
         </Button>
