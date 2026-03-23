@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useDeleteEntryTest, useEntryTests } from '@/hooks/useEntryTests'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import type { EntryTestCandidate } from '@/types/entities'
 
 export const Route = createFileRoute('/_authenticated/_admin/entry-tests/')({
@@ -28,9 +29,14 @@ function EntryTestsListPage() {
   const { data: entryTests = [], isLoading, error } = useEntryTests()
   const deleteEntryTest = useDeleteEntryTest()
   const navigate = useNavigate()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete entry test for ${name}?`)) {
+    if (await confirm({
+      title: 'Delete entry test?',
+      description: `Are you sure you want to delete entry test for ${name}?`,
+      confirmText: 'Delete',
+    })) {
       await deleteEntryTest.mutateAsync(id)
     }
   }
@@ -140,6 +146,7 @@ function EntryTestsListPage() {
           </CardContent>
         </Card>
       )}
+      {confirmDialog}
     </div>
   )
 }

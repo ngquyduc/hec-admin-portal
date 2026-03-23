@@ -3,6 +3,7 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { Pencil, Trash2, ClipboardList, CheckCircle } from 'lucide-react'
 import { useLessons, useDeleteLesson, useLessonAttendance } from '@/hooks/useLessons'
 import { useClasses } from '@/hooks/useClasses'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { DataTable } from '@/components/DataTable'
 import type { Lesson } from '@/types/entities'
 import { LESSON_STATUS_LABELS, LESSON_STATUS_COLORS } from '@/lib/constants'
@@ -48,11 +49,16 @@ function LessonsListPage() {
   const { data: classes = [] } = useClasses()
   const deleteLesson = useDeleteLesson()
   const navigate = useNavigate()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const classMap = new Map(classes.map((c) => [c.id, c.name]))
 
   const handleDelete = async (id: string, title: string) => {
-    if (confirm(`Delete lesson "${title}"?`)) {
+    if (await confirm({
+      title: 'Delete lesson?',
+      description: `Delete lesson "${title}"?`,
+      confirmText: 'Delete',
+    })) {
       await deleteLesson.mutateAsync(id)
     }
   }
@@ -190,6 +196,7 @@ function LessonsListPage() {
           </CardContent>
         </Card>
       )}
+      {confirmDialog}
     </div>
   )
 }

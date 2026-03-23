@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { useDeleteStaff, useStaffById } from '@/hooks/useStaff'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { STAFF_ROLE_LABELS, STATUS_COLORS, STATUS_LABELS } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,10 +16,15 @@ function StaffDetailPage() {
   const navigate = useNavigate()
   const { data: staff, isLoading, error } = useStaffById(staffId)
   const deleteStaff = useDeleteStaff()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const handleDelete = async () => {
     if (!staff) return
-    if (confirm(`Are you sure you want to delete ${staff.name}?`)) {
+    if (await confirm({
+      title: 'Delete staff member?',
+      description: `Are you sure you want to delete ${staff.name}?`,
+      confirmText: 'Delete',
+    })) {
       await deleteStaff.mutateAsync(staff.id)
       navigate({ to: '/staff' })
     }
@@ -110,6 +116,7 @@ function StaffDetailPage() {
           </dl>
         </CardContent>
       </Card>
+      {confirmDialog}
     </div>
   )
 }

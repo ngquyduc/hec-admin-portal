@@ -3,6 +3,7 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { Pencil, Trash2, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useClasses, useDeleteClass } from '@/hooks/useClasses'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { DataTable } from '@/components/DataTable'
 import type { Class, Status } from '@/types/entities'
 import { CLASS_LEVEL_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
@@ -25,13 +26,18 @@ function ClassesListPage() {
   const { data: classes = [], isLoading, error } = useClasses()
   const deleteClass = useDeleteClass()
   const navigate = useNavigate()
+  const { confirm, confirmDialog } = useConfirmDialog()
   const [statusFilter, setStatusFilter] = useState<Status | 'all'>('active')
   const filteredClasses = statusFilter === 'all'
     ? classes
     : classes.filter((classItem) => classItem.status === statusFilter)
 
   const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete "${name}"? This will also delete all its lessons.`)) {
+    if (await confirm({
+      title: 'Delete class?',
+      description: `Are you sure you want to delete "${name}"? This will also delete all its lessons.`,
+      confirmText: 'Delete',
+    })) {
       await deleteClass.mutateAsync(id)
     }
   }
@@ -158,6 +164,7 @@ function ClassesListPage() {
           </CardContent>
         </Card>
       )}
+      {confirmDialog}
     </div>
   )
 }

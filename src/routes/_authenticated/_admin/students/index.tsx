@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Pencil, Trash2, Plus } from 'lucide-react'
 import { useStudents, useDeleteStudent } from '@/hooks/useStudents'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { DataTable } from '@/components/DataTable'
 import type { Student } from '@/types/entities'
 import { STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
@@ -17,9 +18,14 @@ function StudentsListPage() {
   const { data: students = [], isLoading, error } = useStudents()
   const deleteStudent = useDeleteStudent()
   const navigate = useNavigate()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
+    if (await confirm({
+      title: 'Delete student?',
+      description: `Are you sure you want to delete ${name}?`,
+      confirmText: 'Delete',
+    })) {
       await deleteStudent.mutateAsync(id)
     }
   }
@@ -129,6 +135,7 @@ function StudentsListPage() {
           </CardContent>
         </Card>
       )}
+      {confirmDialog}
     </div>
   )
 }

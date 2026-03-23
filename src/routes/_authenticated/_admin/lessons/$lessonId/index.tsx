@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { useClassById } from '@/hooks/useClasses'
 import { useDeleteLesson, useLessonById } from '@/hooks/useLessons'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { LESSON_STATUS_COLORS, LESSON_STATUS_LABELS } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -17,10 +18,15 @@ function LessonDetailPage() {
   const { data: lesson, isLoading, error } = useLessonById(lessonId)
   const { data: classData } = useClassById(lesson?.classId ?? '')
   const deleteLesson = useDeleteLesson()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const handleDelete = async () => {
     if (!lesson) return
-    if (confirm(`Delete lesson "${lesson.title}"?`)) {
+    if (await confirm({
+      title: 'Delete lesson?',
+      description: `Delete lesson "${lesson.title}"?`,
+      confirmText: 'Delete',
+    })) {
       await deleteLesson.mutateAsync(lesson.id)
       navigate({ to: '/lessons' })
     }
@@ -114,6 +120,7 @@ function LessonDetailPage() {
           </dl>
         </CardContent>
       </Card>
+      {confirmDialog}
     </div>
   )
 }

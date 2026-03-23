@@ -4,6 +4,7 @@ import { useLessonsByClass, useDeleteLesson, useLessonAttendance } from '@/hooks
 import { useClassAssessments } from '@/hooks/useGrades'
 import { useStudents } from '@/hooks/useStudents'
 import { useTeachers } from '@/hooks/useTeachers'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { CLASS_LEVEL_LABELS, STATUS_COLORS, STATUS_LABELS, LESSON_STATUS_LABELS, LESSON_STATUS_COLORS, ASSESSMENT_TYPE_LABELS } from '@/lib/constants'
 import type { Lesson } from '@/types/entities'
 import { Plus, Pencil, Trash2, UserMinus, UserPlus, ClipboardList, CheckCircle, BookOpen } from 'lucide-react'
@@ -109,6 +110,7 @@ function ClassDetailPage() {
   const removeStudent = useRemoveStudentFromClass()
   const addStudent = useAddStudentToClass()
   const deleteLesson = useDeleteLesson()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const [studentSearch, setStudentSearch] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
@@ -228,7 +230,11 @@ function ClassDetailPage() {
                 lesson={lesson}
                 classId={classId}
                 onDelete={async () => {
-                  if (confirm(`Delete lesson "${lesson.title}"?`)) {
+                  if (await confirm({
+                    title: 'Delete lesson?',
+                    description: `Delete lesson "${lesson.title}"?`,
+                    confirmText: 'Delete',
+                  })) {
                     await deleteLesson.mutateAsync(lesson.id)
                   }
                 }}
@@ -362,7 +368,11 @@ function ClassDetailPage() {
                   size="icon-sm"
                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   onClick={async () => {
-                    if (confirm(`Remove ${s.name} from this class?`)) {
+                    if (await confirm({
+                      title: 'Remove student from class?',
+                      description: `Remove ${s.name} from this class?`,
+                      confirmText: 'Remove',
+                    })) {
                       await removeStudent.mutateAsync({ classId, studentId: s.id })
                     }
                   }}
@@ -376,6 +386,7 @@ function ClassDetailPage() {
         )}
         </CardContent>
       </Card>
+      {confirmDialog}
     </div>
   )
 }

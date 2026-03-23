@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Pencil, Trash2, Plus } from 'lucide-react'
 import { useStaff, useDeleteStaff } from '@/hooks/useStaff'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { DataTable } from '@/components/DataTable'
 import type { Staff } from '@/types/entities'
 import { STAFF_ROLE_LABELS, STATUS_LABELS, STATUS_COLORS } from '@/lib/constants'
@@ -17,9 +18,14 @@ function StaffListPage() {
   const { data: staff = [], isLoading, error } = useStaff()
   const deleteStaff = useDeleteStaff()
   const navigate = useNavigate()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
+    if (await confirm({
+      title: 'Delete staff member?',
+      description: `Are you sure you want to delete ${name}?`,
+      confirmText: 'Delete',
+    })) {
       await deleteStaff.mutateAsync(id)
     }
   }
@@ -140,6 +146,7 @@ function StaffListPage() {
           </CardContent>
         </Card>
       )}
+      {confirmDialog}
     </div>
   )
 }

@@ -19,7 +19,7 @@ export const authService = {
       .eq('user_id', data.user.id)
       .single()
 
-    if (roleError) throw new Error('No role assigned to this account. Please ask an administrator to assign your role in the user_roles table.')
+    if (roleError) throw new Error('No role assigned to this account. Please ask an administrator to assign you a role.')
 
     return {
       id: data.user.id,

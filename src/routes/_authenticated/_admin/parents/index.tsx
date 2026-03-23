@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Pencil, Trash2, Plus } from 'lucide-react'
 import { useParents, useDeleteParent } from '@/hooks/useParents'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { DataTable } from '@/components/DataTable'
 import type { Parent } from '@/types/entities'
 import { RELATIONSHIP_LABELS } from '@/lib/constants'
@@ -17,9 +18,14 @@ function ParentsListPage() {
   const { data: parents = [], isLoading, error } = useParents()
   const deleteParent = useDeleteParent()
   const navigate = useNavigate()
+  const { confirm, confirmDialog } = useConfirmDialog()
 
   const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
+    if (await confirm({
+      title: 'Delete parent?',
+      description: `Are you sure you want to delete ${name}?`,
+      confirmText: 'Delete',
+    })) {
       await deleteParent.mutateAsync(id)
     }
   }
@@ -133,6 +139,7 @@ function ParentsListPage() {
           </CardContent>
         </Card>
       )}
+      {confirmDialog}
     </div>
   )
 }
