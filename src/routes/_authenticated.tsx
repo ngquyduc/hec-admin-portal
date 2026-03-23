@@ -3,12 +3,14 @@ import {
   Outlet,
   redirect,
   isRedirect,
+  useNavigate,
 } from '@tanstack/react-router'
 import Header from '@/components/Header'
 import Navigation from '@/components/Navigation'
 import { AUTH_QUERY_KEY, useCurrentUser } from '@/hooks/useAuth'
 import { authService } from '@/services/auth.service'
 import { buildLoginRedirectPath } from '@/lib/utils'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ context, location }) => {
@@ -44,10 +46,35 @@ export const Route = createFileRoute('/_authenticated')({
 })
 
 function AuthenticatedLayout() {
+  const navigate = useNavigate()
   const { data: user, isLoading } = useCurrentUser()
 
-  if (isLoading || !user) {
-    return null
+  useEffect(() => {
+    if (isLoading || user || typeof window === 'undefined') {
+      return
+    }
+
+    navigate({
+      to: '/login',
+      search: { redirect: buildLoginRedirectPath(window.location.href) },
+      replace: true,
+    })
+  }, [isLoading, user, navigate])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
+        <p className="text-sm text-muted-foreground">Loading your session...</p>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
+        <p className="text-sm text-muted-foreground">Redirecting to login...</p>
+      </div>
+    )
   }
 
   return (

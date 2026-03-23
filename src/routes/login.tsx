@@ -103,7 +103,13 @@ function LoginPage() {
     setStep('email')
   }
 
-  if (isLoading) return null
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
