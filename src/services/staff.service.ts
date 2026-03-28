@@ -14,7 +14,7 @@ function transformStaffRow(row: StaffRow): Staff {
     email: row.email,
     phone: row.phone,
     role: row.role,
-    hireDate: row.hire_date,
+    hireDate: row.hire_date ?? undefined,
     status: row.status,
     address: row.address ?? undefined,
     emergencyContact: row.emergency_contact ?? undefined,
@@ -26,15 +26,22 @@ function transformStaffRow(row: StaffRow): Staff {
 
 // Transform create input to database insert
 function transformCreateStaff(data: CreateStaff): StaffInsert {
+  const emergencyContact = data.emergencyContact?.trim()
+
   return {
     name: data.name,
     email: data.email,
     phone: data.phone,
     role: data.role,
-    hire_date: typeof data.hireDate === 'string' ? data.hireDate : data.hireDate.toISOString(),
+    hire_date:
+      data.hireDate === undefined
+        ? null
+        : typeof data.hireDate === 'string'
+          ? data.hireDate
+          : data.hireDate.toISOString(),
     status: data.status,
     address: data.address ?? null,
-    emergency_contact: data.emergencyContact ?? null,
+    emergency_contact: emergencyContact ? emergencyContact : null,
     notes: data.notes ?? null,
   }
 }
@@ -48,11 +55,18 @@ function transformUpdateStaff(data: UpdateStaff): StaffUpdate {
   if (data.phone !== undefined) update.phone = data.phone
   if (data.role !== undefined) update.role = data.role
   if (data.hireDate !== undefined) {
-    update.hire_date = typeof data.hireDate === 'string' ? data.hireDate : data.hireDate.toISOString()
+    update.hire_date = data.hireDate
+      ? typeof data.hireDate === 'string'
+        ? data.hireDate
+        : data.hireDate.toISOString()
+      : null
   }
   if (data.status !== undefined) update.status = data.status
   if (data.address !== undefined) update.address = data.address ?? null
-  if (data.emergencyContact !== undefined) update.emergency_contact = data.emergencyContact ?? null
+  if (data.emergencyContact !== undefined) {
+    const emergencyContact = data.emergencyContact?.trim()
+    update.emergency_contact = emergencyContact ? emergencyContact : null
+  }
   if (data.notes !== undefined) update.notes = data.notes ?? null
   
   return update

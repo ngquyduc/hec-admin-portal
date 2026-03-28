@@ -1,9 +1,38 @@
 import { z } from 'zod'
 
 // ============= Common Schemas =============
+const PHONE_ALLOWED_CHARS_REGEX = /^\+?[\d\s()-]+$/
+
+export const PhoneSchema = z
+  .string()
+  .trim()
+  .min(1, 'Phone number is required')
+  .refine(
+    (value) => PHONE_ALLOWED_CHARS_REGEX.test(value),
+    'Phone number can only contain digits, spaces, +, -, and parentheses',
+  )
+  .refine((value) => {
+    const digitsOnly = value.replace(/\D/g, '')
+    return digitsOnly.length >= 8 && digitsOnly.length <= 15
+  }, 'Phone number must contain 8 to 15 digits')
+
+export const OptionalPhoneSchema = z
+  .string()
+  .trim()
+  .refine(
+    (value) => value === '' || PHONE_ALLOWED_CHARS_REGEX.test(value),
+    'Emergency contact can only contain digits, spaces, +, -, and parentheses',
+  )
+  .refine((value) => {
+    if (value === '') return true
+    const digitsOnly = value.replace(/\D/g, '')
+    return digitsOnly.length >= 8 && digitsOnly.length <= 15
+  }, 'Emergency contact must contain 8 to 15 digits')
+  .optional()
+
 export const ContactInfoSchema = z.object({
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: PhoneSchema,
 })
 
 export const StatusSchema = z.enum(['active', 'inactive', 'suspended'])
@@ -21,12 +50,12 @@ export const StaffSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: PhoneSchema,
   role: StaffRoleSchema,
-  hireDate: z.string().or(z.date()),
+  hireDate: z.string().or(z.date()).optional(),
   status: StatusSchema,
   address: z.string().optional(),
-  emergencyContact: z.string().optional(),
+  emergencyContact: OptionalPhoneSchema,
   notes: z.string().optional(),
   createdAt: z.string().or(z.date()),
   updatedAt: z.string().or(z.date()),
@@ -61,12 +90,12 @@ export const TeacherSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   role: TeacherRoleSchema,
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: PhoneSchema,
   subjects: z.array(SubjectSchema).min(1, 'At least one subject is required'),
   hireDate: z.string().or(z.date()),
   status: StatusSchema,
   address: z.string().optional(),
-  emergencyContact: z.string().optional(),
+  emergencyContact: OptionalPhoneSchema,
   notes: z.string().optional(),
   createdAt: z.string().or(z.date()),
   updatedAt: z.string().or(z.date()),
@@ -101,7 +130,7 @@ export const StudentSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address').or(z.literal('')).optional(),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: PhoneSchema,
   dateOfBirth: z.string().or(z.date()).optional(),
   enrollmentDate: z.string().or(z.date()),
   entryResult: z.string().optional(),
@@ -138,7 +167,7 @@ export const EntryTestCandidateSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address').or(z.literal('')).optional(),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: PhoneSchema,
   dateOfBirth: z.string().or(z.date()).optional(),
   testDate: z.string().or(z.date()),
   entryResult: z.string().min(1, 'Entry result is required'),
@@ -180,7 +209,7 @@ export const ParentSchema = z.object({
     .email('Invalid email address')
     .or(z.literal(''))
     .optional(),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: PhoneSchema,
   relationship: RelationshipSchema,
   studentIds: z.array(z.string()).default([]),
   address: z.string().optional(),

@@ -25,6 +25,8 @@ function transformTeacherRow(row: TeacherRow): Teacher {
 }
 
 function transformCreateTeacher(data: CreateTeacher): TeacherInsert {
+  const emergencyContact = data.emergencyContact?.trim()
+
   return {
     name: data.name,
     role: data.role,
@@ -34,7 +36,7 @@ function transformCreateTeacher(data: CreateTeacher): TeacherInsert {
     hire_date: typeof data.hireDate === 'string' ? data.hireDate : data.hireDate.toISOString(),
     status: data.status,
     address: data.address ?? null,
-    emergency_contact: data.emergencyContact ?? null,
+    emergency_contact: emergencyContact ? emergencyContact : null,
     notes: data.notes ?? null,
   }
 }
@@ -52,7 +54,10 @@ function transformUpdateTeacher(data: UpdateTeacher): TeacherUpdate {
   }
   if (data.status !== undefined) update.status = data.status
   if (data.address !== undefined) update.address = data.address ?? null
-  if (data.emergencyContact !== undefined) update.emergency_contact = data.emergencyContact ?? null
+  if (data.emergencyContact !== undefined) {
+    const emergencyContact = data.emergencyContact?.trim()
+    update.emergency_contact = emergencyContact ? emergencyContact : null
+  }
   if (data.notes !== undefined) update.notes = data.notes ?? null
   
   return update

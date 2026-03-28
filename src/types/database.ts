@@ -19,7 +19,7 @@ export type Database = {
           email: string
           phone: string
           role: 'administrator' | 'coordinator' | 'receptionist' | 'accountant' | 'manager'
-          hire_date: string
+          hire_date: string | null
           status: 'active' | 'inactive' | 'suspended'
           address: string | null
           emergency_contact: string | null
@@ -33,7 +33,7 @@ export type Database = {
           email: string
           phone: string
           role: 'administrator' | 'coordinator' | 'receptionist' | 'accountant' | 'manager'
-          hire_date: string
+          hire_date?: string | null
           status?: 'active' | 'inactive' | 'suspended'
           address?: string | null
           emergency_contact?: string | null
@@ -47,7 +47,7 @@ export type Database = {
           email?: string
           phone?: string
           role?: 'administrator' | 'coordinator' | 'receptionist' | 'accountant' | 'manager'
-          hire_date?: string
+          hire_date?: string | null
           status?: 'active' | 'inactive' | 'suspended'
           address?: string | null
           emergency_contact?: string | null

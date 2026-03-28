@@ -23,6 +23,25 @@ interface StaffFormProps {
   mode: 'create' | 'edit'
 }
 
+function getFieldErrorMessage(errors: unknown[] | undefined): string {
+  if (!errors?.length) return ''
+
+  return errors
+    .map((error) => {
+      if (typeof error === 'string') return error
+      if (error instanceof Error) return error.message
+
+      if (error && typeof error === 'object' && 'message' in error) {
+        const message = (error as { message?: unknown }).message
+        if (typeof message === 'string') return message
+      }
+
+      const fallback = String(error)
+      return fallback === '[object Object]' ? 'Invalid value' : fallback
+    })
+    .join(', ')
+}
+
 export function StaffForm({ staff, mode }: StaffFormProps) {
   const navigate = useNavigate()
   const createStaff = useCreateStaff()
@@ -42,7 +61,12 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
       email: staff?.email ?? '',
       phone: staff?.phone ?? '',
       role: staff?.role ?? ('administrator' as const),
-      hireDate: (typeof staff?.hireDate === 'string' ? staff.hireDate : staff?.hireDate ? new Date(staff.hireDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
+      hireDate:
+        typeof staff?.hireDate === 'string'
+          ? staff.hireDate
+          : staff?.hireDate
+            ? new Date(staff.hireDate).toISOString().split('T')[0]
+            : '',
       status: staff?.status ?? ('active' as const),
       address: staff?.address ?? '',
       emergencyContact: staff?.emergencyContact ?? '',
@@ -50,11 +74,16 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
     },
     onSubmit: async ({ value }) => {
       try {
+        const submitData = {
+          ...value,
+          hireDate: value.hireDate || undefined,
+        }
+
         if (mode === 'create') {
-          const validated = CreateStaffSchema.parse(value)
+          const validated = CreateStaffSchema.parse(submitData)
           await createStaff.mutateAsync(validated)
         } else if (staff) {
-          const validated = UpdateStaffSchema.parse(value)
+          const validated = UpdateStaffSchema.parse(submitData)
           await updateStaff.mutateAsync({ id: staff.id, data: validated })
         }
         navigate({ to: '/staff' })
@@ -92,7 +121,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
                 onBlur={field.handleBlur}
               />
               {field.state.meta.errors && (
-                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
               )}
             </div>
           )}
@@ -115,7 +144,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
                 onBlur={field.handleBlur}
               />
               {field.state.meta.errors && (
-                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
               )}
             </div>
           )}
@@ -138,7 +167,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
                 onBlur={field.handleBlur}
               />
               {field.state.meta.errors && (
-                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
               )}
             </div>
           )}
@@ -165,7 +194,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
                 </SelectContent>
               </Select>
               {field.state.meta.errors && (
-                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
               )}
             </div>
           )}
@@ -177,7 +206,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         >
           {(field) => (
             <div className="space-y-1.5">
-              <Label>Hire Date <span className="text-destructive">*</span></Label>
+              <Label>Hire Date</Label>
               <DatePicker
                 value={field.state.value}
                 onChange={(value) => field.handleChange(value ?? '')}
@@ -185,7 +214,7 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
                 toYear={new Date().getFullYear() + 2}
               />
               {field.state.meta.errors && (
-                <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
               )}
             </div>
           )}
@@ -225,15 +254,24 @@ export function StaffForm({ staff, mode }: StaffFormProps) {
         </form.Field>
 
         {/* Emergency Contact */}
-        <form.Field name="emergencyContact">
+        <form.Field
+          name="emergencyContact"
+          validators={{
+            onChange: CreateStaffSchema.shape.emergencyContact.unwrap(),
+          }}
+        >
           {(field) => (
             <div className="space-y-1.5">
               <Label>Emergency Contact</Label>
               <Input
-                type="text"
+                type="tel"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                onBlur={field.handleBlur}
               />
+              {field.state.meta.errors && (
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
+              )}
             </div>
           )}
         </form.Field>

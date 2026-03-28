@@ -25,6 +25,25 @@ interface TeacherFormProps {
   mode: 'create' | 'edit'
 }
 
+function getFieldErrorMessage(errors: unknown[] | undefined): string {
+  if (!errors?.length) return ''
+
+  return errors
+    .map((error) => {
+      if (typeof error === 'string') return error
+      if (error instanceof Error) return error.message
+
+      if (error && typeof error === 'object' && 'message' in error) {
+        const message = (error as { message?: unknown }).message
+        if (typeof message === 'string') return message
+      }
+
+      const fallback = String(error)
+      return fallback === '[object Object]' ? 'Invalid value' : fallback
+    })
+    .join(', ')
+}
+
 export function TeacherForm({ teacher, mode }: TeacherFormProps) {
   const navigate = useNavigate()
   const createTeacher = useCreateTeacher()
@@ -281,15 +300,24 @@ export function TeacherForm({ teacher, mode }: TeacherFormProps) {
         </form.Field>
 
         {/* Emergency Contact */}
-        <form.Field name="emergencyContact">
+        <form.Field
+          name="emergencyContact"
+          validators={{
+            onChange: CreateTeacherSchema.shape.emergencyContact.unwrap(),
+          }}
+        >
           {(field) => (
             <div className="space-y-1.5">
               <Label>Emergency Contact</Label>
               <Input
-                type="text"
+                type="tel"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                onBlur={field.handleBlur}
               />
+              {field.state.meta.errors && (
+                <p className="text-sm text-destructive">{getFieldErrorMessage(field.state.meta.errors)}</p>
+              )}
             </div>
           )}
         </form.Field>
