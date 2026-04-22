@@ -1,6 +1,15 @@
 import { useSignOut, useCurrentUser } from '@/hooks/useAuth'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { LogOut, Menu } from 'lucide-react'
+import { useBreadcrumbs } from '@/hooks/useBreadcrumbs'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 type HeaderProps = {
   isNavOpen: boolean
@@ -11,6 +20,7 @@ export default function Header({ isNavOpen, onToggleNav }: HeaderProps) {
   const { data: user } = useCurrentUser()
   const signOut = useSignOut()
   const navigate = useNavigate()
+  const breadcrumbs = useBreadcrumbs()
 
   const handleSignOut = async () => {
     await signOut.mutateAsync()
@@ -31,7 +41,28 @@ export default function Header({ isNavOpen, onToggleNav }: HeaderProps) {
             >
               <Menu className="h-4 w-4" />
             </button>
-            <h1 className="text-xl font-bold text-gray-900">HEC Admin Portal</h1>
+            <h1 className="text-xl font-bold text-gray-900">HEC</h1>
+            {breadcrumbs.length > 0 && (
+              <Breadcrumb>
+                <BreadcrumbList>
+                  {breadcrumbs.map((crumb, index) => {
+                    const isLast = index === breadcrumbs.length - 1
+                    return (
+                      <BreadcrumbItem key={index}>
+                        {index > 0 && <BreadcrumbSeparator />}
+                        {isLast || !crumb.to ? (
+                          <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink asChild>
+                            <Link to={crumb.to}>{crumb.label}</Link>
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                    )
+                  })}
+                </BreadcrumbList>
+              </Breadcrumb>
+            )}
           </div>
           <div className="flex items-center gap-4">
             {user && (
