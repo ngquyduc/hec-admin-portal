@@ -1,8 +1,13 @@
 import { useSignOut, useCurrentUser } from '@/hooks/useAuth'
 import { useNavigate } from '@tanstack/react-router'
-import { LogOut } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 
-export default function Header() {
+type HeaderProps = {
+  isNavOpen: boolean
+  onToggleNav: () => void
+}
+
+export default function Header({ isNavOpen, onToggleNav }: HeaderProps) {
   const { data: user } = useCurrentUser()
   const signOut = useSignOut()
   const navigate = useNavigate()
@@ -14,9 +19,20 @@ export default function Header() {
 
   return (
     <header className="bg-white border-b shadow-sm">
-      <div className="container mx-auto px-4">
+      <div className="px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
-          <h1 className="text-xl font-bold text-gray-900">HEC Admin Portal</h1>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onToggleNav}
+              className="inline-flex cursor-pointer items-center justify-center h-9 w-9 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200 transition-colors"
+              aria-label={isNavOpen ? 'Collapse navigation' : 'Expand navigation'}
+              title={isNavOpen ? 'Collapse navigation' : 'Expand navigation'}
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+            <h1 className="text-xl font-bold text-gray-900">HEC Admin Portal</h1>
+          </div>
           <div className="flex items-center gap-4">
             {user && (
               <>

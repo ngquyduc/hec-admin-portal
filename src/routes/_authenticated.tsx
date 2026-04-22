@@ -10,7 +10,7 @@ import Navigation from '@/components/Navigation'
 import { AUTH_QUERY_KEY, useCurrentUser } from '@/hooks/useAuth'
 import { authService } from '@/services/auth.service'
 import { buildLoginRedirectPath } from '@/lib/utils'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ context, location }) => {
@@ -48,6 +48,7 @@ export const Route = createFileRoute('/_authenticated')({
 function AuthenticatedLayout() {
   const navigate = useNavigate()
   const { data: user, isLoading } = useCurrentUser()
+  const [isNavOpen, setIsNavOpen] = useState(true)
 
   useEffect(() => {
     if (isLoading || user || typeof window === 'undefined') {
@@ -78,10 +79,14 @@ function AuthenticatedLayout() {
   }
 
   return (
-    <>
-      <Header />
-      <Navigation />
-      <Outlet />
-    </>
+    <div className="min-h-screen bg-muted/30">
+      <Header isNavOpen={isNavOpen} onToggleNav={() => setIsNavOpen((prev) => !prev)} />
+      <div className="md:flex">
+        <Navigation isOpen={isNavOpen} />
+        <main className="min-w-0 flex-1 w-full">
+          <Outlet />
+        </main>
+      </div>
+    </div>
   )
 }
