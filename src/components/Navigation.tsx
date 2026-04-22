@@ -10,7 +10,7 @@ import {
   FileText,
   House,
 } from 'lucide-react'
-import { useCurrentUser, useIsAdmin } from '@/hooks/useAuth'
+import { useCurrentUser } from '@/hooks/useAuth'
 
 type NavigationProps = {
   isOpen: boolean
@@ -18,7 +18,6 @@ type NavigationProps = {
 
 export default function Navigation({ isOpen }: NavigationProps) {
   const { data: user } = useCurrentUser()
-  const isAdmin = useIsAdmin()
 
   if (!user) return null
 
@@ -39,7 +38,7 @@ export default function Navigation({ isOpen }: NavigationProps) {
     { to: '/feedback' as const, label: 'Feedback', icon: MessageSquare },
   ]
 
-  const navItems = isAdmin ? adminNavItems : teacherNavItems
+  const navItems = user.role === 'teacher' ? teacherNavItems : adminNavItems
 
   return (
     <nav className="border-r bg-white">
