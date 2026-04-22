@@ -88,7 +88,7 @@ function TeacherClassDetail() {
             </div>
             <Button variant="outline" asChild>
               <Link to="/teacher/classes/$classId/grades" params={{ classId }}>
-                <Star className="h-4 w-4" /> Bảng điểm
+                <Star className="h-4 w-4" /> Gradebook
               </Link>
             </Button>
           </CardContent>
@@ -139,10 +139,10 @@ function TeacherClassDetail() {
                   <div className="min-w-0">
                     <p className="font-medium truncate">{assessment.title}</p>
                     <div className="text-sm text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                      <span>Loại: {ASSESSMENT_TYPE_LABELS[assessment.type]}</span>
-                      <span>Điểm tối đa: {assessment.maxScore}</span>
+                      <span>Type: {ASSESSMENT_TYPE_LABELS[assessment.type]}</span>
+                      <span>Max score: {assessment.maxScore}</span>
                       {assessment.dueAt && (
-                        <span>Hạn nộp: {new Date(assessment.dueAt).toLocaleString()}</span>
+                        <span>Due: {new Date(assessment.dueAt).toLocaleString()}</span>
                       )}
                     </div>
                   </div>
@@ -151,7 +151,7 @@ function TeacherClassDetail() {
                       to="/teacher/classes/$classId/assignments/$assessmentId/grade"
                       params={{ classId, assessmentId: assessment.id }}
                     >
-                      Chấm điểm
+                      Grade
                     </Link>
                   </Button>
                 </li>
@@ -187,7 +187,7 @@ function TeacherClassDetail() {
                       {LESSON_STATUS_LABELS[lesson.status]}
                     </Badge>
                     <span className="ml-2 text-xs text-muted-foreground">
-                      {new Date(lesson.startTime).toLocaleDateString('vi-VN')}
+                      {new Date(lesson.startTime).toLocaleDateString('en-US')}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -201,7 +201,7 @@ function TeacherClassDetail() {
                         })
                       }
                     >
-                      <ClipboardList className="h-3.5 w-3.5" /> Điểm danh
+                      <ClipboardList className="h-3.5 w-3.5" /> Attendance
                     </Button>
                     <Button
                       variant="ghost"

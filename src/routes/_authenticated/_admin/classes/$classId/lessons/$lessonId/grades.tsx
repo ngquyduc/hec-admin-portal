@@ -70,17 +70,17 @@ function LessonGradesPage() {
         maxScore,
         records,
       })
-      toast.success('Điểm đã được lưu thành công!')
+      toast.success('Scores saved successfully!')
       navigate({ to: '/classes/$classId', params: { classId } })
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Không thể lưu điểm. Vui lòng thử lại.')
+      toast.error(error instanceof Error ? error.message : 'Failed to save scores. Please try again.')
     }
   }
 
   if (lessonLoading || gradesLoading) {
     return (
       <Card className="container mx-auto max-w-2xl mt-8">
-        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+        <CardContent className="p-12 text-center text-muted-foreground">Loading...</CardContent>
       </Card>
     )
   }
@@ -89,7 +89,7 @@ function LessonGradesPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
-          Không tìm thấy buổi học: {lessonError?.message}
+          Lesson not found: {lessonError?.message}
         </div>
       </div>
     )
@@ -107,12 +107,12 @@ function LessonGradesPage() {
           className="mb-3"
         >
           <ArrowLeft className="h-4 w-4" />
-          Quay lại lớp học
+          Back to class
         </Button>
         <div className="flex items-center gap-3">
           <Star className="h-7 w-7 text-yellow-500" />
           <div>
-            <h1 className="text-2xl font-bold">Chấm điểm</h1>
+            <h1 className="text-2xl font-bold">Grading</h1>
             <p className="text-muted-foreground text-sm mt-0.5">{lesson.title}</p>
           </div>
         </div>
@@ -122,20 +122,20 @@ function LessonGradesPage() {
       <Card>
         <CardContent className="p-4 flex flex-wrap gap-6 text-sm">
         <div>
-          <span className="text-muted-foreground">Thời gian bắt đầu: </span>
+          <span className="text-muted-foreground">Start time: </span>
           <span className="font-medium">
-            {new Date(lesson.startTime).toLocaleString('vi-VN')}
+            {new Date(lesson.startTime).toLocaleString('en-US')}
           </span>
         </div>
         <div>
-          <span className="text-muted-foreground">Thời gian kết thúc: </span>
+          <span className="text-muted-foreground">End time: </span>
           <span className="font-medium">
-            {new Date(lesson.endTime).toLocaleString('vi-VN')}
+            {new Date(lesson.endTime).toLocaleString('en-US')}
           </span>
         </div>
         <div>
-          <span className="text-muted-foreground">Sĩ số: </span>
-          <span className="font-medium">{totalCount} học sinh</span>
+          <span className="text-muted-foreground">Class size: </span>
+          <span className="font-medium">{totalCount} students</span>
         </div>
         </CardContent>
       </Card>
@@ -144,7 +144,7 @@ function LessonGradesPage() {
       <Card>
         <CardContent className="p-4 flex flex-wrap gap-6 items-end">
         <div>
-          <label className="block text-sm font-medium mb-1">Loại đánh giá</label>
+          <label className="block text-sm font-medium mb-1">Assessment type</label>
           <div className="flex gap-2 flex-wrap">
             {ASSESSMENT_TYPES.map((type) => (
               <Button
@@ -160,7 +160,7 @@ function LessonGradesPage() {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Điểm tối đa</label>
+          <label className="block text-sm font-medium mb-1">Max score</label>
           <input
             type="number"
             min={1}
@@ -171,7 +171,7 @@ function LessonGradesPage() {
           />
         </div>
         <div className="text-sm text-muted-foreground">
-          {gradedCount}/{totalCount} đã chấm điểm
+           {gradedCount}/{totalCount} graded
         </div>
         </CardContent>
       </Card>
@@ -180,7 +180,7 @@ function LessonGradesPage() {
       {totalCount === 0 ? (
         <Card>
           <CardContent className="p-12 text-center text-muted-foreground">
-            Không có học sinh nào trong lớp.
+             No students in this class.
           </CardContent>
         </Card>
       ) : (
@@ -190,9 +190,9 @@ function LessonGradesPage() {
             <thead className="bg-muted/50 border-b">
               <tr>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground w-8">#</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Học sinh</th>
+                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Student</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                  Điểm (/{maxScore})
+                   Score (/{maxScore})
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground w-16">%</th>
               </tr>
@@ -264,14 +264,14 @@ function LessonGradesPage() {
             onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
           >
             <ArrowLeft className="h-4 w-4" />
-            Hủy
+             Cancel
           </Button>
           <Button
             type="button"
             onClick={handleSubmit}
             disabled={upsertScores.isPending}
           >
-            {upsertScores.isPending ? 'Đang lưu...' : 'Lưu điểm'}
+             {upsertScores.isPending ? 'Saving...' : 'Save scores'}
           </Button>
         </div>
       )}

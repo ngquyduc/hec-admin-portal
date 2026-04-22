@@ -105,16 +105,16 @@ function TeacherGradeAssignmentPage() {
     try {
       await upsertScores.mutateAsync({ assessmentId, records })
       await upsertComponentScores.mutateAsync({ assessmentId, records: componentRecords })
-      toast.success('Đã lưu điểm và nhận xét thành công!')
+      toast.success('Scores and feedback saved successfully!')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Không thể lưu điểm.')
+      toast.error(error instanceof Error ? error.message : 'Failed to save scores.')
     }
   }
 
   if (userLoading || classLoading) {
     return (
       <Card className="container mx-auto max-w-2xl mt-8">
-        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+        <CardContent className="p-12 text-center text-muted-foreground">Loading...</CardContent>
       </Card>
     )
   }
@@ -132,7 +132,7 @@ function TeacherGradeAssignmentPage() {
   if (assessmentLoading || scoresLoading || componentsLoading || componentScoresLoading) {
     return (
       <Card className="container mx-auto max-w-2xl mt-8">
-        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+        <CardContent className="p-12 text-center text-muted-foreground">Loading...</CardContent>
       </Card>
     )
   }
@@ -141,7 +141,7 @@ function TeacherGradeAssignmentPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
-          Không tìm thấy bài đánh giá: {assessmentError?.message}
+          Assessment not found: {assessmentError?.message}
         </div>
       </div>
     )
@@ -163,18 +163,18 @@ function TeacherGradeAssignmentPage() {
           className="mb-3"
         >
           <ArrowLeft className="h-4 w-4" />
-          Quay lại lớp học
+          Back to class
         </Button>
-        <h1 className="text-2xl font-bold">Chấm điểm bài đánh giá</h1>
+        <h1 className="text-2xl font-bold">Grade Assessment</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          {assessment.title} • {ASSESSMENT_TYPE_LABELS[assessment.type]} • {gradedCount}/{enrolledStudents.length} đã chấm
+          {assessment.title} • {ASSESSMENT_TYPE_LABELS[assessment.type]} • {gradedCount}/{enrolledStudents.length} graded
         </p>
       </div>
 
       <Card>
         <CardContent className="p-4 text-sm flex flex-wrap gap-6">
           <div>
-            <span className="text-muted-foreground">Điểm tối đa: </span>
+            <span className="text-muted-foreground">Max score: </span>
             <span className="font-medium">{assessment.maxScore}</span>
           </div>
           <div>
@@ -184,12 +184,12 @@ function TeacherGradeAssignmentPage() {
               size="sm"
               onClick={() => setShowOnlyUngraded((value) => !value)}
             >
-              {showOnlyUngraded ? 'Hiện tất cả học sinh' : 'Chỉ hiện chưa chấm'}
+               {showOnlyUngraded ? 'Show all students' : 'Show ungraded only'}
             </Button>
           </div>
           {assessment.dueAt && (
             <div>
-              <span className="text-muted-foreground">Hạn nộp: </span>
+               <span className="text-muted-foreground">Due: </span>
               <span className="font-medium">{new Date(assessment.dueAt).toLocaleString()}</span>
             </div>
           )}
@@ -199,7 +199,7 @@ function TeacherGradeAssignmentPage() {
       {enrolledStudents.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center text-muted-foreground">
-            Không có học sinh nào trong lớp.
+             No students in this class.
           </CardContent>
         </Card>
       ) : (
@@ -210,9 +210,9 @@ function TeacherGradeAssignmentPage() {
                 <thead className="bg-muted/50 border-b">
                   <tr>
                     <th className="px-4 py-3 text-left font-medium text-muted-foreground w-8">#</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Học sinh</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Điểm (/{assessment.maxScore})</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nhận xét</th>
+                     <th className="px-4 py-3 text-left font-medium text-muted-foreground">Student</th>
+                     <th className="px-4 py-3 text-left font-medium text-muted-foreground">Score (/{assessment.maxScore})</th>
+                     <th className="px-4 py-3 text-left font-medium text-muted-foreground">Feedback</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -241,7 +241,7 @@ function TeacherGradeAssignmentPage() {
                         <Textarea
                           value={comments[student.id] ?? ''}
                           onChange={(e) => setComments((prev) => ({ ...prev, [student.id]: e.target.value }))}
-                          placeholder="Nhận xét cho học sinh"
+                           placeholder="Feedback for student"
                           className="min-h-16"
                         />
                       </td>
@@ -276,11 +276,11 @@ function TeacherGradeAssignmentPage() {
                     <thead className="bg-muted/50 border-b">
                       <tr>
                         <th className="px-4 py-3 text-left font-medium text-muted-foreground w-8">#</th>
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Học sinh</th>
+                         <th className="px-4 py-3 text-left font-medium text-muted-foreground">Student</th>
                         {component.isScorable && (
-                          <th className="px-4 py-3 text-left font-medium text-muted-foreground">Điểm</th>
+                           <th className="px-4 py-3 text-left font-medium text-muted-foreground">Score</th>
                         )}
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nhận xét</th>
+                         <th className="px-4 py-3 text-left font-medium text-muted-foreground">Feedback</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -317,7 +317,7 @@ function TeacherGradeAssignmentPage() {
                                 onChange={(e) =>
                                   setComponentCommentInputs((prev) => ({ ...prev, [key]: e.target.value }))
                                 }
-                                placeholder="Nhận xét cho học sinh"
+                                 placeholder="Feedback for student"
                                 className="min-h-16"
                               />
                             </td>
@@ -340,14 +340,14 @@ function TeacherGradeAssignmentPage() {
             variant="outline"
             onClick={() => navigate({ to: '/teacher/classes/$classId', params: { classId } })}
           >
-            Hủy
+             Cancel
           </Button>
           <Button
             type="button"
             onClick={handleSubmit}
             disabled={upsertScores.isPending || upsertComponentScores.isPending}
           >
-            {upsertScores.isPending || upsertComponentScores.isPending ? 'Đang lưu...' : 'Lưu điểm và nhận xét'}
+             {upsertScores.isPending || upsertComponentScores.isPending ? 'Saving...' : 'Save scores and feedback'}
           </Button>
         </div>
       )}

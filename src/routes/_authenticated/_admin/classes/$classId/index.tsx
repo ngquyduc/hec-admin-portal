@@ -43,10 +43,10 @@ function LessonRow({
           {attendanceTaken ? (
             <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
               <CheckCircle className="h-3.5 w-3.5" />
-              Đã điểm danh
+              Attendance recorded
             </span>
           ) : (
-            <span className="text-xs text-muted-foreground">Chưa điểm danh</span>
+            <span className="text-xs text-muted-foreground">Attendance not recorded</span>
           )}
         </div>
       </div>
@@ -64,10 +64,10 @@ function LessonRow({
               params: { classId, lessonId: lesson.id },
             })
           }
-          title="Điểm danh"
+          title="Attendance"
         >
           <ClipboardList className="h-3.5 w-3.5" />
-          Điểm danh
+          Attendance
         </Button>
         <Button
           type="button"
@@ -170,7 +170,7 @@ function ClassDetailPage() {
           <Button variant="outline" asChild>
             <Link to="/classes/$classId/grades" params={{ classId }}>
               <BookOpen className="h-4 w-4" />
-              Bảng điểm
+              Gradebook
             </Link>
           </Button>
           <Button variant="outline" asChild>
@@ -269,13 +269,13 @@ function ClassDetailPage() {
                 <div className="min-w-0">
                   <p className="font-medium truncate">{assessment.title}</p>
                   <div className="text-sm text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                    <span>Loại: {ASSESSMENT_TYPE_LABELS[assessment.type]}</span>
-                    <span>Điểm tối đa: {assessment.maxScore}</span>
+                    <span>Type: {ASSESSMENT_TYPE_LABELS[assessment.type]}</span>
+                    <span>Max score: {assessment.maxScore}</span>
                     {assessment.lessonId && (
-                      <span>Bài học: {lessonTitleMap.get(assessment.lessonId) ?? 'N/A'}</span>
+                      <span>Lesson: {lessonTitleMap.get(assessment.lessonId) ?? 'N/A'}</span>
                     )}
                     {assessment.dueAt && (
-                      <span>Hạn nộp: {new Date(assessment.dueAt).toLocaleString()}</span>
+                      <span>Due: {new Date(assessment.dueAt).toLocaleString()}</span>
                     )}
                   </div>
                 </div>
@@ -285,7 +285,7 @@ function ClassDetailPage() {
                       to="/classes/$classId/assignments/$assessmentId/grade"
                       params={{ classId, assessmentId: assessment.id }}
                     >
-                      Chấm điểm
+                      Grade
                     </Link>
                   </Button>
                   <Badge variant="secondary">{ASSESSMENT_TYPE_LABELS[assessment.type]}</Badge>

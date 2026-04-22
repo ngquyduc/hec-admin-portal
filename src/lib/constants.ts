@@ -20,7 +20,7 @@ export const STAFF_ROLE_LABELS: Record<StaffRole, string> = {
 // Subject labels
 export const SUBJECT_LABELS: Record<Subject, string> = {
   'ielts': 'IELTS',
-  'communication-english': 'Tiếng Anh giao tiếp',
+  'communication-english': 'Communication English',
 }
 
 // English level labels
@@ -41,7 +41,7 @@ export const CLASS_LEVEL_LABELS: Record<ClassLevel, string> = {
   'pre-intermediate': 'Pre-Intermediate',
   intermediate: 'Intermediate',
   'upper-intermediate': 'Upper-Intermediate',
-  'pre-ielts': 'Pre-IELTS (dưới 3.4)',
+  'pre-ielts': 'Pre-IELTS (below 3.4)',
   '3.5-4.5': '3.5-4.5',
   '4.5-5.5': '4.5-5.5',
   '5.5-6.5': '5.5-6.5',
@@ -94,12 +94,12 @@ export const LESSON_STATUS_COLORS: Record<LessonStatus, string> = {
   cancelled: 'text-red-600 bg-red-50',
 }
 
-// Attendance status labels (Vietnamese)
+// Attendance status labels
 export const ATTENDANCE_STATUS_LABELS: Record<AttendanceStatus, string> = {
-  present: 'Có mặt',
-  late: 'Đi trễ',
-  absent_excused: 'Nghỉ có phép',
-  absent_unexcused: 'Nghỉ không phép',
+  present: 'Present',
+  late: 'Late',
+  absent_excused: 'Excused Absence',
+  absent_unexcused: 'Unexcused Absence',
 }
 
 // Attendance status colors
@@ -110,21 +110,21 @@ export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, string> = {
   absent_unexcused: 'text-red-600 bg-red-50',
 }
 
-// Assessment type labels (Vietnamese)
+// Assessment type labels
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
-  'in-class': 'Bài tập trên lớp',
-  homework: 'Bài tập về nhà',
-  test: 'Kiểm tra tiến độ',
+  'in-class': 'In-class Assignment',
+  homework: 'Homework',
+  test: 'Progress Test',
 }
 
-// Absence reason options (Vietnamese)
+// Absence reason options
 export const ABSENCE_REASONS = [
-  'Ốm',
-  'Đi du lịch',
-  'Việc gia đình đột xuất',
-  'Việc gia đình có lịch trước (ngày giỗ, đám cưới...)',
-  'Lịch học đột xuất ở trường',
-  'Hoạt động khác ở trường (có lịch trước)',
-  'Không thông báo, không rõ lý do',
-  'Học buổi khác',
+  'Sick',
+  'Traveling',
+  'Family emergency',
+  'Planned family event (anniversary, wedding, etc.)',
+  'Unexpected school schedule',
+  'Other school activity (planned)',
+  'No notice, unknown reason',
+  'Attending another session',
 ] as const

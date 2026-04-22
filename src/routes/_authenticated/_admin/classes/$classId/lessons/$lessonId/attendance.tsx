@@ -55,7 +55,7 @@ function AttendancePage() {
     // All enrolled students must be marked
     const unmarked = enrolledStudents.filter((s) => !attendance[s.id])
     if (unmarked.length > 0) {
-      toast.error(`Vui lòng điểm danh cho tất cả học sinh (còn ${unmarked.length} chưa được điểm danh)`)
+      toast.error(`Please mark attendance for all students (${unmarked.length} still unmarked)`)
       return
     }
 
@@ -69,10 +69,10 @@ function AttendancePage() {
           : undefined,
       }))
       await upsertAttendance.mutateAsync(records)
-      toast.success('Điểm danh đã được lưu thành công!')
+      toast.success('Attendance saved successfully!')
       navigate({ to: '/classes/$classId', params: { classId } })
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Không thể lưu điểm danh. Vui lòng thử lại.')
+      toast.error(error instanceof Error ? error.message : 'Failed to save attendance. Please try again.')
     }
   }
 
@@ -85,7 +85,7 @@ function AttendancePage() {
   if (lessonLoading || attendanceLoading) {
     return (
       <Card className="container mx-auto max-w-2xl mt-8">
-        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+        <CardContent className="p-12 text-center text-muted-foreground">Loading...</CardContent>
       </Card>
     )
   }
@@ -94,7 +94,7 @@ function AttendancePage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
-          Không tìm thấy buổi học: {lessonError?.message}
+          Lesson not found: {lessonError?.message}
         </div>
       </div>
     )
@@ -114,12 +114,12 @@ function AttendancePage() {
             className="mb-3"
           >
             <ArrowLeft className="h-4 w-4" />
-            Quay lại lớp học
+            Back to class
           </Button>
           <div className="flex items-center gap-3">
             <ClipboardList className="h-7 w-7 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold">Điểm danh</h1>
+              <h1 className="text-2xl font-bold">Attendance</h1>
               <p className="text-muted-foreground text-sm mt-0.5">{lesson.title}</p>
             </div>
           </div>
@@ -127,7 +127,7 @@ function AttendancePage() {
         {attendanceTaken && (
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm font-medium">
             <CheckCircle className="h-4 w-4" />
-            Đã điểm danh
+            Attendance recorded
           </div>
         )}
       </div>
@@ -136,20 +136,20 @@ function AttendancePage() {
       <Card>
         <CardContent className="p-4 flex flex-wrap gap-6 text-sm">
         <div>
-          <span className="text-muted-foreground">Thời gian bắt đầu: </span>
+          <span className="text-muted-foreground">Start time: </span>
           <span className="font-medium">
-            {new Date(lesson.startTime).toLocaleString('vi-VN')}
+            {new Date(lesson.startTime).toLocaleString('en-US')}
           </span>
         </div>
         <div>
-          <span className="text-muted-foreground">Thời gian kết thúc: </span>
+          <span className="text-muted-foreground">End time: </span>
           <span className="font-medium">
-            {new Date(lesson.endTime).toLocaleString('vi-VN')}
+            {new Date(lesson.endTime).toLocaleString('en-US')}
           </span>
         </div>
         <div>
-          <span className="text-muted-foreground">Sĩ số: </span>
-          <span className="font-medium">{totalCount} học sinh</span>
+          <span className="text-muted-foreground">Class size: </span>
+          <span className="font-medium">{totalCount} students</span>
         </div>
         </CardContent>
       </Card>
@@ -159,9 +159,9 @@ function AttendancePage() {
         <Card>
           <CardContent className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold">Đánh dấu nhanh tất cả</h2>
+            <h2 className="text-sm font-semibold">Quick mark all</h2>
             <span className="text-xs text-muted-foreground">
-              {markedCount}/{totalCount} đã điểm danh
+               {markedCount}/{totalCount} marked
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -174,7 +174,7 @@ function AttendancePage() {
                 onClick={() => markAll(value)}
                 className={ATTENDANCE_STATUS_COLORS[value]}
               >
-                Tất cả: {label}
+                 Mark all: {label}
               </Button>
             ))}
           </div>
@@ -186,7 +186,7 @@ function AttendancePage() {
       {totalCount === 0 ? (
         <Card>
           <CardContent className="p-12 text-center text-muted-foreground">
-            Không có học sinh nào trong lớp.
+             No students in this class.
           </CardContent>
         </Card>
       ) : (
@@ -196,9 +196,9 @@ function AttendancePage() {
             <thead className="bg-muted/50 border-b">
               <tr>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground w-8">#</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Học sinh</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Trạng thái</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Lý do nghỉ (nếu có)</th>
+                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Student</th>
+                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Absence reason (if any)</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -235,7 +235,7 @@ function AttendancePage() {
                         }`}
                       >
                         <option value="" disabled>
-                          -- Chọn --
+                           -- Select --
                         </option>
                         {(Object.entries(ATTENDANCE_STATUS_LABELS) as [AttendanceStatus, string][]).map(
                           ([value, label]) => (
@@ -258,7 +258,7 @@ function AttendancePage() {
                           }
                           className="w-full px-2 py-1.5 text-xs border rounded-md focus:outline-none focus:ring-1 focus:ring-ring bg-background"
                         >
-                          <option value="">-- Chọn lý do --</option>
+                           <option value="">-- Select reason --</option>
                           {ABSENCE_REASONS.map((reason) => (
                             <option key={reason} value={reason}>
                               {reason}
@@ -285,14 +285,14 @@ function AttendancePage() {
             onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
           >
             <ArrowLeft className="h-4 w-4" />
-            Hủy
+             Cancel
           </Button>
           <Button
             type="button"
             onClick={handleSubmit}
             disabled={upsertAttendance.isPending}
           >
-            {upsertAttendance.isPending ? 'Đang lưu...' : 'Lưu điểm danh'}
+             {upsertAttendance.isPending ? 'Saving...' : 'Save attendance'}
           </Button>
         </div>
       )}

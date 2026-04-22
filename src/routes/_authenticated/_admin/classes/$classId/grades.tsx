@@ -52,7 +52,7 @@ function ClassGradesPage() {
   if (classLoading || gradebookLoading) {
     return (
       <Card className="container mx-auto max-w-2xl mt-8">
-        <CardContent className="p-12 text-center text-muted-foreground">Đang tải...</CardContent>
+        <CardContent className="p-12 text-center text-muted-foreground">Loading...</CardContent>
       </Card>
     )
   }
@@ -61,7 +61,7 @@ function ClassGradesPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="rounded-md border border-destructive/50 bg-destructive/10 text-destructive px-4 py-3">
-          Không tìm thấy lớp học: {classError?.message}
+          Class not found: {classError?.message}
         </div>
       </div>
     )
@@ -78,12 +78,12 @@ function ClassGradesPage() {
           className="mb-3"
         >
           <ArrowLeft className="h-4 w-4" />
-          Quay lại lớp học
+          Back to class
         </Button>
         <div className="flex items-center gap-3">
           <BookOpen className="h-7 w-7 text-primary" />
           <div>
-            <h1 className="text-2xl font-bold">Bảng điểm lớp học</h1>
+             <h1 className="text-2xl font-bold">Class Gradebook</h1>
             <p className="text-muted-foreground text-sm mt-0.5">{classData.name}</p>
           </div>
         </div>
@@ -92,13 +92,13 @@ function ClassGradesPage() {
       {enrolledStudents.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center text-muted-foreground">
-            Không có học sinh nào trong lớp.
+             No students in this class.
           </CardContent>
         </Card>
       ) : assessments.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center text-muted-foreground">
-            Chưa có bài đánh giá nào.
+             No assessments yet.
           </CardContent>
         </Card>
       ) : (
@@ -108,7 +108,7 @@ function ClassGradesPage() {
               <thead>
                 <tr className="bg-muted/50 border-b">
                   <th rowSpan={2} className="px-4 py-3 text-left font-medium text-muted-foreground sticky left-0 bg-muted/50 z-20 border-r">
-                    Học sinh
+                     Student
                   </th>
                   {assessments.map((assessment) => {
                     const subComponents = componentByAssessmentId.get(assessment.id) ?? []
@@ -133,7 +133,7 @@ function ClassGradesPage() {
                     return (
                       <Fragment key={`${assessment.id}:columns`}>
                         <th className="px-3 py-2 text-center text-xs font-medium text-muted-foreground border-l whitespace-nowrap">
-                          Tổng (/{assessment.maxScore})
+                           Total (/{assessment.maxScore})
                         </th>
                         {subComponents.map((component) => (
                           <th

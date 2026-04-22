@@ -29,15 +29,15 @@ function AttendanceCell({ lesson }: { lesson: Lesson }) {
             params: { classId: lesson.classId, lessonId: lesson.id },
           })
         }
-        title="Điểm danh"
+        title="Attendance"
       >
         <ClipboardList className="h-3.5 w-3.5" />
-        Điểm danh
+        Attendance
       </Button>
       {taken && (
         <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
           <CheckCircle className="h-3.5 w-3.5" />
-          Đã xong
+          Done
         </span>
       )}
     </div>
@@ -113,7 +113,7 @@ function LessonsListPage() {
     },
     {
       id: 'attendance',
-      header: 'Điểm danh',
+      header: 'Attendance',
       meta: {
         disableRowClick: true,
       },
