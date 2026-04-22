@@ -111,14 +111,8 @@ function ParentsListPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold">Parents Management</h1>
-        <Button asChild>
-          <Link to="/parents/new">
-            <Plus className="h-4 w-4" />
-            Add New Parent
-          </Link>
-        </Button>
       </div>
 
       {isLoading ? (
@@ -135,6 +129,14 @@ function ParentsListPage() {
               data={parents}
               searchColumn="name"
               searchPlaceholder="Search by name..."
+              toolbarContent={(
+                <Button asChild>
+                  <Link to="/parents/new">
+                    <Plus className="h-4 w-4" />
+                    Add New Parent
+                  </Link>
+                </Button>
+              )}
             />
           </CardContent>
         </Card>

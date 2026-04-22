@@ -162,20 +162,9 @@ function LessonsListPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">All Lessons</h1>
-          <p className="text-muted-foreground mt-1">{lessons.length} lesson{lessons.length !== 1 ? 's' : ''} across all classes</p>
-        </div>
-
-        <div className="flex w-full md:w-auto md:justify-end">
-          <Button asChild>
-            <Link to="/lessons/new">
-              <Plus className="h-4 w-4" />
-              New lesson
-            </Link>
-          </Button>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold">All Lessons</h1>
+        <p className="text-muted-foreground mt-1">{lessons.length} lesson{lessons.length !== 1 ? 's' : ''} across all classes</p>
       </div>
 
       {isLoading ? (
@@ -192,6 +181,14 @@ function LessonsListPage() {
               data={lessons}
               searchColumn="title"
               searchPlaceholder="Search lessons..."
+              toolbarContent={(
+                <Button asChild>
+                  <Link to="/lessons/new">
+                    <Plus className="h-4 w-4" />
+                    New Lesson
+                  </Link>
+                </Button>
+              )}
             />
           </CardContent>
         </Card>

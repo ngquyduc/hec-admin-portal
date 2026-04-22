@@ -117,17 +117,9 @@ function ClassesListPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">Classes</h1>
-          <p className="text-muted-foreground mt-1">{filteredClasses.length} class{filteredClasses.length !== 1 ? 'es' : ''}</p>
-        </div>
-        <Button asChild>
-          <Link to="/classes/new">
-            <Plus className="h-4 w-4" />
-            Add New Class
-          </Link>
-        </Button>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold">Classes</h1>
+        <p className="text-muted-foreground mt-1">{filteredClasses.length} class{filteredClasses.length !== 1 ? 'es' : ''}</p>
       </div>
 
       {isLoading ? (
@@ -145,20 +137,28 @@ function ClassesListPage() {
               searchColumn="name"
               searchPlaceholder="Search classes..."
               toolbarContent={(
-                <Select
-                  value={statusFilter}
-                  onValueChange={(value) => setStatusFilter(value as Status | 'all')}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Filter status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">{STATUS_LABELS.active}</SelectItem>
-                    <SelectItem value="inactive">{STATUS_LABELS.inactive}</SelectItem>
-                    <SelectItem value="suspended">{STATUS_LABELS.suspended}</SelectItem>
-                    <SelectItem value="all">All statuses</SelectItem>
-                  </SelectContent>
-                </Select>
+                <>
+                  <Select
+                    value={statusFilter}
+                    onValueChange={(value) => setStatusFilter(value as Status | 'all')}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Filter status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">{STATUS_LABELS.active}</SelectItem>
+                      <SelectItem value="inactive">{STATUS_LABELS.inactive}</SelectItem>
+                      <SelectItem value="suspended">{STATUS_LABELS.suspended}</SelectItem>
+                      <SelectItem value="all">All statuses</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button asChild>
+                    <Link to="/classes/new">
+                      <Plus className="h-4 w-4" />
+                      Add New Class
+                    </Link>
+                  </Button>
+                </>
               )}
             />
           </CardContent>

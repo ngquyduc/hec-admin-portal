@@ -107,14 +107,8 @@ function StudentsListPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold">Students Management</h1>
-        <Button asChild>
-          <Link to="/students/new">
-            <Plus className="h-4 w-4" />
-            Add New Student
-          </Link>
-        </Button>
       </div>
 
       {isLoading ? (
@@ -131,6 +125,14 @@ function StudentsListPage() {
               data={students}
               searchColumn="name"
               searchPlaceholder="Search by name..."
+              toolbarContent={(
+                <Button asChild>
+                  <Link to="/students/new">
+                    <Plus className="h-4 w-4" />
+                    Add New Student
+                  </Link>
+                </Button>
+              )}
             />
           </CardContent>
         </Card>
