@@ -119,9 +119,16 @@ function TeacherClassDetail() {
       {/* Assignments */}
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-lg font-semibold mb-4">
-            Assignments ({assessments.length})
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">
+              Assignments ({assessments.length})
+            </h2>
+            <Button asChild size="sm">
+              <Link to="/teacher/classes/$classId/assignments/new" params={{ classId }}>
+                <Plus className="h-4 w-4" /> Add Assignment
+              </Link>
+            </Button>
+          </div>
 
           {assessments.length === 0 ? (
             <p className="text-muted-foreground text-sm">No assignments yet.</p>

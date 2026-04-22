@@ -112,9 +112,9 @@ export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, string> = {
 
 // Assessment type labels (Vietnamese)
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
-  classwork: 'Bài tập trên lớp',
+  'in-class': 'Bài tập trên lớp',
   homework: 'Bài tập về nhà',
-  'progress-check': 'Kiểm tra tiến độ',
+  test: 'Kiểm tra tiến độ',
 }
 
 // Absence reason options (Vietnamese)

@@ -27,7 +27,7 @@ function LessonGradesPage() {
   const { data: existingScores = [], isLoading: gradesLoading } = useLessonAssessmentScores(classId, lessonId)
   const upsertScores = useUpsertLessonAssessmentScores()
 
-  const [assessmentType, setAssessmentType] = useState<AssessmentType>('progress-check')
+  const [assessmentType, setAssessmentType] = useState<AssessmentType>('test')
   const [maxScore, setMaxScore] = useState<number>(10)
   // Map studentId → score string (empty = not graded)
   const [scores, setScores] = useState<Record<string, string>>({})

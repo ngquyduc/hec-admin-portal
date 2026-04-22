@@ -49,6 +49,7 @@ import { Route as AuthenticatedTeacherTeacherClassesClassIdGradesRouteImport } f
 import { Route as AuthenticatedAdminClassesClassIdLessonsNewRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/new'
 import { Route as AuthenticatedAdminClassesClassIdAssignmentsNewRouteImport } from './routes/_authenticated/_admin/classes/$classId/assignments/new'
 import { Route as AuthenticatedTeacherTeacherClassesClassIdLessonsNewRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/lessons/new'
+import { Route as AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRouteImport } from './routes/_authenticated/_teacher/teacher/classes/$classId/assignments/new'
 import { Route as AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades'
 import { Route as AuthenticatedAdminClassesClassIdLessonsLessonIdEditRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit'
 import { Route as AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRouteImport } from './routes/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance'
@@ -287,6 +288,12 @@ const AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute =
     path: '/teacher/classes/$classId/lessons/new',
     getParentRoute: () => AuthenticatedTeacherRoute,
   } as any)
+const AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute =
+  AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRouteImport.update({
+    id: '/teacher/classes/$classId/assignments/new',
+    path: '/teacher/classes/$classId/assignments/new',
+    getParentRoute: () => AuthenticatedTeacherRoute,
+  } as any)
 const AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute =
   AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRouteImport.update({
     id: '/classes/$classId/lessons/$lessonId/grades',
@@ -379,6 +386,7 @@ export interface FileRoutesByFullPath {
   '/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
   '/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
   '/classes/$classId/lessons/$lessonId/grades': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+  '/teacher/classes/$classId/assignments/new': typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute
   '/teacher/classes/$classId/lessons/new': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
   '/teacher/classes/$classId/assignments/$assessmentId/grade': typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsAssessmentIdGradeRoute
   '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
@@ -425,6 +433,7 @@ export interface FileRoutesByTo {
   '/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
   '/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
   '/classes/$classId/lessons/$lessonId/grades': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+  '/teacher/classes/$classId/assignments/new': typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute
   '/teacher/classes/$classId/lessons/new': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
   '/teacher/classes/$classId/assignments/$assessmentId/grade': typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsAssessmentIdGradeRoute
   '/teacher/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
@@ -475,6 +484,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdAttendanceRoute
   '/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdEditRoute
   '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades': typeof AuthenticatedAdminClassesClassIdLessonsLessonIdGradesRoute
+  '/_authenticated/_teacher/teacher/classes/$classId/assignments/new': typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute
   '/_authenticated/_teacher/teacher/classes/$classId/lessons/new': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
   '/_authenticated/_teacher/teacher/classes/$classId/assignments/$assessmentId/grade': typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsAssessmentIdGradeRoute
   '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance': typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
@@ -523,6 +533,7 @@ export interface FileRouteTypes {
     | '/classes/$classId/lessons/$lessonId/attendance'
     | '/classes/$classId/lessons/$lessonId/edit'
     | '/classes/$classId/lessons/$lessonId/grades'
+    | '/teacher/classes/$classId/assignments/new'
     | '/teacher/classes/$classId/lessons/new'
     | '/teacher/classes/$classId/assignments/$assessmentId/grade'
     | '/teacher/classes/$classId/lessons/$lessonId/attendance'
@@ -569,6 +580,7 @@ export interface FileRouteTypes {
     | '/classes/$classId/lessons/$lessonId/attendance'
     | '/classes/$classId/lessons/$lessonId/edit'
     | '/classes/$classId/lessons/$lessonId/grades'
+    | '/teacher/classes/$classId/assignments/new'
     | '/teacher/classes/$classId/lessons/new'
     | '/teacher/classes/$classId/assignments/$assessmentId/grade'
     | '/teacher/classes/$classId/lessons/$lessonId/attendance'
@@ -618,6 +630,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/classes/$classId/lessons/$lessonId/attendance'
     | '/_authenticated/_admin/classes/$classId/lessons/$lessonId/edit'
     | '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades'
+    | '/_authenticated/_teacher/teacher/classes/$classId/assignments/new'
     | '/_authenticated/_teacher/teacher/classes/$classId/lessons/new'
     | '/_authenticated/_teacher/teacher/classes/$classId/assignments/$assessmentId/grade'
     | '/_authenticated/_teacher/teacher/classes/$classId/lessons/$lessonId/attendance'
@@ -912,6 +925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRouteImport
       parentRoute: typeof AuthenticatedTeacherRoute
     }
+    '/_authenticated/_teacher/teacher/classes/$classId/assignments/new': {
+      id: '/_authenticated/_teacher/teacher/classes/$classId/assignments/new'
+      path: '/teacher/classes/$classId/assignments/new'
+      fullPath: '/teacher/classes/$classId/assignments/new'
+      preLoaderRoute: typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRouteImport
+      parentRoute: typeof AuthenticatedTeacherRoute
+    }
     '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades': {
       id: '/_authenticated/_admin/classes/$classId/lessons/$lessonId/grades'
       path: '/classes/$classId/lessons/$lessonId/grades'
@@ -1065,6 +1085,7 @@ interface AuthenticatedTeacherRouteChildren {
   AuthenticatedTeacherTeacherIndexRoute: typeof AuthenticatedTeacherTeacherIndexRoute
   AuthenticatedTeacherTeacherClassesClassIdGradesRoute: typeof AuthenticatedTeacherTeacherClassesClassIdGradesRoute
   AuthenticatedTeacherTeacherClassesClassIdIndexRoute: typeof AuthenticatedTeacherTeacherClassesClassIdIndexRoute
+  AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute: typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute
   AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute
   AuthenticatedTeacherTeacherClassesClassIdAssignmentsAssessmentIdGradeRoute: typeof AuthenticatedTeacherTeacherClassesClassIdAssignmentsAssessmentIdGradeRoute
   AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute: typeof AuthenticatedTeacherTeacherClassesClassIdLessonsLessonIdAttendanceRoute
@@ -1077,6 +1098,8 @@ const AuthenticatedTeacherRouteChildren: AuthenticatedTeacherRouteChildren = {
     AuthenticatedTeacherTeacherClassesClassIdGradesRoute,
   AuthenticatedTeacherTeacherClassesClassIdIndexRoute:
     AuthenticatedTeacherTeacherClassesClassIdIndexRoute,
+  AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute:
+    AuthenticatedTeacherTeacherClassesClassIdAssignmentsNewRoute,
   AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute:
     AuthenticatedTeacherTeacherClassesClassIdLessonsNewRoute,
   AuthenticatedTeacherTeacherClassesClassIdAssignmentsAssessmentIdGradeRoute:

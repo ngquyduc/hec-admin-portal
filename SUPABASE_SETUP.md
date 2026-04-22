@@ -32,16 +32,17 @@
 
 ## 4. Set Up Database Schema
 
-1. In Supabase dashboard, go to **SQL Editor**
-2. Click **New Query**
-3. Copy the entire contents of `supabase-schema.sql` and paste it
-4. Click **Run** to execute the schema
+Link the CLI to your remote project and apply all migrations:
 
-This will create:
-- `staff`, `teachers`, `students`, `parents` tables
-- Indexes for performance
-- Auto-updating `updated_at` triggers
-- Row Level Security policies
+```bash
+pnpm exec supabase link --project-ref <your-project-ref>
+pnpm db:push
+```
+
+- **Project ref**: the subdomain from your `VITE_SUPABASE_URL` (e.g. `https://abcdef.supabase.co` → ref is `abcdef`)
+- You will be prompted for the **database password** (Supabase dashboard → Settings → Database — not the anon key)
+
+This applies all migration files in `supabase/migrations/` in order, creating all tables, indexes, triggers, and RLS policies.
 
 ## 5. (Optional) Add Sample Data
 
@@ -62,17 +63,21 @@ pnpm dev
 
 ## 8. Apply Schema Migrations (for existing projects)
 
-If your database already exists and you changed table fields in code, run the migration SQL file:
+Schema changes are managed via migration files in `supabase/migrations/`. To apply any pending migrations to an existing database:
 
-1. Open **SQL Editor** in Supabase dashboard
-2. Click **New Query**
-3. Paste the content from [supabase/migrations/20260314_replace_student_level_with_entry_exit.sql](supabase/migrations/20260314_replace_student_level_with_entry_exit.sql)
-4. Click **Run**
+```bash
+pnpm db:push
+```
 
-This migration:
-- Adds `entry_result` and `exit_target`
-- Copies old `level` values into `entry_result`
-- Drops the old `level` column
+To create a new migration for a schema change (instead of using the Supabase dashboard SQL editor):
+
+```bash
+pnpm db:new describe_your_change
+# Edit the generated file in supabase/migrations/
+pnpm db:push
+```
+
+See `DEVELOPER.md` for the full workflow.
 
 ## Security Notes
 

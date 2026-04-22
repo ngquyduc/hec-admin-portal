@@ -420,7 +420,7 @@ export type Database = {
           id: string
           class_id: string
           lesson_id: string | null
-          type: 'classwork' | 'homework' | 'progress-check'
+          type: 'in-class' | 'homework' | 'test'
           title: string
           max_score: number
           weight: number
@@ -434,7 +434,7 @@ export type Database = {
           id?: string
           class_id: string
           lesson_id?: string | null
-          type: 'classwork' | 'homework' | 'progress-check'
+          type: 'in-class' | 'homework' | 'test'
           title: string
           max_score?: number
           weight?: number
@@ -448,7 +448,7 @@ export type Database = {
           id?: string
           class_id?: string
           lesson_id?: string | null
-          type?: 'classwork' | 'homework' | 'progress-check'
+          type?: 'in-class' | 'homework' | 'test'
           title?: string
           max_score?: number
           weight?: number

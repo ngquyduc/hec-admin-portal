@@ -340,9 +340,9 @@ export type CreateAttendance = z.infer<typeof CreateAttendanceSchema>
 
 // ============= Assessment Schemas =============
 export const AssessmentTypeSchema = z.enum([
-  'classwork',
+  'in-class',
   'homework',
-  'progress-check',
+  'test',
 ])
 
 export const AssessmentSchema = z.object({

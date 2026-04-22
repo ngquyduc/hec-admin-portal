@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-export const Route = createFileRoute('/_authenticated/_admin/classes/$classId/assignments/new')({
+export const Route = createFileRoute('/_authenticated/_teacher/teacher/classes/$classId/assignments/new')({
   component: NewAssignmentPage,
 })
 
@@ -91,7 +91,7 @@ function NewAssignmentPage() {
         })),
       })
       toast.success('Assignment created successfully!')
-      navigate({ to: '/classes/$classId', params: { classId } })
+      navigate({ to: '/teacher/classes/$classId', params: { classId } })
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to create assignment.')
     }
@@ -104,7 +104,7 @@ function NewAssignmentPage() {
           variant="ghost"
           size="sm"
           type="button"
-          onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
+          onClick={() => navigate({ to: '/teacher/classes/$classId', params: { classId } })}
           className="mb-3"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -243,10 +243,7 @@ function NewAssignmentPage() {
                             setComponents((prev) =>
                               prev.map((item, itemIndex) =>
                                 itemIndex === index
-                                  ? {
-                                      ...item,
-                                      isScorable: value === 'score',
-                                    }
+                                  ? { ...item, isScorable: value === 'score' }
                                   : item,
                               ),
                             )
@@ -321,7 +318,7 @@ function NewAssignmentPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate({ to: '/classes/$classId', params: { classId } })}
+              onClick={() => navigate({ to: '/teacher/classes/$classId', params: { classId } })}
             >
               Cancel
             </Button>
