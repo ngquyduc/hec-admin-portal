@@ -154,7 +154,7 @@ export const gradeService = {
         assessment_id: data.id,
         title: component.title,
         is_scorable: component.isScorable,
-        max_score: component.isScorable ? (component.maxScore ?? 10) : null,
+        max_score: component.isScorable ? (component.maxScore ?? 9) : null,
         display_order: index,
         notes: component.notes ?? null,
       }))

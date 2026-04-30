@@ -112,9 +112,9 @@ export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, string> = {
 
 // Assessment type labels
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
-  'in-class': 'In-class Assignment',
+  'in-class': 'In-class practice',
   homework: 'Homework',
-  test: 'Progress Test',
+  test: 'Test',
 }
 
 // Absence reason options

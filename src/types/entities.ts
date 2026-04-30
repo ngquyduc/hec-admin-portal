@@ -351,7 +351,7 @@ export const AssessmentSchema = z.object({
   lessonId: z.string().optional(),
   type: AssessmentTypeSchema,
   title: z.string().min(1, 'Title is required'),
-  maxScore: z.number().min(0.1).default(10),
+  maxScore: z.number().min(0.1).default(9),
   weight: z.number().min(0.1).default(1),
   assignedAt: z.string().or(z.date()),
   dueAt: z.string().or(z.date()).optional(),

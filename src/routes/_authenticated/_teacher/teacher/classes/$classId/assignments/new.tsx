@@ -27,9 +27,9 @@ const ASSESSMENT_TYPES = Object.keys(ASSESSMENT_TYPE_LABELS) as AssessmentType[]
 
 type DraftComponent = {
   title: string
-  isScorable: boolean
+  mode: 'score-comment' | 'score-only' | 'comment-only'
   maxScore: number
-  notes: string
+  description: string
 }
 
 function NewAssignmentPage() {
@@ -40,10 +40,10 @@ function NewAssignmentPage() {
 
   const [title, setTitle] = useState('')
   const [type, setType] = useState<AssessmentType>('in-class')
-  const [maxScore, setMaxScore] = useState<number>(10)
+  const [maxScore, setMaxScore] = useState<number>(9)
   const [lessonId, setLessonId] = useState<string>('none')
   const [dueAt, setDueAt] = useState('')
-  const [notes, setNotes] = useState('')
+  const [description, setDescription] = useState('')
   const [components, setComponents] = useState<DraftComponent[]>([])
 
   const handleSubmit = async () => {
@@ -55,9 +55,9 @@ function NewAssignmentPage() {
 
     const normalizedComponents = components.map((component) => ({
       title: component.title.trim(),
-      isScorable: component.isScorable,
+      isScorable: component.mode !== 'comment-only',
       maxScore: component.maxScore,
-      notes: component.notes.trim(),
+      description: component.description.trim(),
     }))
 
     if (normalizedComponents.some((component) => !component.title)) {
@@ -82,12 +82,12 @@ function NewAssignmentPage() {
         title: trimmedTitle,
         maxScore,
         dueAt: dueAt ? new Date(dueAt).toISOString() : undefined,
-        notes: notes.trim() || undefined,
+        notes: description.trim() || undefined,
         components: normalizedComponents.map((component) => ({
           title: component.title,
           isScorable: component.isScorable,
           maxScore: component.isScorable ? component.maxScore : undefined,
-          notes: component.notes || undefined,
+          notes: component.description || undefined,
         })),
       })
       toast.success('Assignment created successfully!')
@@ -117,7 +117,9 @@ function NewAssignmentPage() {
       <Card>
         <CardContent className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <Label>Title</Label>
+            <Label>
+              Title <span className="text-red-500">*</span>
+            </Label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -127,7 +129,9 @@ function NewAssignmentPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Type</Label>
+              <Label>
+                Type <span className="text-red-500">*</span>
+              </Label>
               <Select value={type} onValueChange={(value) => setType(value as AssessmentType)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -143,7 +147,9 @@ function NewAssignmentPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label>Max Score</Label>
+              <Label>
+                Max Score <span className="text-red-500">*</span>
+              </Label>
               <Input
                 type="number"
                 min={1}
@@ -165,7 +171,11 @@ function NewAssignmentPage() {
                   <SelectItem value="none">No lesson</SelectItem>
                   {lessons.map((lesson) => (
                     <SelectItem key={lesson.id} value={lesson.id}>
-                      {lesson.title}
+                      <span className="font-semibold">{lesson.title}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {' '}
+                        — {new Date(lesson.startTime).toLocaleString()}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -183,20 +193,20 @@ function NewAssignmentPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Notes (optional)</Label>
+            <Label>Description (optional)</Label>
             <Textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Any instructions or notes for this assignment"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Any instructions or description for this assignment"
             />
           </div>
 
           <div className="space-y-3 border rounded-md p-4">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <Label>Components (optional)</Label>
+                <Label>Sub-assignment (optional)</Label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Add subassignments/components like Listening, Reading, Speaking.
+                  Add sub-assignments like Listening, Reading, Speaking.
                 </p>
               </div>
               <Button
@@ -206,12 +216,12 @@ function NewAssignmentPage() {
                 onClick={() =>
                   setComponents((prev) => [
                     ...prev,
-                    { title: '', isScorable: true, maxScore: 10, notes: '' },
+                    { title: '', mode: 'score-comment', maxScore: 9, description: '' },
                   ])
                 }
               >
                 <Plus className="h-4 w-4" />
-                Add Component
+                Add Sub-assignment
               </Button>
             </div>
 
@@ -221,7 +231,9 @@ function NewAssignmentPage() {
                   <div key={index} className="border rounded-md p-3 space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <Label>Component Title</Label>
+                        <Label>
+                          Sub-assignment Title <span className="text-red-500">*</span>
+                        </Label>
                         <Input
                           value={component.title}
                           onChange={(e) =>
@@ -236,14 +248,16 @@ function NewAssignmentPage() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <Label>Mode</Label>
+                        <Label>
+                          Mode <span className="text-red-500">*</span>
+                        </Label>
                         <Select
-                          value={component.isScorable ? 'score' : 'comment-only'}
+                          value={component.mode}
                           onValueChange={(value) =>
                             setComponents((prev) =>
                               prev.map((item, itemIndex) =>
                                 itemIndex === index
-                                  ? { ...item, isScorable: value === 'score' }
+                                  ? { ...item, mode: value as DraftComponent['mode'] }
                                   : item,
                               ),
                             )
@@ -253,7 +267,8 @@ function NewAssignmentPage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="score">Score + Comment</SelectItem>
+                            <SelectItem value="score-comment">Score & Comment</SelectItem>
+                            <SelectItem value="score-only">Score only</SelectItem>
                             <SelectItem value="comment-only">Comment only</SelectItem>
                           </SelectContent>
                         </Select>
@@ -261,36 +276,41 @@ function NewAssignmentPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label>Component Max Score</Label>
-                        <Input
-                          type="number"
-                          min={0.5}
-                          step={0.5}
-                          disabled={!component.isScorable}
-                          value={component.maxScore}
-                          onChange={(e) =>
-                            setComponents((prev) =>
-                              prev.map((item, itemIndex) =>
-                                itemIndex === index ? { ...item, maxScore: Number(e.target.value) } : item,
-                              ),
-                            )
-                          }
-                        />
-                      </div>
+                      {component.mode !== 'comment-only' && (
+                        <div className="space-y-1.5">
+                          <Label>
+                            Sub-assignment Max Score <span className="text-red-500">*</span>
+                          </Label>
+                          <Input
+                            type="number"
+                            min={0.5}
+                            step={0.5}
+                            value={component.maxScore}
+                            onChange={(e) =>
+                              setComponents((prev) =>
+                                prev.map((item, itemIndex) =>
+                                  itemIndex === index
+                                    ? { ...item, maxScore: Number(e.target.value) }
+                                    : item,
+                                ),
+                              )
+                            }
+                          />
+                        </div>
+                      )}
 
                       <div className="space-y-1.5">
-                        <Label>Notes (optional)</Label>
+                        <Label>Description (optional)</Label>
                         <Input
-                          value={component.notes}
+                          value={component.description}
                           onChange={(e) =>
                             setComponents((prev) =>
                               prev.map((item, itemIndex) =>
-                                itemIndex === index ? { ...item, notes: e.target.value } : item,
+                                itemIndex === index ? { ...item, description: e.target.value } : item,
                               ),
                             )
                           }
-                          placeholder="Optional guidance"
+                          placeholder="Optional description"
                         />
                       </div>
                     </div>
